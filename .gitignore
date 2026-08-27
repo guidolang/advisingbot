@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Run artifacts
+.last_run.json
+seats.csv
+seats.json
+.DS_Store
