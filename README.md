@@ -1,37 +1,79 @@
 # AdvisingBot
 
-Finds Quinnipiac courses that still have **open seats**, so you don't have to
-click through Self-Service one subject at a time.
+Finds Quinnipiac courses that still have **open seats**, so nobody has to click
+through Self-Service one subject at a time.
 
-Out of the box it checks, for the current semester:
-
-- **BAN** — Business Analytics, undergraduate *and* graduate
-- **CIS** — Computer Information Systems, undergraduate
-- **Every elective** named by the AI & Business Analytics and CIS programs —
-  currently 35 courses across AC, BAN, CIS, FIN, HM, IB, MBA, MG, MK and SB,
-  read straight out of the catalog
-
-...and prints every section with a seat left, including how many, when it
-meets, where, and who teaches it.
-
-There are two scripts, because they run on very different clocks:
+It is two things sharing one engine:
 
 | | | |
 | --- | --- | --- |
-| `advisingbot.py` | checks seats | run it whenever you like |
-| `build_electives.py` | reads the catalog | run it once a year, when a new catalog goes live |
+| **A web page** | Pick a semester, a program, and a delivery mode; see every course with a seat left, grouped the way the Catalog groups it | for faculty and students |
+| **A command-line tool** | Sweep a watchlist of subjects and print what's open | for you |
+
+Both read the same public sources, and neither ever logs in.
+
+## The three scripts
+
+They run on very different clocks, which is why they're separate:
+
+| Script | What it does | How often |
+| --- | --- | --- |
+| `build_catalog.py` | Reads all 40 School of Business curricula from the Catalog → `programs.json` | once a year, when a new Catalog edition goes live |
+| `build_site.py` | Combines `programs.json` with live Self-Service seat data → `docs/data.json` | daily, from GitHub Actions |
+| `advisingbot.py` | Prints open seats for your own watchlist | whenever you like |
 
 ## Requirements
 
 Python 3.11 or newer. **No packages to install** — standard library only.
 
-## Use it
+## The web page
+
+`docs/index.html` is a single static file that reads `docs/data.json`. No
+server, no framework, no build step.
+
+### Publishing it
+
+1. **Settings → Pages → Source: GitHub Actions.**
+   On a private repo this needs a paid plan; otherwise make the repo public —
+   it contains no secrets and no student data.
+2. **Actions → "Refresh open seats" → Run workflow.**
+
+That collects fresh data, commits `docs/data.json`, and publishes the page.
+
+### Making it automatic
+
+The workflow is manual on purpose right now. To run it every morning,
+uncomment the `schedule:` block in
+[`.github/workflows/refresh.yml`](.github/workflows/refresh.yml):
+
+```yaml
+schedule:
+  - cron: "0 10 * * *"   # 6:00 a.m. Eastern during EDT
+```
+
+GitHub cron is always UTC and ignores daylight saving, so one entry can't be
+6:00 a.m. year-round. The file explains the two-entry workaround.
+
+### What it shows
+
+- **Semester** — every term Self-Service currently offers, defaulting to the
+  one in session.
+- **Program** — all 40 SoB programs: bachelor's, minors, certificates,
+  master's, dual degrees.
+- **Delivery** — online only, on-ground only, or either. Hybrid sections
+  (part web, part classroom) show up under both.
+
+Courses appear under the Catalog's own group names — *Accounting Core*,
+*BAN Elective Courses*, *Concentration in Finance* — rather than categories
+we invent. A course with several open sections collapses to one line and
+expands on click, so a long program stays scannable. Selections are
+remembered between visits.
+
+## The command-line tool
 
 ```bash
 python3 advisingbot.py
 ```
-
-That's the whole thing. It takes about 25 seconds.
 
 ```
 Open seats - Fall 2026 (26/FA)
@@ -44,27 +86,21 @@ Business Analytics (all levels)
     BAN*615-01       25 of 35 open
                      M/W 11:00 AM-12:15 PM (Lecture) | Mount Carmel | Friday, C
 ...
-26 section(s) with open seats, 255 seat(s) total, across 23 course(s).
+15 section(s) with open seats, 190 seat(s) total, across 14 course(s).
 ```
-
-### Other things it does
 
 ```bash
-python3 advisingbot.py --term "Spring 2027"   # a specific term
-python3 advisingbot.py --term next            # the upcoming term
-python3 advisingbot.py --term all             # every term on offer
-python3 advisingbot.py --list-terms           # what terms exist right now
-python3 advisingbot.py --list-subjects        # every subject code + count
-
+python3 advisingbot.py --term "Spring 2027"    # a specific term
+python3 advisingbot.py --term next             # the upcoming term
+python3 advisingbot.py --list-terms            # what terms exist right now
+python3 advisingbot.py --list-subjects         # every subject code + count
 python3 advisingbot.py --subject CIS --levels UG   # one-off, ignores watchlist
-python3 advisingbot.py --include-closed            # show full sections too
-
+python3 advisingbot.py --include-closed        # show full sections too
 python3 advisingbot.py --csv seats.csv --json seats.json
-python3 advisingbot.py --diff                 # what changed since last run
+python3 advisingbot.py --diff                  # what changed since last run
 ```
 
-`--diff` is the one to run repeatedly during registration season — it reports
-seats that just opened up, filled, or moved:
+`--diff` is the one to run repeatedly during registration season:
 
 ```
 Changes since 2026-08-26T09:15:02
@@ -74,75 +110,62 @@ Changes since 2026-08-26T09:15:02
   NOW FULL     IB-335 IB*335-01
 ```
 
-## Choosing what to watch
+## Configuration
 
-Two files feed the check, and they have different jobs.
-
-### `watchlist.toml` — hand-maintained
-
-Whole subjects you want swept, plus any electives the catalog misses.
+### `watchlist.toml` — hand-maintained, drives the CLI only
 
 ```toml
-[[watch]]
+[[watch]]                       # whole subjects to sweep
 label = "Business Analytics (all levels)"
 subject = "BAN"
-levels = ["UG", "GR"]     # UG, GR, DL, LW — omit for all levels
-courses = ["220", "330"]  # omit to take the whole subject
-exclude = ["484"]         # optional
+levels = ["UG", "GR"]           # UG, GR, DL, LW — omit for all
+courses = ["220", "330"]        # omit to take the whole subject
+exclude = ["484"]
 
-[manual]
+[electives]                     # draw electives from these programs
+programs = ["Applied AI and Business Analytics",
+            "Computer Information Systems"]
+
+[manual]                        # electives the Catalog states as prose
 courses = ["MK 630", "HM 610"]
 ```
 
-`python3 advisingbot.py --list-subjects` prints every valid subject code.
+Without `[electives].programs`, "electives" would mean every elective in the
+School of Business. The web page is not filtered this way — it shows each
+program's own electives.
 
-### `electives.toml` — generated, don't edit
-
-Built by `build_electives.py` from these five curriculum pages:
-
-- [BS Applied AI & Business Analytics](https://catalog.qu.edu/business/computer-information-systems/bs-applied-ai-business-analytics/#curriculumtext)
-- [Applied AI & Business Analytics minor](https://catalog.qu.edu/business/computer-information-systems/applied-ai-business-analytics-minor/#curriculumtext)
-- [BS Computer Information Systems](https://catalog.qu.edu/business/computer-information-systems/computer-information-systems-bs/#curriculumtext)
-- [Computer Information Systems minor](https://catalog.qu.edu/business/computer-information-systems/computer-information-systems-minor/#curriculumtext)
-- [MS Applied AI & Business Analytics](https://catalog.qu.edu/graduate-studies/business/business-applied-ai-business-analytics-ms/#curriculumtext)
+### `programs.json` — generated, don't edit
 
 ```bash
-python3 build_electives.py            # rewrite electives.toml
-python3 build_electives.py --diff     # what changed since the current file
-python3 build_electives.py --dry-run  # print it instead of writing
+python3 build_catalog.py            # rewrite it
+python3 build_catalog.py --diff     # what changed since the current file
+python3 build_catalog.py --dry-run  # print a summary, write nothing
 ```
 
-Commit the result. `advisingbot.py` picks it up automatically, and warns if
-it's more than a year old.
+Commit the result. Everything downstream reads this file instead of hitting
+the Catalog, and `advisingbot.py` warns if it's over a year old.
 
-### When the catalog states a rule instead of a list
+### When the Catalog states a rule instead of a list
 
-Some elective requirements can't be reduced to courses:
+40 requirements across the School of Business can't be reduced to courses:
 
 ```
-[Computer Information Systems minor]     Choose four CIS electives
+[Minor in Computer Information Systems]  Choose four CIS electives
 [BS Computer Information Systems]        Select any 200 level or above CIS class
-[Applied AI & Business Analytics minor]  Any BAN course
 [MS Applied AI & Business Analytics]     Take one 600-level MK course
+[Full-Time MBA]                          Take two other 600-level FIN electives
 ```
 
-`build_electives.py` prints these at the end of every run and writes them into
-`electives.toml` as comments, so they can't quietly go missing. Cover them one
-of two ways:
-
-- **A subject watch**, when the rule is broad. The `BAN` and `CIS` blocks in
-  `watchlist.toml` already answer the first three above.
-- **`[manual]`**, when it's a handful of courses — `"Take one 600-level MK
-  course"` is best handled by naming the ones you'd actually approve.
-
-Anything in `[manual]` that's already in `electives.toml` is ignored, so
-duplicates are harmless.
+These are printed after every `build_catalog.py` run, kept on their group in
+`programs.json`, and shown on the web page in a callout marked *"stated as a
+rule, not a course list"* — so a student can see that a requirement exists
+even where no course list does. For the CLI, cover them with a subject watch
+or by naming courses under `[manual]`.
 
 ## How it works
 
 Self-Service is a single-page app, and its UI actions map onto three JSON
-endpoints. AdvisingBot calls those directly instead of driving a browser —
-same data, no clicking, and it can run unattended:
+endpoints. AdvisingBot calls those directly instead of driving a browser:
 
 | What you'd click | What the script calls |
 | --- | --- |
@@ -150,50 +173,88 @@ same data, no clicking, and it can run unattended:
 | Picking a subject, term, level | `POST /student/Courses/PostSearchCriteria` |
 | "View Available Sections for BAN-610" | `POST /student/Courses/Sections` |
 
-The course catalog is public, so **no login, password, or student data is
-involved anywhere** — the script sees exactly what a signed-out visitor sees.
-It also paces itself (0.4s between requests, tunable with `--delay`).
+The Catalog is a CourseLeaf site whose curriculum tables are read directly.
+Both sources are public, so **no login, password, or student data is involved
+anywhere**.
 
-### Two things worth knowing about the data
+### Keeping the load off Self-Service
+
+A full refresh of all 40 programs is **183 requests in about 75 seconds**,
+once a day. Four things get it there:
+
+- **One search covers every subject.** The endpoint accepts a list, so 43
+  subjects cost one request rather than 43.
+- **One search covers every term.** Omitting the term filter makes sections
+  come back bucketed by term, so terms are separated afterwards instead of
+  re-running the whole scrape per semester.
+- **Courses are deduplicated first.** SB 488 sits in a dozen curricula and is
+  fetched once.
+- **Unoffered courses are skipped.** The search says which courses have no
+  sections at all — 137 of 318 — and those cost nothing.
+
+That leaves one request per offered course, paced 0.4s apart. Requests are
+serial on purpose: for a nightly job there's nothing to gain from
+parallelism, and staying gentle is what makes this defensible.
+
+Everyone viewing the page reads a static file, so traffic to the site costs
+Self-Service nothing at all.
+
+### Three things worth knowing about the data
 
 **We do not use Self-Service's "Open Sections Only" checkbox.** It drops
 sections that genuinely have seats — as of this writing `CIS*101-01` has a
-free seat but that filter excludes it. AdvisingBot pulls every section in the
-term and checks the seat counts itself, which is why it finds a few sections
-the website's own filter hides.
+free seat but that filter excludes it. AdvisingBot pulls every section and
+checks the seat counts itself.
 
-**A heading that isn't there doesn't mean "not checked".** Watches that
-found nothing are listed under *"Checked, nothing open"* at the end, so a
-full-or-not-offered elective can't be mistaken for one that was skipped.
+**`currentPageIndex` does not work.** Asking `PostSearchCriteria` for page 2
+returns page 1 again, so paging silently yields duplicates. We request a
+single page large enough for the whole result set and raise if the server
+reports more rows than it returned.
 
-**Some sections publish no seat count at all** (Self-Service shows
-`0 / 0 / 0`, mostly distance-ed `-DE` sections). Their numbers mean nothing,
-so they aren't counted as open — but they're listed at the bottom of every
-report so you can check them by hand rather than have them vanish silently.
+**Some sections publish no seat count** (Self-Service shows `0 / 0 / 0`,
+mostly distance-ed `-DE` sections). Their numbers mean nothing, so they are
+never counted as open — but they're shown as *"no seat count published"*
+rather than hidden, because a section that might be registerable shouldn't
+vanish.
 
 ## Files
 
 | File | What it is |
 | --- | --- |
-| `advisingbot.py` | The seat checker — run this |
+| `advisingbot.py` | The command-line seat checker |
+| `build_site.py` | Builds `docs/data.json` for the web page |
+| `build_catalog.py` | Rebuilds `programs.json` from the Catalog — run yearly |
 | `selfservice.py` | Client for the Self-Service JSON API |
-| `watchlist.toml` | Subjects to sweep + manual electives — **edit this** |
-| `build_electives.py` | Rebuilds the elective list from the catalog — run yearly |
-| `catalog.py` | Parser for the catalog's curriculum tables |
-| `electives.toml` | Electives harvested from the catalog — generated |
-| `.last_run.json` | Previous run, written automatically, used by `--diff` |
+| `catalog.py` | Parser for the Catalog's curriculum tables |
+| `watchlist.toml` | CLI configuration — **edit this** |
+| `programs.json` | All 40 SoB curricula — generated |
+| `docs/index.html` | The web page |
+| `docs/data.json` | Seat data the page reads — generated |
+| `.github/workflows/refresh.yml` | The daily refresh |
+| `.last_run.json` | Previous CLI run, used by `--diff` |
 
 ## If it breaks
 
 Self-Service is a vendor product (Ellucian Colleague) and can change without
-notice. Two failure modes to expect:
+notice:
 
 - *"Could not find the antiforgery token"* — the search page's HTML changed.
 - *"Expected JSON from ..."* — an endpoint changed shape.
+- *"reported N courses but returned M"* — raise `page_size`.
 
-In both cases the fix is to open the page in a browser, watch the network tab
-while clicking the filters, and update `selfservice.py` to match.
+The fix is to open the page in a browser, watch the network tab while
+clicking the filters, and update `selfservice.py` to match.
 
-The catalog is a CourseLeaf site and is far more stable, but if
-`build_electives.py` reports *"No elective courses found at all"*, its table
-markup has changed — check `catalog.py` against a curriculum page.
+The Catalog is more stable, but if `build_catalog.py` reports *"No programs
+parsed at all"*, its table markup has changed — check `catalog.py` against a
+curriculum page.
+
+## Notice
+
+This project aggregates information from two publicly accessible sources, the
+Quinnipiac University Academic Catalog and the Quinnipiac University
+Self-Service course catalog. It performs no authentication and accesses no
+student, enrollment, or other non-public record. It is not affiliated with,
+endorsed by, or an official publication of Quinnipiac University, and seat
+data is a periodic snapshot rather than a live feed. The full notice appears
+on the web page itself.

@@ -78,6 +78,15 @@ class Section:
     meeting_times: str
     credits: str
     seats_display: str        # "15 / 35 / 0" exactly as Self-Service shows it
+    delivery: str             # "online" / "on-ground" / "hybrid"
+
+    @property
+    def is_online(self) -> bool:
+        return self.delivery in ("online", "hybrid")
+
+    @property
+    def is_on_ground(self) -> bool:
+        return self.delivery in ("on-ground", "hybrid")
 
     @property
     def seats_unpublished(self) -> bool:
@@ -183,7 +192,9 @@ class SelfServiceClient:
         self._token = match.group(1)
         return self._token
 
-    def _post_json(self, path: str, payload: dict) -> dict:
+    def _post_json(
+        self, path: str, payload: dict, *, retry_on_expiry: bool = True
+    ) -> dict:
         token = self._ensure_session()
         request = urllib.request.Request(
             f"{BASE_URL}{path}",
@@ -198,7 +209,17 @@ class SelfServiceClient:
                 "Referer": f"{BASE_URL}{SEARCH_PAGE}",
             },
         )
-        body = self._open(request)
+        try:
+            body = self._open(request)
+        except SelfServiceError as exc:
+            # The token and session cookie expire. On a run long enough for
+            # that to happen, pick up a fresh pair and try the call once more.
+            if "400" not in str(exc) or retry_on_expiry is False:
+                raise
+            self._token = None
+            self._jar.clear()
+            return self._post_json(path, payload, retry_on_expiry=False)
+
         try:
             return json.loads(body)
         except json.JSONDecodeError as exc:
@@ -255,56 +276,57 @@ class SelfServiceClient:
         terms: list[str] | None = None,
         academic_levels: list[str] | None = None,
         open_only: bool = True,
-        page_size: int = 50,
-        max_pages: int = 40,
+        page_size: int = 2000,
+        max_pages: int = 1,
+        complete: bool = True,
     ) -> tuple[list[Course], dict]:
-        """Run a catalog search, following pagination.
+        """Run a catalog search and return (courses, raw payload).
 
-        Returns (courses, first_page_payload). The raw first page is handed
-        back too because it carries the facet lists (terms, levels, subjects)
-        that the caller uses to discover what's actually offered.
+        Self-Service ignores `currentPageIndex` on this endpoint - asking for
+        page 2 returns page 1 again - so paging through results silently
+        yields duplicates. Instead we ask for one page large enough to hold
+        the whole result set, which is also one request rather than several.
+
+        The raw payload is handed back because it carries the facet lists
+        (terms, levels, subjects) the caller uses to discover what exists.
+
+        Pass `complete=False` when only the facets are wanted and a
+        deliberately tiny page is fine.
+
+        `max_pages` is accepted for backwards compatibility and ignored.
         """
-        subjects = subjects or []
-        terms = terms or []
-        academic_levels = academic_levels or []
+        del max_pages
 
-        first = self._post_json(
+        payload = self._post_json(
             POST_SEARCH_CRITERIA,
             self._criteria(
-                subjects=subjects,
-                terms=terms,
-                academic_levels=academic_levels,
+                subjects=subjects or [],
+                terms=terms or [],
+                academic_levels=academic_levels or [],
                 open_only=open_only,
                 page=1,
                 page_size=page_size,
             ),
         )
-        message = (first.get("ErrorMessage") or "").strip()
+
+        message = (payload.get("ErrorMessage") or "").strip()
         if message:
             # An empty result set comes back as an "error" message; that is a
-            # normal outcome for a watch, not a failure.
+            # normal outcome for a search, not a failure.
             if "no courses found" in message.lower():
-                return [], first
+                return [], payload
             raise SelfServiceError(f"Self-Service said: {message}")
 
-        courses = [_parse_course(c) for c in first.get("Courses") or []]
-        total_pages = min(int(first.get("TotalPages") or 1), max_pages)
+        courses = [_parse_course(c) for c in payload.get("Courses") or []]
 
-        for page in range(2, total_pages + 1):
-            payload = self._post_json(
-                POST_SEARCH_CRITERIA,
-                self._criteria(
-                    subjects=subjects,
-                    terms=terms,
-                    academic_levels=academic_levels,
-                    open_only=open_only,
-                    page=page,
-                    page_size=page_size,
-                ),
+        total = int(payload.get("TotalItems") or 0)
+        if complete and total > len(courses):
+            raise SelfServiceError(
+                f"Self-Service reported {total} courses but returned "
+                f"{len(courses)}. Raise page_size above {page_size}."
             )
-            courses.extend(_parse_course(c) for c in payload.get("Courses") or [])
 
-        return courses, first
+        return courses, payload
 
     def fetch_sections(self, course: Course) -> list[Section]:
         """The "View Available Sections for XXX-YYY" click, for one course."""
@@ -335,7 +357,7 @@ class SelfServiceClient:
         terms worth reporting on: terms that have closed out drop away by
         themselves, rather than needing a hardcoded cutoff date.
         """
-        _, payload = self.search(open_only=True, page_size=1, max_pages=1)
+        _, payload = self.search(open_only=True, page_size=1, complete=False)
 
         dated = {
             t.get("Code"): t
@@ -402,6 +424,37 @@ def _format_credits(section: dict) -> str:
     return f"{low:g}" if low is not None else ""
 
 
+# Instructional-method codes Colleague uses for web delivery.
+_WEB_METHODS = {"WEB", "ONL", "OL"}
+# The location code Self-Service shows as "Web".
+_WEB_LOCATION = "WB"
+
+
+def _delivery(section: dict) -> str:
+    """Online, on-ground, or both.
+
+    Two independent signals: the section's location (WB is "Web") and the
+    instructional method on each meeting. A section carrying both a web
+    meeting and a room meeting is genuinely hybrid, so it is offered to
+    whichever filter the user picks rather than being forced into one.
+    """
+    codes = {
+        (meeting.get("InstructionalMethodCode") or "").upper()
+        for meeting in section.get("Meetings") or []
+    }
+    codes.discard("")
+    web_location = (section.get("LocationCode") or "").upper() == _WEB_LOCATION
+
+    has_web = web_location or bool(codes & _WEB_METHODS)
+    has_ground = bool(codes - _WEB_METHODS) and not web_location
+
+    if has_web and has_ground:
+        return "hybrid"
+    if has_web:
+        return "online"
+    return "on-ground"
+
+
 def _parse_section(wrapper: dict, term: dict) -> Section | None:
     section = wrapper.get("Section") or {}
     if not section.get("Id"):
@@ -424,4 +477,5 @@ def _parse_section(wrapper: dict, term: dict) -> Section | None:
         seats_display=section.get("AvailabilityDisplay")
         or wrapper.get("AvailabilityDisplay")
         or "",
+        delivery=_delivery(section),
     )

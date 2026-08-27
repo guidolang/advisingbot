@@ -3,8 +3,11 @@ __pycache__/
 .venv/
 venv/
 
-# Run artifacts
+# CLI run artifacts
 .last_run.json
 seats.csv
 seats.json
 .DS_Store
+
+# docs/data.json is generated but IS committed - the page reads it and the
+# history doubles as a record of how seats moved.

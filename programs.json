@@ -1,0 +1,5703 @@
+{
+  "generated": "2026-08-27",
+  "source": "https://catalog.qu.edu/",
+  "programs": [
+    {
+      "name": "Accelerated Dual-Degree BS/MS in Accounting (3+1)",
+      "url": "https://catalog.qu.edu/graduate-studies/business/accounting-ms/accelerated-dual-degree-bs-ms/",
+      "level": "graduate",
+      "category": "Dual-Degree Programs",
+      "groups": [
+        {
+          "name": "Fall Semester",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "MSA Elective"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "635",
+              "title": "Advanced Topics in Financial Accounting and Reporting"
+            },
+            {
+              "subject": "AC",
+              "number": "645",
+              "title": "Information Assurance"
+            },
+            {
+              "subject": "AC",
+              "number": "650",
+              "title": "Advanced Accounting Information Systems"
+            }
+          ]
+        },
+        {
+          "name": "Spring Semester",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "MSA Elective"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "660",
+              "title": "Strategic Management Control Systems"
+            },
+            {
+              "subject": "AC",
+              "number": "670",
+              "title": "Advanced Business Law, Regulation, Ethics and Reporting Environments"
+            },
+            {
+              "subject": "AC",
+              "number": "680",
+              "title": "Advanced Federal Income Taxation and Tax Research"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Accelerated Dual-Degree BS/Master of Science in Applied AI and Business Analytics (3+1)",
+      "url": "https://catalog.qu.edu/graduate-studies/business/business-applied-ai-business-analytics-ms/accelerated-dual-degree-bs-ms/",
+      "level": "graduate",
+      "category": "Dual-Degree Programs",
+      "groups": [
+        {
+          "name": "Core Curriculum",
+          "credits": "21",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "610",
+              "title": "Statistical Foundations for Applied AI And Business Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "615",
+              "title": "Predictive Business Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "621",
+              "title": "Data Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "628",
+              "title": "Data Mining for Competitive Advantage"
+            },
+            {
+              "subject": "BAN",
+              "number": "650",
+              "title": "Data Visualization for Managers"
+            },
+            {
+              "subject": "BAN",
+              "number": "668",
+              "title": "Python Programming for Data Analysis"
+            },
+            {
+              "subject": "BAN",
+              "number": "674",
+              "title": "Generative AI Applications in Business"
+            }
+          ]
+        },
+        {
+          "name": "Master of Science in Applied AI and Business Analytics Electives",
+          "credits": "12",
+          "is_elective": true,
+          "notes": [],
+          "rules": [
+            "Master of Science in Applied AI and Business Analytics Electives (Choose 4 electives)"
+          ],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "629",
+              "title": "Text Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "660",
+              "title": "Optimization"
+            },
+            {
+              "subject": "BAN",
+              "number": "663",
+              "title": "Business Data Analytics with R"
+            },
+            {
+              "subject": "BAN",
+              "number": "673",
+              "title": "AI and Analytics in Healthcare"
+            },
+            {
+              "subject": "BAN",
+              "number": "667",
+              "title": "Design and Analysis of Business Information Systems"
+            },
+            {
+              "subject": "BAN",
+              "number": "669",
+              "title": "Project Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "671",
+              "title": "Fundamentals of Blockchain Technology"
+            },
+            {
+              "subject": "BAN",
+              "number": "672",
+              "title": "Applied Business Analytics W Advance Exc"
+            },
+            {
+              "subject": "MBA",
+              "number": "630",
+              "title": "Business Data Analytics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dual-Degree BA/MBA (4+1)",
+      "url": "https://catalog.qu.edu/graduate-studies/business/business-administration-mba/fast-track-combined-ba-mba/",
+      "level": "graduate",
+      "category": "Dual-Degree Programs",
+      "groups": [
+        {
+          "name": "Dual-Degree BA/MBA (4+1) Program of Study",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "211",
+              "title": "Financial Accounting"
+            },
+            {
+              "subject": "EC",
+              "number": "111",
+              "title": "Principles of Microeconomics"
+            },
+            {
+              "subject": "EC",
+              "number": "272",
+              "title": "Advanced Applied Statistics"
+            }
+          ]
+        },
+        {
+          "name": "Core Business Disciplines (30 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "610",
+              "title": "Statistical Foundations for Applied AI And Business Analytics"
+            },
+            {
+              "subject": "MBA",
+              "number": "615",
+              "title": "Skills for Contemporary Business Issues"
+            },
+            {
+              "subject": "MBA",
+              "number": "620",
+              "title": "Financial and Managerial Accounting for Decision Making (AC 620)"
+            },
+            {
+              "subject": "AC",
+              "number": "620",
+              "title": "Financial and Managerial Accounting for Decision Making (AC 620)",
+              "cross_listed": true
+            },
+            {
+              "subject": "MBA",
+              "number": "625",
+              "title": "Authentic Leadership within Organizations"
+            },
+            {
+              "subject": "MBA",
+              "number": "630",
+              "title": "Business Data Analytics"
+            },
+            {
+              "subject": "MBA",
+              "number": "635",
+              "title": "Supply Chain Management in a New Era"
+            },
+            {
+              "subject": "MBA",
+              "number": "640",
+              "title": "Financial Decision Making"
+            },
+            {
+              "subject": "MBA",
+              "number": "645",
+              "title": "Marketing Decision Making"
+            },
+            {
+              "subject": "MBA",
+              "number": "690",
+              "title": "Strategic Management"
+            },
+            {
+              "subject": "MBA",
+              "number": "695",
+              "title": "Action-Based Learning Lab"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dual-Degree BS/MBA (4+1)",
+      "url": "https://catalog.qu.edu/graduate-studies/business/business-administration-mba/fast-track-combined-bs-mba/",
+      "level": "graduate",
+      "category": "Dual-Degree Programs",
+      "groups": [
+        {
+          "name": "Core Business Disciplines (30 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "610",
+              "title": "Statistical Foundations for Applied AI And Business Analytics"
+            },
+            {
+              "subject": "MBA",
+              "number": "615",
+              "title": "Skills for Contemporary Business Issues"
+            },
+            {
+              "subject": "MBA",
+              "number": "620",
+              "title": "Financial and Managerial Accounting for Decision Making (AC 620)"
+            },
+            {
+              "subject": "AC",
+              "number": "620",
+              "title": "Financial and Managerial Accounting for Decision Making (AC 620)",
+              "cross_listed": true
+            },
+            {
+              "subject": "MBA",
+              "number": "625",
+              "title": "Authentic Leadership within Organizations"
+            },
+            {
+              "subject": "MBA",
+              "number": "630",
+              "title": "Business Data Analytics"
+            },
+            {
+              "subject": "MBA",
+              "number": "635",
+              "title": "Supply Chain Management in a New Era"
+            },
+            {
+              "subject": "MBA",
+              "number": "640",
+              "title": "Financial Decision Making"
+            },
+            {
+              "subject": "MBA",
+              "number": "645",
+              "title": "Marketing Decision Making"
+            },
+            {
+              "subject": "MBA",
+              "number": "690",
+              "title": "Strategic Management"
+            },
+            {
+              "subject": "MBA",
+              "number": "695",
+              "title": "Action-Based Learning Lab"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dual-Degree Bachelor\u2019s/Master of Science in Applied AI and Business Analytics (4+1)",
+      "url": "https://catalog.qu.edu/graduate-studies/business/business-applied-ai-business-analytics-ms/dual-degree-bs-ms/",
+      "level": "graduate",
+      "category": "Dual-Degree Programs",
+      "groups": [
+        {
+          "name": "Core Curriculum",
+          "credits": "21",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "610",
+              "title": "Statistical Foundations for Applied AI And Business Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "615",
+              "title": "Predictive Business Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "621",
+              "title": "Data Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "628",
+              "title": "Data Mining for Competitive Advantage"
+            },
+            {
+              "subject": "BAN",
+              "number": "668",
+              "title": "Python Programming for Data Analysis"
+            },
+            {
+              "subject": "BAN",
+              "number": "650",
+              "title": "Data Visualization for Managers"
+            },
+            {
+              "subject": "BAN",
+              "number": "674",
+              "title": "Generative AI Applications in Business"
+            }
+          ]
+        },
+        {
+          "name": "Master of Science in Applied AI and Business Analytics Electives",
+          "credits": "12",
+          "is_elective": true,
+          "notes": [],
+          "rules": [
+            "Master of Science in Applied AI and Business Analytics Electives (choose 4 electives)"
+          ],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "629",
+              "title": "Text Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "663",
+              "title": "Business Data Analytics with R"
+            },
+            {
+              "subject": "BAN",
+              "number": "660",
+              "title": "Optimization"
+            },
+            {
+              "subject": "BAN",
+              "number": "667",
+              "title": "Design and Analysis of Business Information Systems"
+            },
+            {
+              "subject": "BAN",
+              "number": "669",
+              "title": "Project Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "671",
+              "title": "Fundamentals of Blockchain Technology"
+            },
+            {
+              "subject": "BAN",
+              "number": "672",
+              "title": "Applied Business Analytics W Advance Exc"
+            },
+            {
+              "subject": "BAN",
+              "number": "673",
+              "title": "AI and Analytics in Healthcare"
+            },
+            {
+              "subject": "MBA",
+              "number": "630",
+              "title": "Business Data Analytics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dual-Degree JD/MBA",
+      "url": "https://catalog.qu.edu/graduate-studies/business/business-administration-mba/jd-mba/",
+      "level": "graduate",
+      "category": "Dual-Degree Programs",
+      "groups": [
+        {
+          "name": "Core Business Disciplines (30 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "610",
+              "title": "Statistical Foundations for Applied AI And Business Analytics"
+            },
+            {
+              "subject": "MBA",
+              "number": "615",
+              "title": "Skills for Contemporary Business Issues"
+            },
+            {
+              "subject": "MBA",
+              "number": "620",
+              "title": "Financial and Managerial Accounting for Decision Making (AC 620)"
+            },
+            {
+              "subject": "AC",
+              "number": "620",
+              "title": "Financial and Managerial Accounting for Decision Making (AC 620)",
+              "cross_listed": true
+            },
+            {
+              "subject": "MBA",
+              "number": "625",
+              "title": "Authentic Leadership within Organizations"
+            },
+            {
+              "subject": "MBA",
+              "number": "630",
+              "title": "Business Data Analytics"
+            },
+            {
+              "subject": "MBA",
+              "number": "635",
+              "title": "Supply Chain Management in a New Era"
+            },
+            {
+              "subject": "MBA",
+              "number": "640",
+              "title": "Financial Decision Making"
+            },
+            {
+              "subject": "MBA",
+              "number": "645",
+              "title": "Marketing Decision Making"
+            },
+            {
+              "subject": "MBA",
+              "number": "690",
+              "title": "Strategic Management"
+            },
+            {
+              "subject": "MBA",
+              "number": "695",
+              "title": "Action-Based Learning Lab"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Digital Badge in Healthcare Quality and Patient Safety",
+      "url": "https://catalog.qu.edu/graduate-studies/business/healthcare-qualitypatientsafety-badge/",
+      "level": "graduate",
+      "category": "Graduate programs",
+      "groups": [
+        {
+          "name": "Required Courses",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Complete IHI Modules"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "HM",
+              "number": "621",
+              "title": "Quality Management in Healthcare Facilities"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Full-Time Master of Business Administration in Management Science",
+      "url": "https://catalog.qu.edu/graduate-studies/business/business-administration-mba/",
+      "level": "graduate",
+      "category": "Graduate programs",
+      "groups": [
+        {
+          "name": "Core Business Disciplines (30 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "MBA 640 or FIN 610 (Financial Decision Making; Investment and Portfolio Analysis I) 1"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "610",
+              "title": "Statistical Foundations for Applied AI And Business Analytics"
+            },
+            {
+              "subject": "MBA",
+              "number": "615",
+              "title": "Skills for Contemporary Business Issues"
+            },
+            {
+              "subject": "MBA",
+              "number": "620",
+              "title": "Financial and Managerial Accounting for Decision Making (AC 620)"
+            },
+            {
+              "subject": "AC",
+              "number": "620",
+              "title": "Financial and Managerial Accounting for Decision Making (AC 620)",
+              "cross_listed": true
+            },
+            {
+              "subject": "MBA",
+              "number": "625",
+              "title": "Authentic Leadership within Organizations"
+            },
+            {
+              "subject": "MBA",
+              "number": "630",
+              "title": "Business Data Analytics"
+            },
+            {
+              "subject": "MBA",
+              "number": "635",
+              "title": "Supply Chain Management in a New Era"
+            },
+            {
+              "subject": "MBA",
+              "number": "640",
+              "title": ""
+            },
+            {
+              "subject": "FIN",
+              "number": "610",
+              "title": ""
+            },
+            {
+              "subject": "MBA",
+              "number": "645",
+              "title": "Marketing Decision Making"
+            },
+            {
+              "subject": "MBA",
+              "number": "690",
+              "title": "Strategic Management"
+            },
+            {
+              "subject": "MBA",
+              "number": "695",
+              "title": "Action-Based Learning Lab"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Accounting",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Completion of at least one undergraduate intermediate accounting course is required prior to completing the accounting concentration",
+            "AC 670 or AC 675 (Advanced Business Law, Regulation, Ethics and Reporting Environments; Governmental and Not-For-Profit Accounting)"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "660",
+              "title": "Strategic Management Control Systems"
+            },
+            {
+              "subject": "AC",
+              "number": "665",
+              "title": "Forensic Accounting and Fraud Examination"
+            },
+            {
+              "subject": "AC",
+              "number": "670",
+              "title": ""
+            },
+            {
+              "subject": "AC",
+              "number": "675",
+              "title": ""
+            },
+            {
+              "subject": "AC",
+              "number": "680",
+              "title": "Advanced Federal Income Taxation and Tax Research"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Applied AI and Business Analytics",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "MBA 636 or BAN 674 (Artificial Intelligence for Sustainable Development Goals; Generative AI Applications in Business)",
+            "Take two other 600-level BAN electives"
+          ],
+          "rules": [
+            "Take two other 600-level BAN electives"
+          ],
+          "courses": [
+            {
+              "subject": "MBA",
+              "number": "636",
+              "title": ""
+            },
+            {
+              "subject": "BAN",
+              "number": "674",
+              "title": ""
+            },
+            {
+              "subject": "BAN",
+              "number": "650",
+              "title": "Data Visualization for Managers"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Finance",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two other 600-level FIN electives"
+          ],
+          "rules": [
+            "Take two other 600-level FIN electives"
+          ],
+          "courses": [
+            {
+              "subject": "FIN",
+              "number": "610",
+              "title": "Investment and Portfolio Analysis I *"
+            },
+            {
+              "subject": "FIN",
+              "number": "630",
+              "title": "Investment and Portfolio Analysis II"
+            }
+          ]
+        },
+        {
+          "name": "Healthcare Management",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two other 600-level HM electives"
+          ],
+          "rules": [
+            "Take two other 600-level HM electives"
+          ],
+          "courses": [
+            {
+              "subject": "HM",
+              "number": "600",
+              "title": "Foundations of Healthcare Management"
+            },
+            {
+              "subject": "HM",
+              "number": "621",
+              "title": "Quality Management in Healthcare Facilities"
+            }
+          ]
+        },
+        {
+          "name": "Human Resources Analytics",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Take two courses from the following:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "650",
+              "title": "Data Visualization for Managers"
+            },
+            {
+              "subject": "OL",
+              "number": "630",
+              "title": "Performance Management: HR Analytics and Talent Optimization"
+            },
+            {
+              "subject": "BAN",
+              "number": "621",
+              "title": "Data Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "663",
+              "title": "Business Data Analytics with R"
+            },
+            {
+              "subject": "BAN",
+              "number": "668",
+              "title": "Python Programming for Data Analysis"
+            },
+            {
+              "subject": "BAN",
+              "number": "671",
+              "title": "Fundamentals of Blockchain Technology"
+            },
+            {
+              "subject": "HM",
+              "number": "660",
+              "title": "Human Resource Management in Healthcare Administration"
+            },
+            {
+              "subject": "OL",
+              "number": "681",
+              "title": "Strategic Leadership: People, Culture, and Talent"
+            },
+            {
+              "subject": "OL",
+              "number": "683",
+              "title": "Talent Management: Attracting, Developing, and Retaining Top Performers"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Marketing",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two other 600-level MK electives"
+          ],
+          "rules": [
+            "Take two other 600-level MK electives"
+          ],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "616",
+              "title": "Digital Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "620",
+              "title": "Applied Consumer Behavior Research"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Supply Chain Management",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Select two courses from the following:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MG",
+              "number": "603",
+              "title": "Project Management"
+            },
+            {
+              "subject": "MG",
+              "number": "641",
+              "title": "AI-Assistant Decision Making in Supply Chains"
+            },
+            {
+              "subject": "BAN",
+              "number": "650",
+              "title": "Data Visualization for Managers"
+            },
+            {
+              "subject": "BAN",
+              "number": "660",
+              "title": "Optimization"
+            },
+            {
+              "subject": "BAN",
+              "number": "671",
+              "title": "Fundamentals of Blockchain Technology"
+            },
+            {
+              "subject": "IB",
+              "number": "623",
+              "title": "International Business Negotiation"
+            },
+            {
+              "subject": "MG",
+              "number": "642",
+              "title": "Logistics Management"
+            },
+            {
+              "subject": "MG",
+              "number": "643",
+              "title": "Strategic Sourcing and Supply Management"
+            },
+            {
+              "subject": "MK",
+              "number": "615",
+              "title": "Managing Marketing Channels"
+            }
+          ]
+        },
+        {
+          "name": "Co-Operative Work Experience",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MBA",
+              "number": "681",
+              "title": "Co-Operative Experience I"
+            },
+            {
+              "subject": "MBA",
+              "number": "682",
+              "title": "Co-Operative Experience II"
+            },
+            {
+              "subject": "MBA",
+              "number": "683",
+              "title": "Co-Operative Experience III"
+            },
+            {
+              "subject": "MBA",
+              "number": "684",
+              "title": "Co-Operative Experience IV"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Master of Science in Accounting",
+      "url": "https://catalog.qu.edu/graduate-studies/business/accounting-ms/",
+      "level": "graduate",
+      "category": "Graduate programs",
+      "groups": [
+        {
+          "name": "Required Core Courses (18 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "635",
+              "title": "Advanced Topics in Financial Accounting and Reporting"
+            },
+            {
+              "subject": "AC",
+              "number": "645",
+              "title": "Information Assurance"
+            },
+            {
+              "subject": "AC",
+              "number": "650",
+              "title": "Advanced Accounting Information Systems"
+            },
+            {
+              "subject": "AC",
+              "number": "660",
+              "title": "Strategic Management Control Systems"
+            },
+            {
+              "subject": "AC",
+              "number": "670",
+              "title": "Advanced Business Law, Regulation, Ethics and Reporting Environments"
+            },
+            {
+              "subject": "AC",
+              "number": "680",
+              "title": "Advanced Federal Income Taxation and Tax Research"
+            }
+          ]
+        },
+        {
+          "name": "Elective Courses (12 credits)",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Select four of the following:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "640",
+              "title": "Financial Statement Analysis"
+            },
+            {
+              "subject": "AC",
+              "number": "665",
+              "title": "Forensic Accounting and Fraud Examination"
+            },
+            {
+              "subject": "AC",
+              "number": "675",
+              "title": "Governmental and Not-For-Profit Accounting"
+            },
+            {
+              "subject": "BAN",
+              "number": "610",
+              "title": "Statistical Foundations for Applied AI And Business Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "615",
+              "title": "Predictive Business Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "628",
+              "title": "Data Mining for Competitive Advantage"
+            },
+            {
+              "subject": "BAN",
+              "number": "650",
+              "title": "Data Visualization for Managers"
+            },
+            {
+              "subject": "BAN",
+              "number": "674",
+              "title": "Generative AI Applications in Business"
+            },
+            {
+              "subject": "EC",
+              "number": "600",
+              "title": "Managerial Economics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Master of Science in Applied AI and Business Analytics",
+      "url": "https://catalog.qu.edu/graduate-studies/business/business-applied-ai-business-analytics-ms/",
+      "level": "graduate",
+      "category": "Graduate programs",
+      "groups": [
+        {
+          "name": "Required Core Courses",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "610",
+              "title": "Statistical Foundations for Applied AI And Business Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "615",
+              "title": "Predictive Business Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "621",
+              "title": "Data Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "628",
+              "title": "Data Mining for Competitive Advantage"
+            },
+            {
+              "subject": "BAN",
+              "number": "650",
+              "title": "Data Visualization for Managers"
+            },
+            {
+              "subject": "BAN",
+              "number": "668",
+              "title": "Python Programming for Data Analysis"
+            },
+            {
+              "subject": "BAN",
+              "number": "674",
+              "title": "Generative AI Applications in Business"
+            }
+          ]
+        },
+        {
+          "name": "Elective Courses",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Select four of the following: 1"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "629",
+              "title": "Text Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "660",
+              "title": "Optimization"
+            },
+            {
+              "subject": "BAN",
+              "number": "663",
+              "title": "Business Data Analytics with R"
+            },
+            {
+              "subject": "BAN",
+              "number": "667",
+              "title": "Design and Analysis of Business Information Systems"
+            },
+            {
+              "subject": "BAN",
+              "number": "669",
+              "title": "Project Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "671",
+              "title": "Fundamentals of Blockchain Technology"
+            },
+            {
+              "subject": "BAN",
+              "number": "672",
+              "title": "Applied Business Analytics W Advance Exc"
+            },
+            {
+              "subject": "BAN",
+              "number": "673",
+              "title": "AI and Analytics in Healthcare"
+            },
+            {
+              "subject": "BAN",
+              "number": "676",
+              "title": "Quantum Computing for Business"
+            },
+            {
+              "subject": "BAN",
+              "number": "677",
+              "title": "Building GenAI Assistants to Solve Business Problems"
+            },
+            {
+              "subject": "BAN",
+              "number": "678",
+              "title": "Enterprise Data Governance & Quality"
+            },
+            {
+              "subject": "BAN",
+              "number": "679",
+              "title": "Recent Work on Justice Systems of Power: Technology, Labor, and Society"
+            },
+            {
+              "subject": "MBA",
+              "number": "630",
+              "title": "Business Data Analytics"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Marketing",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take the following three electives",
+            "Take one 600-level MK course",
+            "MBA 645 is a prerequisite for all 600-level MK courses"
+          ],
+          "rules": [
+            "Take one 600-level MK course",
+            "MBA 645 is a prerequisite for all 600-level MK courses"
+          ],
+          "courses": [
+            {
+              "subject": "MBA",
+              "number": "645",
+              "title": "Marketing Decision Making"
+            },
+            {
+              "subject": "MK",
+              "number": "619",
+              "title": "Marketing Analytics"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Healthcare Analytics",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take the following three electives",
+            "Take one other 600-level HM or BAN elective"
+          ],
+          "rules": [
+            "Take one other 600-level HM or BAN elective"
+          ],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "673",
+              "title": "AI and Analytics in Healthcare"
+            },
+            {
+              "subject": "HM",
+              "number": "600",
+              "title": "Foundations of Healthcare Management"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Finance",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take the following three electives",
+            "Take one other 600-level FIN or BAN 671 elective"
+          ],
+          "rules": [
+            "Take one other 600-level FIN or BAN 671 elective"
+          ],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "660",
+              "title": "Optimization"
+            },
+            {
+              "subject": "MBA",
+              "number": "640",
+              "title": "Financial Decision Making"
+            },
+            {
+              "subject": "FIN",
+              "number": "610",
+              "title": "Investment and Portfolio Analysis I",
+              "alternative": true
+            },
+            {
+              "subject": "BAN",
+              "number": "671",
+              "title": ""
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Supply Chain",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take the following three electives"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "660",
+              "title": "Optimization"
+            },
+            {
+              "subject": "MG",
+              "number": "643",
+              "title": "Strategic Sourcing and Supply Management"
+            },
+            {
+              "subject": "IB",
+              "number": "623",
+              "title": "International Business Negotiation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Master of Science in Organizational Leadership",
+      "url": "https://catalog.qu.edu/graduate-studies/business/organizational-leadership-ms/",
+      "level": "graduate",
+      "category": "Graduate programs",
+      "groups": [
+        {
+          "name": "Required Core Courses",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "OL",
+              "number": "601",
+              "title": "The Leadership Mindset"
+            },
+            {
+              "subject": "OL",
+              "number": "610",
+              "title": "Strategic Communication: Talk, Listen, Lead"
+            },
+            {
+              "subject": "OL",
+              "number": "650",
+              "title": "Leading Organizational Change"
+            },
+            {
+              "subject": "OL",
+              "number": "689",
+              "title": "Capstone I: Executive Project Design and Leadership Consulting"
+            },
+            {
+              "subject": "OL",
+              "number": "690",
+              "title": "Capstone II: Leading Change-Consulting Implementation and Impact"
+            }
+          ]
+        },
+        {
+          "name": "Organizational Leadership Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Students may choose specialized electives in organizational leadership, or other graduate business courses. Select five electives from the course list below:",
+            "May take no more than four of the five electives from the following list"
+          ],
+          "rules": [
+            "Students may choose specialized electives in organizational leadership, or other graduate business courses. Select five electives from the course list below:"
+          ],
+          "courses": [
+            {
+              "subject": "OL",
+              "number": "607",
+              "title": "Insights Into Emotions and Emotional Intelligence"
+            },
+            {
+              "subject": "OL",
+              "number": "620",
+              "title": "Digital Leadership and AI Navigating Transformation & Emerging Technology"
+            },
+            {
+              "subject": "OL",
+              "number": "630",
+              "title": "Performance Management: HR Analytics and Talent Optimization"
+            },
+            {
+              "subject": "OL",
+              "number": "662",
+              "title": "Leading With Integrity: Business Ethics and Governance"
+            },
+            {
+              "subject": "OL",
+              "number": "681",
+              "title": "Strategic Leadership: People, Culture, and Talent"
+            },
+            {
+              "subject": "OL",
+              "number": "682",
+              "title": "Workplace Law & Inclusion: Navigating Policy in Modern Organizations"
+            },
+            {
+              "subject": "OL",
+              "number": "683",
+              "title": "Talent Management: Attracting, Developing, and Retaining Top Performers"
+            },
+            {
+              "subject": "OL",
+              "number": "684",
+              "title": "Total Rewards: Compensation, Benefits & Employee Value"
+            },
+            {
+              "subject": "PMBA",
+              "number": "612",
+              "title": "Contemporary Issues in Business and Society"
+            },
+            {
+              "subject": "PMBA",
+              "number": "616",
+              "title": "Creating Innovation in Organizations"
+            },
+            {
+              "subject": "PMBA",
+              "number": "626",
+              "title": "Data Driven Decisions with Visual Analytics"
+            },
+            {
+              "subject": "PMBA",
+              "number": "632",
+              "title": "Analyzing Financial Information"
+            },
+            {
+              "subject": "PMBA",
+              "number": "633",
+              "title": "Qualitative Accounting"
+            },
+            {
+              "subject": "PMBA",
+              "number": "634",
+              "title": "Budgeting for Planning and Control"
+            },
+            {
+              "subject": "PMBA",
+              "number": "636",
+              "title": "Strategic Thinking Across Business Functions"
+            },
+            {
+              "subject": "PMBA",
+              "number": "637",
+              "title": "Business Dynamics"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Applied AI and Business Analytics",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two other 600-level BAN electives"
+          ],
+          "rules": [
+            "Take two other 600-level BAN electives"
+          ],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "674",
+              "title": "Generative AI Applications in Business"
+            },
+            {
+              "subject": "MBA",
+              "number": "636",
+              "title": "Artificial Intelligence for Sustainable Development Goals",
+              "alternative": true
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Healthcare Management",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two other 600-level HM electives (one HM elective could include BAN 673 )"
+          ],
+          "rules": [
+            "Take two other 600-level HM electives (one HM elective could include BAN 673 )"
+          ],
+          "courses": [
+            {
+              "subject": "HM",
+              "number": "600",
+              "title": "Foundations of Healthcare Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "673",
+              "title": ""
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Human Resource Analytics",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take one of the following electives"
+          ],
+          "rules": [
+            "Take one of the following electives"
+          ],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "650",
+              "title": "Data Visualization for Managers"
+            },
+            {
+              "subject": "PMBA",
+              "number": "626",
+              "title": "Data Driven Decisions with Visual Analytics",
+              "alternative": true
+            },
+            {
+              "subject": "OL",
+              "number": "630",
+              "title": "Performance Management: HR Analytics and Talent Optimization"
+            },
+            {
+              "subject": "BAN",
+              "number": "663",
+              "title": "Business Data Analytics with R"
+            },
+            {
+              "subject": "BAN",
+              "number": "668",
+              "title": "Python Programming for Data Analysis"
+            },
+            {
+              "subject": "BAN",
+              "number": "671",
+              "title": "Fundamentals of Blockchain Technology"
+            },
+            {
+              "subject": "HM",
+              "number": "660",
+              "title": "Human Resource Management in Healthcare Administration"
+            },
+            {
+              "subject": "OL",
+              "number": "681",
+              "title": "Strategic Leadership: People, Culture, and Talent"
+            },
+            {
+              "subject": "OL",
+              "number": "683",
+              "title": "Talent Management: Attracting, Developing, and Retaining Top Performers"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Strategic Leadership",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Take three courses from the following"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "IB",
+              "number": "623",
+              "title": "International Business Negotiation"
+            },
+            {
+              "subject": "MBA",
+              "number": "636",
+              "title": "Artificial Intelligence for Sustainable Development Goals"
+            },
+            {
+              "subject": "MG",
+              "number": "603",
+              "title": "Project Management"
+            },
+            {
+              "subject": "OL",
+              "number": "607",
+              "title": "Insights Into Emotions and Emotional Intelligence"
+            },
+            {
+              "subject": "OL",
+              "number": "620",
+              "title": "Digital Leadership and AI Navigating Transformation & Emerging Technology"
+            },
+            {
+              "subject": "OL",
+              "number": "630",
+              "title": "Performance Management: HR Analytics and Talent Optimization"
+            },
+            {
+              "subject": "OL",
+              "number": "683",
+              "title": "Talent Management: Attracting, Developing, and Retaining Top Performers"
+            },
+            {
+              "subject": "OL",
+              "number": "684",
+              "title": "Total Rewards: Compensation, Benefits & Employee Value"
+            },
+            {
+              "subject": "OL",
+              "number": "686",
+              "title": "Public Sector Leadership: Driving Change in Government and Nonprofits"
+            },
+            {
+              "subject": "OL",
+              "number": "687",
+              "title": "Strategic Planning for Public Impact"
+            },
+            {
+              "subject": "PMBA",
+              "number": "616",
+              "title": "Creating Innovation in Organizations"
+            },
+            {
+              "subject": "PMBA",
+              "number": "636",
+              "title": "Strategic Thinking Across Business Functions"
+            },
+            {
+              "subject": "PMBA",
+              "number": "637",
+              "title": "Business Dynamics"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Marketing",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take three 600-level MK electives"
+          ],
+          "rules": [
+            "Take three 600-level MK electives"
+          ],
+          "courses": []
+        }
+      ]
+    },
+    {
+      "name": "Professional Master of Business Administration",
+      "url": "https://catalog.qu.edu/graduate-studies/business/business-administration-professional-mba/",
+      "level": "graduate",
+      "category": "Graduate programs",
+      "groups": [
+        {
+          "name": "Core Professional MBA Courses (18 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "PMBA",
+              "number": "612",
+              "title": "Contemporary Issues in Business and Society"
+            },
+            {
+              "subject": "PMBA",
+              "number": "616",
+              "title": "Creating Innovation in Organizations"
+            },
+            {
+              "subject": "PMBA",
+              "number": "622",
+              "title": "Managing and Leading People in Organizations"
+            },
+            {
+              "subject": "PMBA",
+              "number": "626",
+              "title": "Data Driven Decisions with Visual Analytics"
+            },
+            {
+              "subject": "PMBA",
+              "number": "632",
+              "title": "Analyzing Financial Information"
+            },
+            {
+              "subject": "PMBA",
+              "number": "636",
+              "title": "Strategic Thinking Across Business Functions"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Applied AI and Business Analytics",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two other 600-level BAN electives"
+          ],
+          "rules": [
+            "Take two other 600-level BAN electives"
+          ],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "674",
+              "title": "Generative AI Applications in Business"
+            },
+            {
+              "subject": "MBA",
+              "number": "636",
+              "title": "Artificial Intelligence for Sustainable Development Goals",
+              "alternative": true
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Finance",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take one other 600-level FIN elective"
+          ],
+          "rules": [
+            "Take one other 600-level FIN elective"
+          ],
+          "courses": [
+            {
+              "subject": "FIN",
+              "number": "610",
+              "title": "Investment and Portfolio Analysis I"
+            },
+            {
+              "subject": "FIN",
+              "number": "630",
+              "title": "Investment and Portfolio Analysis II"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Healthcare Management",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two other 600-level HM electives (one HM elective could include BAN 673 )"
+          ],
+          "rules": [
+            "Take two other 600-level HM electives (one HM elective could include BAN 673 )"
+          ],
+          "courses": [
+            {
+              "subject": "HM",
+              "number": "600",
+              "title": "Foundations of Healthcare Management"
+            },
+            {
+              "subject": "BAN",
+              "number": "673",
+              "title": ""
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Strategic Leadership",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Take three courses from the following"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "IB",
+              "number": "623",
+              "title": "International Business Negotiation"
+            },
+            {
+              "subject": "MBA",
+              "number": "636",
+              "title": "Artificial Intelligence for Sustainable Development Goals"
+            },
+            {
+              "subject": "MG",
+              "number": "603",
+              "title": "Project Management"
+            },
+            {
+              "subject": "OL",
+              "number": "607",
+              "title": "Insights Into Emotions and Emotional Intelligence"
+            },
+            {
+              "subject": "OL",
+              "number": "620",
+              "title": "Digital Leadership and AI Navigating Transformation & Emerging Technology"
+            },
+            {
+              "subject": "OL",
+              "number": "630",
+              "title": "Performance Management: HR Analytics and Talent Optimization"
+            },
+            {
+              "subject": "OL",
+              "number": "683",
+              "title": "Talent Management: Attracting, Developing, and Retaining Top Performers"
+            },
+            {
+              "subject": "OL",
+              "number": "684",
+              "title": "Total Rewards: Compensation, Benefits & Employee Value"
+            },
+            {
+              "subject": "OL",
+              "number": "686",
+              "title": "Public Sector Leadership: Driving Change in Government and Nonprofits"
+            },
+            {
+              "subject": "OL",
+              "number": "687",
+              "title": "Strategic Planning for Public Impact"
+            }
+          ]
+        },
+        {
+          "name": "Concentration in Marketing",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take three 600-level MK electives"
+          ],
+          "rules": [
+            "Take three 600-level MK electives"
+          ],
+          "courses": []
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Accounting",
+      "url": "https://catalog.qu.edu/business/accounting/accounting-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Accounting Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "305",
+              "title": "Intermediate Accounting I"
+            },
+            {
+              "subject": "AC",
+              "number": "306",
+              "title": "Intermediate Accounting II"
+            },
+            {
+              "subject": "AC",
+              "number": "307",
+              "title": "Intermediate Accounting III"
+            },
+            {
+              "subject": "AC",
+              "number": "326",
+              "title": "Accounting Data Analytics"
+            },
+            {
+              "subject": "AC",
+              "number": "411",
+              "title": "Auditing Theory and Practice"
+            },
+            {
+              "subject": "AC",
+              "number": "431",
+              "title": "Federal Income Taxation of Individuals"
+            }
+          ]
+        },
+        {
+          "name": "Accounting Electives",
+          "credits": "6",
+          "is_elective": true,
+          "notes": [],
+          "rules": [
+            "Accounting Electives (select two 300 or 400 level accounting courses)"
+          ],
+          "courses": []
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Applied AI and Business Analytics",
+      "url": "https://catalog.qu.edu/business/computer-information-systems/bs-applied-ai-business-analytics/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Business Analytics Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "245",
+              "title": "Applied Python With AI Tools"
+            },
+            {
+              "subject": "CIS",
+              "number": "255",
+              "title": "Data Visualization"
+            },
+            {
+              "subject": "CIS",
+              "number": "351",
+              "title": "Database Programming and Design"
+            },
+            {
+              "subject": "BAN",
+              "number": "220",
+              "title": "Data Mining for Business Insights"
+            },
+            {
+              "subject": "BAN",
+              "number": "330",
+              "title": "AI-Driven Business Transformation"
+            },
+            {
+              "subject": "BAN",
+              "number": "420",
+              "title": "Machine Learning and Artificial Intelligence for Business"
+            },
+            {
+              "subject": "BAN",
+              "number": "490",
+              "title": "Applied AI & Business Analytics Capstone"
+            }
+          ]
+        },
+        {
+          "name": "BAN Elective Courses",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Select 2 of the following electives:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "310",
+              "title": "Web Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "410",
+              "title": "Social Media Analytics"
+            },
+            {
+              "subject": "CIS",
+              "number": "340",
+              "title": "Immersive Technologies for Business Innovation"
+            },
+            {
+              "subject": "CIS",
+              "number": "341",
+              "title": "Business Applications of Quantum Computing"
+            },
+            {
+              "subject": "CIS",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)"
+            },
+            {
+              "subject": "AC",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)",
+              "cross_listed": true
+            },
+            {
+              "subject": "CIS",
+              "number": "360",
+              "title": "Programming in Excel"
+            },
+            {
+              "subject": "CIS",
+              "number": "371",
+              "title": "Intro to Blockchain Tech for Business"
+            },
+            {
+              "subject": "FIN",
+              "number": "325",
+              "title": "Financial Analytics"
+            },
+            {
+              "subject": "HM",
+              "number": "365",
+              "title": "Health Care Analysis"
+            },
+            {
+              "subject": "MG",
+              "number": "321",
+              "title": "Data-Driven Decision Making"
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MK",
+              "number": "321",
+              "title": "Marketing Analytics"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Applied Business",
+      "url": "https://catalog.qu.edu/business/management/applied-business-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Applied Business Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MG",
+              "number": "302",
+              "title": "Managing People, Projects and Change"
+            },
+            {
+              "subject": "MG",
+              "number": "335",
+              "title": "Project Management"
+            },
+            {
+              "subject": "MG",
+              "number": "402",
+              "title": "Management Senior Seminar"
+            }
+          ]
+        },
+        {
+          "name": "Analytical Business Skills Course",
+          "credits": "6",
+          "is_elective": false,
+          "notes": [],
+          "rules": [
+            "Analytical Business Skills Course (Choose any 6 credits)"
+          ],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "305",
+              "title": "Intermediate Accounting I"
+            },
+            {
+              "subject": "AC",
+              "number": "323",
+              "title": "Cost Accounting"
+            },
+            {
+              "subject": "AC",
+              "number": "431",
+              "title": "Federal Income Taxation of Individuals"
+            },
+            {
+              "subject": "BAN",
+              "number": "220",
+              "title": "Data Mining for Business Insights"
+            },
+            {
+              "subject": "BAN",
+              "number": "300",
+              "title": "Statistical Programming With R"
+            },
+            {
+              "subject": "BAN",
+              "number": "310",
+              "title": "Web Analytics"
+            },
+            {
+              "subject": "CER",
+              "number": "260",
+              "title": "Introduction to Construction Management"
+            },
+            {
+              "subject": "CIS",
+              "number": "245",
+              "title": "Applied Python With AI Tools"
+            },
+            {
+              "subject": "CIS",
+              "number": "255",
+              "title": "Data Visualization"
+            },
+            {
+              "subject": "CIS",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)"
+            },
+            {
+              "subject": "AC",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)",
+              "cross_listed": true
+            },
+            {
+              "subject": "CIS",
+              "number": "351",
+              "title": "Database Programming and Design"
+            },
+            {
+              "subject": "ENT",
+              "number": "250",
+              "title": "Idea Validation and Business Model Development"
+            },
+            {
+              "subject": "ENT",
+              "number": "290",
+              "title": "Business Accelerator"
+            },
+            {
+              "subject": "ENT",
+              "number": "310",
+              "title": "Creativity and Innovation Management"
+            },
+            {
+              "subject": "ENT",
+              "number": "320",
+              "title": "Small Business Marketing"
+            },
+            {
+              "subject": "ENT",
+              "number": "330",
+              "title": "Entrepreneurial Finance"
+            },
+            {
+              "subject": "ENT",
+              "number": "410",
+              "title": "Creating New Business Models"
+            },
+            {
+              "subject": "FIN",
+              "number": "355",
+              "title": "Retirement Planning and Employee Benefits"
+            },
+            {
+              "subject": "FIN",
+              "number": "356",
+              "title": "Real Estate Finance"
+            },
+            {
+              "subject": "FIN",
+              "number": "360",
+              "title": "Financial Statement Analysis"
+            },
+            {
+              "subject": "HM",
+              "number": "320",
+              "title": "Introduction to Health Insurance"
+            },
+            {
+              "subject": "HM",
+              "number": "365",
+              "title": "Health Care Analysis"
+            },
+            {
+              "subject": "IB",
+              "number": "313",
+              "title": "International Marketing Research"
+            },
+            {
+              "subject": "IB",
+              "number": "335",
+              "title": "International Finance"
+            },
+            {
+              "subject": "IB",
+              "number": "362",
+              "title": "Cross-Cultural Business Research Part 1"
+            },
+            {
+              "subject": "IB",
+              "number": "363",
+              "title": "Cross-Cultural Business Research Part 2"
+            },
+            {
+              "subject": "MG",
+              "number": "305",
+              "title": "Applied Design Thinking"
+            },
+            {
+              "subject": "MG",
+              "number": "306",
+              "title": "Staffing: Recruitment, Selection and Placement"
+            },
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research"
+            },
+            {
+              "subject": "MG",
+              "number": "321",
+              "title": "Data-Driven Decision Making"
+            },
+            {
+              "subject": "MG",
+              "number": "341",
+              "title": "Service Operations Management"
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MG",
+              "number": "343",
+              "title": "Procurement and Sourcing"
+            },
+            {
+              "subject": "MG",
+              "number": "345",
+              "title": "Training and Development"
+            }
+          ]
+        },
+        {
+          "name": "Leadership and Organizational Applications Course",
+          "credits": "6",
+          "is_elective": false,
+          "notes": [],
+          "rules": [
+            "Leadership and Organizational Applications Course (Choose any 6 credits)"
+          ],
+          "courses": [
+            {
+              "subject": "ENT",
+              "number": "210",
+              "title": "Introduction to Entrepreneurial Thinking and Practice"
+            },
+            {
+              "subject": "ENT",
+              "number": "360",
+              "title": "Small and Family Business"
+            },
+            {
+              "subject": "HM",
+              "number": "201",
+              "title": "Introduction to Healthcare Management"
+            },
+            {
+              "subject": "HM",
+              "number": "404",
+              "title": "Legal Aspects of Health Care Delivery"
+            },
+            {
+              "subject": "IB",
+              "number": "320",
+              "title": "Introduction to Global Entrepreneurship"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally"
+            },
+            {
+              "subject": "IB",
+              "number": "352",
+              "title": "International Management"
+            },
+            {
+              "subject": "MG",
+              "number": "202",
+              "title": "Sports Leadership"
+            },
+            {
+              "subject": "MG",
+              "number": "300",
+              "title": "Special Topics Based on course offering"
+            },
+            {
+              "subject": "MG",
+              "number": "301",
+              "title": "Group and Virtual Team Processes"
+            },
+            {
+              "subject": "MG",
+              "number": "307",
+              "title": "Introduction to Nonprofit Management"
+            },
+            {
+              "subject": "MG",
+              "number": "308",
+              "title": "Women in Leadership"
+            },
+            {
+              "subject": "MG",
+              "number": "312",
+              "title": "Sports Management"
+            },
+            {
+              "subject": "MG",
+              "number": "320",
+              "title": "Emotional Intelligence in the Workplace"
+            },
+            {
+              "subject": "MG",
+              "number": "325",
+              "title": "Negotiations and Problem Solving"
+            },
+            {
+              "subject": "MG",
+              "number": "330",
+              "title": "Business and Society"
+            },
+            {
+              "subject": "MG",
+              "number": "360",
+              "title": "Power and Politics of Leadership"
+            },
+            {
+              "subject": "MK",
+              "number": "383",
+              "title": "Professional Selling and Sales Management"
+            }
+          ]
+        },
+        {
+          "name": "Advanced Applied Business Elective Courses",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take any 9 credits in AC, BAN, BLW, CIS, ENT, FIN, HM, IB, MG, MK, SB at the 300 or 400 level."
+          ],
+          "rules": [
+            "Take any 9 credits in AC, BAN, BLW, CIS, ENT, FIN, HM, IB, MG, MK, SB at the 300 or 400 level."
+          ],
+          "courses": []
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Biomedical Marketing",
+      "url": "https://catalog.qu.edu/business/marketing/biomedical-marketing-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Biomedical Science Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BIO",
+              "number": "202",
+              "title": "Inside Out: An Introduction to Human Form and Function"
+            },
+            {
+              "subject": "BMS",
+              "number": "117",
+              "title": "The Human Organism and The Human Organism Lab 1"
+            },
+            {
+              "subject": "BMS",
+              "number": "117L",
+              "title": "The Human Organism and The Human Organism Lab 1"
+            },
+            {
+              "subject": "BMS",
+              "number": "162",
+              "title": "Human Health and Disease 1"
+            },
+            {
+              "subject": "BMS",
+              "number": "276",
+              "title": "Drug Development"
+            },
+            {
+              "subject": "CHE",
+              "number": "101",
+              "title": "Fundamentals of General, Organic and Biological Chemistry I and Fundamentals of General, Organic and Biological Chemistry I Lab 1"
+            },
+            {
+              "subject": "CHE",
+              "number": "101L",
+              "title": "Fundamentals of General, Organic and Biological Chemistry I and Fundamentals of General, Organic and Biological Chemistry I Lab 1"
+            },
+            {
+              "subject": "CHE",
+              "number": "102",
+              "title": "Fundamentals of General, Organic and Biological Chemistry II and Fundamentals of General, Organic and Biological Chemistry II Lab 1"
+            },
+            {
+              "subject": "CHE",
+              "number": "102L",
+              "title": "Fundamentals of General, Organic and Biological Chemistry II and Fundamentals of General, Organic and Biological Chemistry II Lab 1"
+            },
+            {
+              "subject": "HM",
+              "number": "201",
+              "title": "Introduction to Healthcare Management"
+            }
+          ]
+        },
+        {
+          "name": "Biomedical Marketing Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research"
+            },
+            {
+              "subject": "MK",
+              "number": "324",
+              "title": "Business-To-Business Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "332",
+              "title": "Advertising and Integrated Brand Promotion"
+            },
+            {
+              "subject": "MK",
+              "number": "333",
+              "title": "Digital Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "334",
+              "title": "Product, Pricing and Distribution Strategy"
+            },
+            {
+              "subject": "MK",
+              "number": "383",
+              "title": "Professional Selling and Sales Management"
+            },
+            {
+              "subject": "MK",
+              "number": "401",
+              "title": "Marketing Practicum"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Computer Information Systems",
+      "url": "https://catalog.qu.edu/business/computer-information-systems/computer-information-systems-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Computer Information Systems Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "225",
+              "title": "Systems Analysis and Design"
+            },
+            {
+              "subject": "CIS",
+              "number": "245",
+              "title": "Applied Python With AI Tools"
+            },
+            {
+              "subject": "CIS",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)"
+            },
+            {
+              "subject": "AC",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)",
+              "cross_listed": true
+            },
+            {
+              "subject": "CIS",
+              "number": "351",
+              "title": "Database Programming and Design"
+            },
+            {
+              "subject": "CIS",
+              "number": "440",
+              "title": "IT Project Management"
+            },
+            {
+              "subject": "CIS",
+              "number": "490",
+              "title": "Computer Information Systems Capstone"
+            }
+          ]
+        },
+        {
+          "name": "CIS electives",
+          "credits": "9",
+          "is_elective": true,
+          "notes": [],
+          "rules": [
+            "CIS electives (Select any 200 level or above CIS class: SB 488 may fulfill 3 credits of CIS electives"
+          ],
+          "courses": [
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Computer Information Systems and Accounting",
+      "url": "https://catalog.qu.edu/business/computer-information-systems/computer-information-systems-accounting-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Accounting Coursework 1",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "305",
+              "title": "Intermediate Accounting I"
+            },
+            {
+              "subject": "AC",
+              "number": "306",
+              "title": "Intermediate Accounting II"
+            },
+            {
+              "subject": "AC",
+              "number": "326",
+              "title": "Accounting Data Analytics"
+            },
+            {
+              "subject": "AC",
+              "number": "350",
+              "title": "Data Analysis With Excel"
+            },
+            {
+              "subject": "CIS",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)",
+              "alternative": true
+            },
+            {
+              "subject": "AC",
+              "number": "411",
+              "title": "Auditing Theory and Practice"
+            },
+            {
+              "subject": "AC",
+              "number": "431",
+              "title": "Federal Income Taxation of Individuals"
+            }
+          ]
+        },
+        {
+          "name": "Accounting Electives",
+          "credits": "6",
+          "is_elective": true,
+          "notes": [
+            "Select six additional credits in any AC course at the 300 level or above"
+          ],
+          "rules": [
+            "Select six additional credits in any AC course at the 300 level or above"
+          ],
+          "courses": []
+        },
+        {
+          "name": "Computer Information Systems Coursework",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "225",
+              "title": "Systems Analysis and Design"
+            },
+            {
+              "subject": "CIS",
+              "number": "245",
+              "title": "Applied Python With AI Tools"
+            },
+            {
+              "subject": "CIS",
+              "number": "351",
+              "title": "Database Programming and Design"
+            },
+            {
+              "subject": "CIS",
+              "number": "440",
+              "title": "IT Project Management"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Entrepreneurship and Innovation",
+      "url": "https://catalog.qu.edu/business/entrepreneurship-strategy/entrepreneurship-small-business-management-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Entrepreneurship & Small Business Management Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "ENT",
+              "number": "210",
+              "title": "Introduction to Entrepreneurial Thinking and Practice"
+            },
+            {
+              "subject": "ENT",
+              "number": "250",
+              "title": "Idea Validation and Business Model Development"
+            },
+            {
+              "subject": "ENT",
+              "number": "310",
+              "title": "Creativity and Innovation Management"
+            },
+            {
+              "subject": "ENT",
+              "number": "340",
+              "title": "Opportunity Recognition and Negotiation"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally",
+              "alternative": true
+            },
+            {
+              "subject": "ENT",
+              "number": "420",
+              "title": "Business Launch"
+            },
+            {
+              "subject": "IB",
+              "number": "401",
+              "title": "International Strategy and Business Plan",
+              "alternative": true
+            }
+          ]
+        },
+        {
+          "name": "Select three of the following electives (9 credits):",
+          "credits": "9",
+          "is_elective": true,
+          "notes": [
+            "The department encourages students to consider a Global Entrepreneurship theme: IB 311 , IB 335 , IB 352"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "IB",
+              "number": "311",
+              "title": ""
+            },
+            {
+              "subject": "IB",
+              "number": "335",
+              "title": ""
+            },
+            {
+              "subject": "IB",
+              "number": "352",
+              "title": ""
+            },
+            {
+              "subject": "ENT",
+              "number": "110",
+              "title": "Entrepreneurship and Innovative Responses to the Coronavirus"
+            },
+            {
+              "subject": "ENT",
+              "number": "220",
+              "title": "The Business of Music"
+            },
+            {
+              "subject": "ENT",
+              "number": "290",
+              "title": "Business Accelerator"
+            },
+            {
+              "subject": "ENT",
+              "number": "299",
+              "title": "Special Topics in Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "320",
+              "title": "Small Business Marketing"
+            },
+            {
+              "subject": "ENT",
+              "number": "330",
+              "title": "Entrepreneurial Finance"
+            },
+            {
+              "subject": "ENT",
+              "number": "331",
+              "title": "Family or Small Business Financing"
+            },
+            {
+              "subject": "ENT",
+              "number": "350",
+              "title": "Social Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "360",
+              "title": "Small and Family Business"
+            },
+            {
+              "subject": "ENT",
+              "number": "371",
+              "title": "Business Plan Competition"
+            },
+            {
+              "subject": "ENT",
+              "number": "430",
+              "title": "Practicum in Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "490",
+              "title": "Field Projects"
+            },
+            {
+              "subject": "IB",
+              "number": "120",
+              "title": "Introduction to Doing Business in the European Union"
+            },
+            {
+              "subject": "IB",
+              "number": "320",
+              "title": "Introduction to Global Entrepreneurship"
+            },
+            {
+              "subject": "JRN",
+              "number": "388",
+              "title": "The Stories of Business"
+            },
+            {
+              "subject": "MG",
+              "number": "341",
+              "title": "Service Operations Management"
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MG",
+              "number": "343",
+              "title": "Procurement and Sourcing"
+            },
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research"
+            },
+            {
+              "subject": "PO",
+              "number": "332",
+              "title": "European Politics"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Finance",
+      "url": "https://catalog.qu.edu/business/finance/finance-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Finance Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "245",
+              "title": "Applied Python With AI Tools"
+            },
+            {
+              "subject": "FIN",
+              "number": "310",
+              "title": "Investment Analysis"
+            },
+            {
+              "subject": "FIN",
+              "number": "320",
+              "title": "Financial Modeling"
+            },
+            {
+              "subject": "FIN",
+              "number": "325",
+              "title": "Financial Analytics"
+            },
+            {
+              "subject": "FIN",
+              "number": "350",
+              "title": "Financial Markets and Institutions"
+            },
+            {
+              "subject": "FIN",
+              "number": "360",
+              "title": "Financial Statement Analysis"
+            },
+            {
+              "subject": "FIN",
+              "number": "380",
+              "title": "Intermediate Corporate Finance"
+            }
+          ]
+        },
+        {
+          "name": "Finance Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Students must complete 9 credits of finance electives. Of these 9 credits, students may apply up to 3 credits from the following courses toward their finance elective requirements:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "305",
+              "title": "Intermediate Accounting I"
+            },
+            {
+              "subject": "IB",
+              "number": "335",
+              "title": "International Finance"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Financial Technology",
+      "url": "https://catalog.qu.edu/business/finance/fintech/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Financial Technology Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "245",
+              "title": "Applied Python With AI Tools"
+            },
+            {
+              "subject": "FIN",
+              "number": "301",
+              "title": "Introduction to Financial Technology"
+            },
+            {
+              "subject": "FIN",
+              "number": "310",
+              "title": "Investment Analysis"
+            },
+            {
+              "subject": "FIN",
+              "number": "320",
+              "title": "Financial Modeling"
+            },
+            {
+              "subject": "FIN",
+              "number": "325",
+              "title": "Financial Analytics"
+            },
+            {
+              "subject": "FIN",
+              "number": "331",
+              "title": "Decentralized Finance: Blockchain, Crypt"
+            },
+            {
+              "subject": "CIS",
+              "number": "371",
+              "title": "Intro to Blockchain Tech for Business",
+              "alternative": true
+            },
+            {
+              "subject": "FIN",
+              "number": "425",
+              "title": "Advanced Financial Analytics"
+            }
+          ]
+        },
+        {
+          "name": "Financial Technology Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Select three courses from the following list:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "220",
+              "title": "Data Mining for Business Insights"
+            },
+            {
+              "subject": "BAN",
+              "number": "420",
+              "title": "Machine Learning and Artificial Intelligence for Business"
+            },
+            {
+              "subject": "CIS",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)"
+            },
+            {
+              "subject": "AC",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)",
+              "cross_listed": true
+            },
+            {
+              "subject": "DS",
+              "number": "300",
+              "title": "Tools for Data Science"
+            },
+            {
+              "subject": "DS",
+              "number": "380",
+              "title": "Data Mining *"
+            },
+            {
+              "subject": "DS",
+              "number": "385",
+              "title": "Machine Learning"
+            },
+            {
+              "subject": "DS",
+              "number": "399",
+              "title": "Applied Time Series Analysis and Forecasting"
+            },
+            {
+              "subject": "EC",
+              "number": "365",
+              "title": "Econometrics"
+            },
+            {
+              "subject": "FIN",
+              "number": "440",
+              "title": "Introduction to Fixed Income Analytics"
+            },
+            {
+              "subject": "FIN",
+              "number": "450",
+              "title": "Applied Portfolio Management"
+            },
+            {
+              "subject": "FIN",
+              "number": "470",
+              "title": "Trading Strategies and Practices"
+            },
+            {
+              "subject": "FIN",
+              "number": "485",
+              "title": "Derivative Securities"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Human Resource Management",
+      "url": "https://catalog.qu.edu/business/management/human-resource-management-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Human Resource Management Core (24 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MG",
+              "number": "302",
+              "title": "Managing People, Projects and Change"
+            },
+            {
+              "subject": "MG",
+              "number": "306",
+              "title": "Staffing: Recruitment, Selection and Placement"
+            },
+            {
+              "subject": "MG",
+              "number": "311",
+              "title": "Advancing Employment Relations"
+            },
+            {
+              "subject": "MG",
+              "number": "321",
+              "title": "Data-Driven Decision Making"
+            },
+            {
+              "subject": "MG",
+              "number": "325",
+              "title": "Negotiations and Problem Solving"
+            },
+            {
+              "subject": "MG",
+              "number": "345",
+              "title": "Training and Development"
+            },
+            {
+              "subject": "MG",
+              "number": "355",
+              "title": "Compensation and Benefits"
+            },
+            {
+              "subject": "MG",
+              "number": "402",
+              "title": "Management Senior Seminar"
+            }
+          ]
+        },
+        {
+          "name": "Select two courses from the following list of Electives (6 credits)",
+          "credits": "6",
+          "is_elective": true,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "220",
+              "title": "Data Mining for Business Insights"
+            },
+            {
+              "subject": "BAN",
+              "number": "300",
+              "title": "Statistical Programming With R"
+            },
+            {
+              "subject": "BAN",
+              "number": "310",
+              "title": "Web Analytics"
+            },
+            {
+              "subject": "CIS",
+              "number": "225",
+              "title": "Systems Analysis and Design"
+            },
+            {
+              "subject": "FIN",
+              "number": "310",
+              "title": "Investment Analysis"
+            },
+            {
+              "subject": "FIN",
+              "number": "355",
+              "title": "Retirement Planning and Employee Benefits"
+            },
+            {
+              "subject": "HM",
+              "number": "201",
+              "title": "Introduction to Healthcare Management"
+            },
+            {
+              "subject": "HM",
+              "number": "320",
+              "title": "Introduction to Health Insurance"
+            },
+            {
+              "subject": "IB",
+              "number": "352",
+              "title": "International Management"
+            },
+            {
+              "subject": "MG",
+              "number": "300",
+              "title": "Special Topics"
+            },
+            {
+              "subject": "MG",
+              "number": "301",
+              "title": "Group and Virtual Team Processes"
+            },
+            {
+              "subject": "MG",
+              "number": "303",
+              "title": "Immersive Leadership Experience"
+            },
+            {
+              "subject": "MG",
+              "number": "305",
+              "title": "Applied Design Thinking"
+            },
+            {
+              "subject": "MG",
+              "number": "307",
+              "title": "Introduction to Nonprofit Management"
+            },
+            {
+              "subject": "MG",
+              "number": "308",
+              "title": "Women in Leadership"
+            },
+            {
+              "subject": "MG",
+              "number": "312",
+              "title": "Sports Management"
+            },
+            {
+              "subject": "MG",
+              "number": "320",
+              "title": "Emotional Intelligence in the Workplace"
+            },
+            {
+              "subject": "MG",
+              "number": "330",
+              "title": "Business and Society"
+            },
+            {
+              "subject": "MG",
+              "number": "335",
+              "title": "Project Management"
+            },
+            {
+              "subject": "MG",
+              "number": "341",
+              "title": "Service Operations Management"
+            },
+            {
+              "subject": "MG",
+              "number": "360",
+              "title": "Power and Politics of Leadership"
+            },
+            {
+              "subject": "MK",
+              "number": "383",
+              "title": "Professional Selling and Sales Management"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion"
+            },
+            {
+              "subject": "SB",
+              "number": "410",
+              "title": "Business Ethics"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            },
+            {
+              "subject": "SO",
+              "number": "263",
+              "title": "Aging in Society"
+            },
+            {
+              "subject": "SO",
+              "number": "265",
+              "title": "Work and Occupations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in International Business",
+      "url": "https://catalog.qu.edu/business/entrepreneurship-strategy/international-business-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "International Business Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "ENT",
+              "number": "210",
+              "title": "Introduction to Entrepreneurial Thinking and Practice"
+            },
+            {
+              "subject": "IB",
+              "number": "311",
+              "title": "International Marketing"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally"
+            },
+            {
+              "subject": "ENT",
+              "number": "340",
+              "title": "Opportunity Recognition and Negotiation",
+              "alternative": true
+            },
+            {
+              "subject": "IB",
+              "number": "335",
+              "title": "International Finance"
+            },
+            {
+              "subject": "IB",
+              "number": "352",
+              "title": "International Management"
+            },
+            {
+              "subject": "IB",
+              "number": "401",
+              "title": "International Strategy and Business Plan"
+            },
+            {
+              "subject": "ENT",
+              "number": "420",
+              "title": "Business Launch",
+              "alternative": true
+            }
+          ]
+        },
+        {
+          "name": "International Business Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Select two of the following: 1"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "ENT",
+              "number": "220",
+              "title": "The Business of Music"
+            },
+            {
+              "subject": "ENT",
+              "number": "250",
+              "title": "Idea Validation and Business Model Development"
+            },
+            {
+              "subject": "ENT",
+              "number": "290",
+              "title": "Business Accelerator"
+            },
+            {
+              "subject": "ENT",
+              "number": "299",
+              "title": "Special Topics in Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "320",
+              "title": "Small Business Marketing"
+            },
+            {
+              "subject": "ENT",
+              "number": "330",
+              "title": "Entrepreneurial Finance"
+            },
+            {
+              "subject": "ENT",
+              "number": "331",
+              "title": "Family or Small Business Financing"
+            },
+            {
+              "subject": "ENT",
+              "number": "350",
+              "title": "Social Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "360",
+              "title": "Small and Family Business"
+            },
+            {
+              "subject": "ENT",
+              "number": "371",
+              "title": "Business Plan Competition"
+            },
+            {
+              "subject": "ENT",
+              "number": "490",
+              "title": "Field Projects"
+            },
+            {
+              "subject": "IB",
+              "number": "120",
+              "title": "Introduction to Doing Business in the European Union"
+            },
+            {
+              "subject": "IB",
+              "number": "313",
+              "title": "International Marketing Research"
+            },
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research",
+              "alternative": true
+            },
+            {
+              "subject": "IB",
+              "number": "320",
+              "title": "Introduction to Global Entrepreneurship"
+            },
+            {
+              "subject": "IB",
+              "number": "345",
+              "title": "Global Supply Chain"
+            },
+            {
+              "subject": "MG",
+              "number": "340",
+              "title": "Transportation and Logistics Management"
+            },
+            {
+              "subject": "MG",
+              "number": "341",
+              "title": "Service Operations Management"
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MG",
+              "number": "343",
+              "title": "Procurement and Sourcing"
+            },
+            {
+              "subject": "PO",
+              "number": "332",
+              "title": "European Politics"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion (This is a short-term study abroad course)"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Marketing",
+      "url": "https://catalog.qu.edu/business/marketing/marketing-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Marketing Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "210",
+              "title": "Consumer Behavior and Marketing Communications"
+            },
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research"
+            },
+            {
+              "subject": "MK",
+              "number": "334",
+              "title": "Product, Pricing and Distribution Strategy"
+            },
+            {
+              "subject": "MK",
+              "number": "401",
+              "title": "Marketing Practicum"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "321",
+              "title": "Marketing Analytics"
+            },
+            {
+              "subject": "MK",
+              "number": "332",
+              "title": "Advertising and Integrated Brand Promotion"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take any two marketing courses",
+            "IB 311 may be used as marketing elective"
+          ],
+          "rules": [
+            "Take any two marketing courses"
+          ],
+          "courses": [
+            {
+              "subject": "IB",
+              "number": "311",
+              "title": ""
+            }
+          ]
+        },
+        {
+          "name": "Concentration Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "321",
+              "title": "Marketing Analytics"
+            },
+            {
+              "subject": "MK",
+              "number": "322",
+              "title": "Advanced Research Methodologies and Analytical Techniques"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two of the following"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "245",
+              "title": "Applied Python With AI Tools"
+            },
+            {
+              "subject": "BAN",
+              "number": "220",
+              "title": "Data Mining for Business Insights"
+            },
+            {
+              "subject": "BAN",
+              "number": "310",
+              "title": "Web Analytics"
+            },
+            {
+              "subject": "BAN",
+              "number": "410",
+              "title": "Social Media Analytics"
+            },
+            {
+              "subject": "EC",
+              "number": "355",
+              "title": "Game Theory"
+            },
+            {
+              "subject": "EC",
+              "number": "365",
+              "title": "Econometrics"
+            },
+            {
+              "subject": "EC",
+              "number": "366",
+              "title": "Advanced Econometrics"
+            },
+            {
+              "subject": "MK",
+              "number": "351",
+              "title": "Artificial Intelligence (AI) in Marketing"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "383",
+              "title": "Professional Selling and Sales Management"
+            },
+            {
+              "subject": "MK",
+              "number": "324",
+              "title": "Business-To-Business Marketing"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Negotiation Electives - Take one of the following",
+            "Communication & Leadership Electives - Take one of the following"
+          ],
+          "rules": [
+            "Negotiation Electives - Take one of the following",
+            "Communication & Leadership Electives - Take one of the following"
+          ],
+          "courses": [
+            {
+              "subject": "MG",
+              "number": "325",
+              "title": "Negotiations and Problem Solving"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally"
+            },
+            {
+              "subject": "COM",
+              "number": "150",
+              "title": "Public Speaking: Principles and Practice"
+            },
+            {
+              "subject": "CIS",
+              "number": "255",
+              "title": "Data Visualization"
+            },
+            {
+              "subject": "MG",
+              "number": "302",
+              "title": "Managing People, Projects and Change"
+            },
+            {
+              "subject": "MG",
+              "number": "360",
+              "title": "Power and Politics of Leadership"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "333",
+              "title": "Digital Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "321",
+              "title": "Marketing Analytics"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Complete one of the following groups of electives:",
+            "Digital Media Group - Take two of the following",
+            "Analytics Group - Take two of the following",
+            "Entrepreneurship Group"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "265",
+              "title": "Rapid Application Development"
+            },
+            {
+              "subject": "CIS",
+              "number": "267",
+              "title": "Client-Side Web Development"
+            },
+            {
+              "subject": "CIS",
+              "number": "381",
+              "title": "Server-Side Web Development"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            },
+            {
+              "subject": "BAN",
+              "number": "310",
+              "title": "Web Analytics"
+            },
+            {
+              "subject": "MK",
+              "number": "322",
+              "title": "Advanced Research Methodologies and Analytical Techniques"
+            },
+            {
+              "subject": "MK",
+              "number": "351",
+              "title": "Artificial Intelligence (AI) in Marketing"
+            },
+            {
+              "subject": "ENT",
+              "number": "210",
+              "title": "Introduction to Entrepreneurial Thinking and Practice"
+            },
+            {
+              "subject": "ENT",
+              "number": "290",
+              "title": "Business Accelerator"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "326",
+              "title": "Fashion Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "327",
+              "title": "Fashion Buying and Merchandising"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two of the following"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "332",
+              "title": "Advertising and Integrated Brand Promotion"
+            },
+            {
+              "subject": "MK",
+              "number": "333",
+              "title": "Digital Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "351",
+              "title": "Artificial Intelligence (AI) in Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "362",
+              "title": "Sustainability, Marketing and Corporate Social Responsibility"
+            },
+            {
+              "subject": "SB",
+              "number": "125",
+              "title": "ReFashion: Sustainable Fashion in an International Setting"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "364",
+              "title": "Sports and Entertainment Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "383",
+              "title": "Professional Selling and Sales Management"
+            }
+          ]
+        },
+        {
+          "name": "Concentration Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Take two of the following"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "EC",
+              "number": "325",
+              "title": "Sports Economics"
+            },
+            {
+              "subject": "ENT",
+              "number": "220",
+              "title": "The Business of Music"
+            },
+            {
+              "subject": "LE",
+              "number": "224",
+              "title": "Sports Law"
+            },
+            {
+              "subject": "MG",
+              "number": "202",
+              "title": "Sports Leadership"
+            },
+            {
+              "subject": "MG",
+              "number": "312",
+              "title": "Sports Management"
+            },
+            {
+              "subject": "MK",
+              "number": "332",
+              "title": "Advertising and Integrated Brand Promotion"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Sport and Entertainment Management",
+      "url": "https://catalog.qu.edu/business/management/talent-management-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Complete the Sport and Entertainment Management Core",
+          "credits": "19",
+          "is_elective": false,
+          "notes": [
+            "Required University Curriculum Courses"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "211",
+              "title": "Financial Accounting"
+            },
+            {
+              "subject": "BLW",
+              "number": "221",
+              "title": "Business Law and Society"
+            },
+            {
+              "subject": "CIS",
+              "number": "101",
+              "title": "Introduction to Applied AI and Business Analytics"
+            },
+            {
+              "subject": "FIN",
+              "number": "201",
+              "title": "Fundamentals of Financial Management"
+            },
+            {
+              "subject": "MG",
+              "number": "205",
+              "title": "Organizational Management"
+            },
+            {
+              "subject": "MK",
+              "number": "201",
+              "title": "Marketing Principles"
+            },
+            {
+              "subject": "SB",
+              "number": "250",
+              "title": "Career Planning and Development"
+            },
+            {
+              "subject": "EC",
+              "number": "111",
+              "title": "Principles of Microeconomics (credits count for UC Disciplinary Inquiry Social Sciences)"
+            },
+            {
+              "subject": "EC",
+              "number": "112",
+              "title": "Principles of Macroeconomics (credits count for UC Personal Inquiry 1 Social Sciences)"
+            }
+          ]
+        },
+        {
+          "name": "Complete the Sport and Entertainment Management Major Core Curriculum",
+          "credits": "15",
+          "is_elective": false,
+          "notes": [
+            "Select ONE of the three course options (6 credits total):"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MG",
+              "number": "325",
+              "title": "Negotiations and Problem Solving"
+            },
+            {
+              "subject": "MK",
+              "number": "383",
+              "title": "Professional Selling and Sales Management"
+            },
+            {
+              "subject": "ENT",
+              "number": "320",
+              "title": "Small Business Marketing"
+            },
+            {
+              "subject": "MK",
+              "number": "332",
+              "title": "Advertising and Integrated Brand Promotion",
+              "alternative": true
+            },
+            {
+              "subject": "MG",
+              "number": "211",
+              "title": "Operations and Supply Chain Management and Data-Driven Decision Making"
+            },
+            {
+              "subject": "MG",
+              "number": "321",
+              "title": "Operations and Supply Chain Management and Data-Driven Decision Making"
+            },
+            {
+              "subject": "MG",
+              "number": "335",
+              "title": "Operations and Supply Chain Management and Project Management"
+            },
+            {
+              "subject": "MG",
+              "number": "302",
+              "title": "Managing People, Projects and Change and Compensation and Benefits"
+            },
+            {
+              "subject": "MG",
+              "number": "355",
+              "title": "Managing People, Projects and Change and Compensation and Benefits"
+            }
+          ]
+        },
+        {
+          "name": "Open Electives",
+          "credits": "15",
+          "is_elective": true,
+          "notes": [
+            "Note: 9 credits from grad +1 or +3; If you are on the 3+3 track, discuss your open electives with your pre-law adviser. For example: LE 211 and LE 212 may be good options."
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "LE",
+              "number": "211",
+              "title": ""
+            },
+            {
+              "subject": "LE",
+              "number": "212",
+              "title": ""
+            }
+          ]
+        },
+        {
+          "name": "Sports Management Track Required Courses:",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MG",
+              "number": "312",
+              "title": "Sports Management"
+            },
+            {
+              "subject": "MG",
+              "number": "322",
+              "title": "Contemporary Issues in Sports and Entertainment Management"
+            },
+            {
+              "subject": "MK",
+              "number": "364",
+              "title": "Sports and Entertainment Marketing"
+            },
+            {
+              "subject": "SPS",
+              "number": "101",
+              "title": "Introduction to Sports Studies"
+            }
+          ]
+        },
+        {
+          "name": "Select five electives from this list: 1",
+          "credits": "15",
+          "is_elective": true,
+          "notes": [
+            "Any BAN Elective"
+          ],
+          "rules": [
+            "Any BAN Elective"
+          ],
+          "courses": [
+            {
+              "subject": "ADPR",
+              "number": "201",
+              "title": "Writing for Advertising and Public Relations"
+            },
+            {
+              "subject": "COM",
+              "number": "215",
+              "title": "Social Media and Society"
+            },
+            {
+              "subject": "MG",
+              "number": "202",
+              "title": "Sports Leadership"
+            },
+            {
+              "subject": "MG",
+              "number": "203",
+              "title": "College Athletics Administration"
+            },
+            {
+              "subject": "MG",
+              "number": "300",
+              "title": "Special Topics"
+            },
+            {
+              "subject": "MG",
+              "number": "306",
+              "title": "Staffing: Recruitment, Selection and Placement"
+            },
+            {
+              "subject": "MG",
+              "number": "308",
+              "title": "Women in Leadership"
+            },
+            {
+              "subject": "MG",
+              "number": "309",
+              "title": "International Sports Business"
+            },
+            {
+              "subject": "MG",
+              "number": "320",
+              "title": "Emotional Intelligence in the Workplace"
+            },
+            {
+              "subject": "MG",
+              "number": "330",
+              "title": "Business and Society"
+            },
+            {
+              "subject": "MG",
+              "number": "341",
+              "title": "Service Operations Management"
+            },
+            {
+              "subject": "MG",
+              "number": "343",
+              "title": "Procurement and Sourcing"
+            },
+            {
+              "subject": "MG",
+              "number": "345",
+              "title": "Training and Development"
+            },
+            {
+              "subject": "SB",
+              "number": "185",
+              "title": "Personal Finance"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            },
+            {
+              "subject": "SPCM",
+              "number": "362",
+              "title": "Sports Law and Ethics"
+            },
+            {
+              "subject": "SPCM",
+              "number": "363",
+              "title": "Sports Data Visualization and Analytics"
+            },
+            {
+              "subject": "SPS",
+              "number": "200",
+              "title": "Special Topics in Sports Studies"
+            },
+            {
+              "subject": "SPS",
+              "number": "224",
+              "title": "Sports Law"
+            },
+            {
+              "subject": "SPS",
+              "number": "311",
+              "title": "Sports Public Relations"
+            },
+            {
+              "subject": "SPS",
+              "number": "320",
+              "title": "Psychology of Sport and Exercise"
+            },
+            {
+              "subject": "SPS",
+              "number": "325",
+              "title": "Sports Economics"
+            },
+            {
+              "subject": "SPS",
+              "number": "420",
+              "title": "Sports, Media and Society"
+            },
+            {
+              "subject": "SPS",
+              "number": "499",
+              "title": "Independent Study"
+            }
+          ]
+        },
+        {
+          "name": "Entertainment Management Track Required Courses:",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "ADPR",
+              "number": "332",
+              "title": "Communication Research & Analytics"
+            },
+            {
+              "subject": "COM",
+              "number": "120",
+              "title": "Media Industries and Trends"
+            },
+            {
+              "subject": "MSS",
+              "number": "131",
+              "title": "Media Innovators"
+            },
+            {
+              "subject": "MSS",
+              "number": "340",
+              "title": "Communications Law and Policy"
+            },
+            {
+              "subject": "MSS",
+              "number": "495",
+              "title": "Capstone: Media Forecasting and Strategy"
+            }
+          ]
+        },
+        {
+          "name": "Select four electives from this list: 1",
+          "credits": "12",
+          "is_elective": true,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "COM",
+              "number": "215",
+              "title": "Social Media and Society"
+            },
+            {
+              "subject": "COM",
+              "number": "490",
+              "title": "Communications Career Internship"
+            },
+            {
+              "subject": "MSS",
+              "number": "245",
+              "title": "Media Users and Audiences"
+            },
+            {
+              "subject": "MSS",
+              "number": "311",
+              "title": "Diversity in the Media (WGS 311)"
+            },
+            {
+              "subject": "WGS",
+              "number": "311",
+              "title": "Diversity in the Media (WGS 311)",
+              "cross_listed": true
+            },
+            {
+              "subject": "MSS",
+              "number": "346",
+              "title": "Global Communication"
+            },
+            {
+              "subject": "MSS",
+              "number": "441",
+              "title": "Celebrity Culture"
+            },
+            {
+              "subject": "MSS",
+              "number": "442",
+              "title": "Content Creators & Influencers"
+            },
+            {
+              "subject": "MSS",
+              "number": "444",
+              "title": "Popular Music"
+            },
+            {
+              "subject": "SB",
+              "number": "185",
+              "title": "Personal Finance"
+            }
+          ]
+        },
+        {
+          "name": "Esports Management Track Required Courses:",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "GDD",
+              "number": "101",
+              "title": "Introduction to Game Design"
+            },
+            {
+              "subject": "GDD",
+              "number": "201",
+              "title": "Professionalism Practice for Game Design"
+            },
+            {
+              "subject": "GDD",
+              "number": "215",
+              "title": "eSports Management"
+            },
+            {
+              "subject": "GDD",
+              "number": "311",
+              "title": "Game Lab IV: Team Projects"
+            },
+            {
+              "subject": "GDD",
+              "number": "380",
+              "title": "The Business of Games"
+            }
+          ]
+        },
+        {
+          "name": "Select four electives from this list: 1",
+          "credits": "12",
+          "is_elective": true,
+          "notes": [
+            "Any GDD Game Lab"
+          ],
+          "rules": [
+            "Any GDD Game Lab"
+          ],
+          "courses": [
+            {
+              "subject": "COM",
+              "number": "215",
+              "title": "Social Media and Society"
+            },
+            {
+              "subject": "ENT",
+              "number": "290",
+              "title": "Business Accelerator"
+            },
+            {
+              "subject": "ENT",
+              "number": "310",
+              "title": "Creativity and Innovation Management"
+            },
+            {
+              "subject": "GDD",
+              "number": "210",
+              "title": "Game Lab I: Team Projects"
+            },
+            {
+              "subject": "GDD",
+              "number": "314",
+              "title": "VR/AR Development for Games"
+            },
+            {
+              "subject": "GDD",
+              "number": "396",
+              "title": "Games, Learning & Society"
+            },
+            {
+              "subject": "GDD",
+              "number": "490",
+              "title": "Internship"
+            },
+            {
+              "subject": "MG",
+              "number": "202",
+              "title": "Sports Leadership"
+            },
+            {
+              "subject": "MSS",
+              "number": "131",
+              "title": "Media Innovators"
+            },
+            {
+              "subject": "SB",
+              "number": "185",
+              "title": "Personal Finance"
+            },
+            {
+              "subject": "SPS",
+              "number": "311",
+              "title": "Sports Public Relations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Science in Supply Chain Management",
+      "url": "https://catalog.qu.edu/business/management/supply-chain-management-bs/",
+      "level": "undergraduate",
+      "category": "Bachelor\u2019s Degrees",
+      "groups": [
+        {
+          "name": "Supply Chain Management Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MG",
+              "number": "302",
+              "title": "Managing People, Projects and Change"
+            },
+            {
+              "subject": "MG",
+              "number": "321",
+              "title": "Data-Driven Decision Making"
+            },
+            {
+              "subject": "MG",
+              "number": "325",
+              "title": "Negotiations and Problem Solving"
+            },
+            {
+              "subject": "MG",
+              "number": "340",
+              "title": "Transportation and Logistics Management"
+            },
+            {
+              "subject": "MG",
+              "number": "341",
+              "title": "Service Operations Management"
+            },
+            {
+              "subject": "MG",
+              "number": "343",
+              "title": "Procurement and Sourcing"
+            },
+            {
+              "subject": "MG",
+              "number": "402",
+              "title": "Management Senior Seminar"
+            }
+          ]
+        },
+        {
+          "name": "Supply Chain Management Electives",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Select three of the following:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "323",
+              "title": "Cost Accounting"
+            },
+            {
+              "subject": "BAN",
+              "number": "220",
+              "title": "Data Mining for Business Insights"
+            },
+            {
+              "subject": "CIS",
+              "number": "225",
+              "title": "Systems Analysis and Design"
+            },
+            {
+              "subject": "ENV",
+              "number": "226",
+              "title": "Environmental Ethics"
+            },
+            {
+              "subject": "ENV",
+              "number": "230",
+              "title": "Sustainable Development"
+            },
+            {
+              "subject": "HM",
+              "number": "201",
+              "title": "Introduction to Healthcare Management"
+            },
+            {
+              "subject": "IB",
+              "number": "311",
+              "title": "International Marketing"
+            },
+            {
+              "subject": "IB",
+              "number": "320",
+              "title": "Introduction to Global Entrepreneurship"
+            },
+            {
+              "subject": "IB",
+              "number": "352",
+              "title": "International Management"
+            },
+            {
+              "subject": "IER",
+              "number": "220",
+              "title": "Production Systems (MER 225)"
+            },
+            {
+              "subject": "MER",
+              "number": "225",
+              "title": "Production Systems (MER 225)",
+              "cross_listed": true
+            },
+            {
+              "subject": "IER",
+              "number": "375",
+              "title": "Statistical Process Control"
+            },
+            {
+              "subject": "IER",
+              "number": "440",
+              "title": "Simulation"
+            },
+            {
+              "subject": "MG",
+              "number": "300",
+              "title": "Special Topics"
+            },
+            {
+              "subject": "MG",
+              "number": "303",
+              "title": "Immersive Leadership Experience"
+            },
+            {
+              "subject": "MG",
+              "number": "312",
+              "title": "Sports Management"
+            },
+            {
+              "subject": "MG",
+              "number": "320",
+              "title": "Emotional Intelligence in the Workplace"
+            },
+            {
+              "subject": "MG",
+              "number": "335",
+              "title": "Project Management"
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Entrepreneurship and Innovation Interdisciplinary Certificate",
+      "url": "https://catalog.qu.edu/business/entrepreneurship-strategy/entrepreneurshipandinnovationinterdisciplinarycertificate/",
+      "level": "undergraduate",
+      "category": "Certificate Programs",
+      "groups": [
+        {
+          "name": "Required Courses",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "ENT",
+              "number": "210",
+              "title": "Introduction to Entrepreneurial Thinking and Practice"
+            },
+            {
+              "subject": "ENT",
+              "number": "250",
+              "title": "Idea Validation and Business Model Development"
+            },
+            {
+              "subject": "ENT",
+              "number": "310",
+              "title": "Creativity and Innovation Management"
+            }
+          ]
+        },
+        {
+          "name": "Electives - Choose one from the following list:",
+          "credits": "3",
+          "is_elective": true,
+          "notes": [],
+          "rules": [
+            "Electives - Choose one from the following list:"
+          ],
+          "courses": [
+            {
+              "subject": "ENT",
+              "number": "340",
+              "title": "Opportunity Recognition and Negotiation"
+            },
+            {
+              "subject": "ENT",
+              "number": "350",
+              "title": "Social Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "420",
+              "title": "Business Launch"
+            },
+            {
+              "subject": "AN",
+              "number": "230",
+              "title": "Sustainable Development"
+            },
+            {
+              "subject": "BIO",
+              "number": "161",
+              "title": "Introduction to the Biological Aspects of Science and Society"
+            },
+            {
+              "subject": "BMS",
+              "number": "162",
+              "title": "Human Health and Disease"
+            },
+            {
+              "subject": "CER",
+              "number": "210",
+              "title": "Statics"
+            },
+            {
+              "subject": "CIS",
+              "number": "255",
+              "title": "Data Visualization"
+            },
+            {
+              "subject": "CIS",
+              "number": "265",
+              "title": "Rapid Application Development"
+            },
+            {
+              "subject": "COM",
+              "number": "130",
+              "title": "Visual Design"
+            },
+            {
+              "subject": "COM",
+              "number": "140",
+              "title": "Storytelling"
+            },
+            {
+              "subject": "COM",
+              "number": "150",
+              "title": "Public Speaking: Principles and Practice"
+            },
+            {
+              "subject": "COM",
+              "number": "215",
+              "title": "Social Media and Society"
+            },
+            {
+              "subject": "CSC",
+              "number": "106",
+              "title": "Introduction to Programming for Engineers"
+            },
+            {
+              "subject": "DR",
+              "number": "181",
+              "title": "Improvisational Acting"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Global Supply Chain Certificate",
+      "url": "https://catalog.qu.edu/business/entrepreneurship-strategy/global-supply-chain-cert/",
+      "level": "undergraduate",
+      "category": "Certificate Programs",
+      "groups": [
+        {
+          "name": "Required",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Choose one of the following courses:"
+          ],
+          "rules": [
+            "Choose one of the following courses:"
+          ],
+          "courses": [
+            {
+              "subject": "IB",
+              "number": "201",
+              "title": "Globalization and International Business"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally"
+            },
+            {
+              "subject": "IB",
+              "number": "335",
+              "title": "International Finance"
+            },
+            {
+              "subject": "IB",
+              "number": "345",
+              "title": "Global Supply Chain"
+            },
+            {
+              "subject": "IB",
+              "number": "362",
+              "title": "Cross-Cultural Business Research Part 1"
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MG",
+              "number": "343",
+              "title": "Procurement and Sourcing"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Accounting",
+      "url": "https://catalog.qu.edu/business/accounting/accounting-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "Accounting Minor Curriculum",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Select an additional three courses from any AC course at the 300 or 400 level."
+          ],
+          "rules": [
+            "Select an additional three courses from any AC course at the 300 or 400 level."
+          ],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "211",
+              "title": "Financial Accounting"
+            },
+            {
+              "subject": "AC",
+              "number": "212",
+              "title": "Managerial Accounting"
+            },
+            {
+              "subject": "AC",
+              "number": "305",
+              "title": "Intermediate Accounting I"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Applied AI and Business Analytics",
+      "url": "https://catalog.qu.edu/business/computer-information-systems/applied-ai-business-analytics-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "Required Courses (12 Credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "220",
+              "title": "Data Mining for Business Insights"
+            },
+            {
+              "subject": "BAN",
+              "number": "330",
+              "title": "AI-Driven Business Transformation"
+            },
+            {
+              "subject": "CIS",
+              "number": "101",
+              "title": "Introduction to Applied AI and Business Analytics"
+            },
+            {
+              "subject": "CIS",
+              "number": "255",
+              "title": "Data Visualization"
+            }
+          ]
+        },
+        {
+          "name": "Elective Courses (6 Credits)",
+          "credits": "6",
+          "is_elective": true,
+          "notes": [
+            "Any BAN course or"
+          ],
+          "rules": [
+            "Any BAN course or"
+          ],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "351",
+              "title": "Database Programming and Design"
+            },
+            {
+              "subject": "CIS",
+              "number": "340",
+              "title": "Immersive Technologies for Business Innovation"
+            },
+            {
+              "subject": "CIS",
+              "number": "341",
+              "title": "Business Applications of Quantum Computing"
+            },
+            {
+              "subject": "FIN",
+              "number": "325",
+              "title": "Financial Analytics"
+            },
+            {
+              "subject": "HM",
+              "number": "365",
+              "title": "Health Care Analysis"
+            },
+            {
+              "subject": "MG",
+              "number": "321",
+              "title": "Data-Driven Decision Making"
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MK",
+              "number": "321",
+              "title": "Marketing Analytics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Computer Information Systems",
+      "url": "https://catalog.qu.edu/business/computer-information-systems/computer-information-systems-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "CIS Minor Requirements:",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Choose four CIS electives"
+          ],
+          "rules": [
+            "Choose four CIS electives"
+          ],
+          "courses": [
+            {
+              "subject": "CIS",
+              "number": "101",
+              "title": "Introduction to Applied AI and Business Analytics"
+            },
+            {
+              "subject": "CIS",
+              "number": "225",
+              "title": "Systems Analysis and Design"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Entrepreneurship and Innovation",
+      "url": "https://catalog.qu.edu/business/entrepreneurship-strategy/entrepreneurship-small-business-management-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "Required Courses",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Select one elective from the following:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "ENT",
+              "number": "210",
+              "title": "Introduction to Entrepreneurial Thinking and Practice"
+            },
+            {
+              "subject": "ENT",
+              "number": "250",
+              "title": "Idea Validation and Business Model Development"
+            },
+            {
+              "subject": "ENT",
+              "number": "310",
+              "title": "Creativity and Innovation Management"
+            },
+            {
+              "subject": "ENT",
+              "number": "340",
+              "title": "Opportunity Recognition and Negotiation"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally",
+              "alternative": true
+            },
+            {
+              "subject": "ENT",
+              "number": "420",
+              "title": "Business Launch"
+            },
+            {
+              "subject": "IB",
+              "number": "401",
+              "title": "International Strategy and Business Plan",
+              "alternative": true
+            },
+            {
+              "subject": "ENT",
+              "number": "110",
+              "title": "Entrepreneurship and Innovative Responses to the Coronavirus"
+            },
+            {
+              "subject": "ENT",
+              "number": "220",
+              "title": "The Business of Music"
+            },
+            {
+              "subject": "ENT",
+              "number": "290",
+              "title": "Business Accelerator"
+            },
+            {
+              "subject": "ENT",
+              "number": "299",
+              "title": "Special Topics in Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "320",
+              "title": "Small Business Marketing"
+            },
+            {
+              "subject": "ENT",
+              "number": "330",
+              "title": "Entrepreneurial Finance"
+            },
+            {
+              "subject": "ENT",
+              "number": "331",
+              "title": "Family or Small Business Financing"
+            },
+            {
+              "subject": "ENT",
+              "number": "350",
+              "title": "Social Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "360",
+              "title": "Small and Family Business"
+            },
+            {
+              "subject": "ENT",
+              "number": "371",
+              "title": "Business Plan Competition"
+            },
+            {
+              "subject": "ENT",
+              "number": "430",
+              "title": "Practicum in Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "490",
+              "title": "Field Projects"
+            },
+            {
+              "subject": "IB",
+              "number": "120",
+              "title": "Introduction to Doing Business in the European Union"
+            },
+            {
+              "subject": "IB",
+              "number": "311",
+              "title": "International Marketing"
+            },
+            {
+              "subject": "IB",
+              "number": "320",
+              "title": "Introduction to Global Entrepreneurship"
+            },
+            {
+              "subject": "IB",
+              "number": "335",
+              "title": "International Finance"
+            },
+            {
+              "subject": "IB",
+              "number": "352",
+              "title": "International Management"
+            },
+            {
+              "subject": "JRN",
+              "number": "372",
+              "title": "Entrepreneurial Media (The MIC Project)"
+            },
+            {
+              "subject": "MG",
+              "number": "341",
+              "title": "Service Operations Management"
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MG",
+              "number": "343",
+              "title": "Procurement and Sourcing"
+            },
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research"
+            },
+            {
+              "subject": "PO",
+              "number": "332",
+              "title": "European Politics"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Finance",
+      "url": "https://catalog.qu.edu/business/finance/finance-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "Finance Minor Curriculum",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Select five of the following courses:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "FIN",
+              "number": "201",
+              "title": "Fundamentals of Financial Management"
+            },
+            {
+              "subject": "FIN",
+              "number": "310",
+              "title": "Investment Analysis"
+            },
+            {
+              "subject": "FIN",
+              "number": "320",
+              "title": "Financial Modeling"
+            },
+            {
+              "subject": "FIN",
+              "number": "325",
+              "title": "Financial Analytics"
+            },
+            {
+              "subject": "FIN",
+              "number": "350",
+              "title": "Financial Markets and Institutions"
+            },
+            {
+              "subject": "FIN",
+              "number": "360",
+              "title": "Financial Statement Analysis"
+            },
+            {
+              "subject": "FIN",
+              "number": "380",
+              "title": "Intermediate Corporate Finance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Health Care Management",
+      "url": "https://catalog.qu.edu/business/healthcare-management-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "Core",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "HM",
+              "number": "201",
+              "title": "Introduction to Healthcare Management"
+            },
+            {
+              "subject": "HM",
+              "number": "365",
+              "title": "Health Care Analysis"
+            },
+            {
+              "subject": "CIS",
+              "number": "255",
+              "title": "Data Visualization",
+              "alternative": true
+            },
+            {
+              "subject": "HM",
+              "number": "404",
+              "title": "Legal Aspects of Health Care Delivery"
+            },
+            {
+              "subject": "HSC",
+              "number": "404",
+              "title": "Healthcare Law and Ethics",
+              "alternative": true
+            },
+            {
+              "subject": "MG",
+              "number": "205",
+              "title": "Organizational Management"
+            }
+          ]
+        },
+        {
+          "name": "Health Care Management Minor Curriculum",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Students may choose any two electives"
+          ],
+          "rules": [
+            "Students may choose any two electives"
+          ],
+          "courses": [
+            {
+              "subject": "BAN",
+              "number": "220",
+              "title": "Data Mining for Business Insights"
+            },
+            {
+              "subject": "CIS",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)"
+            },
+            {
+              "subject": "AC",
+              "number": "350",
+              "title": "Data Analysis with Excel (AC 350)",
+              "cross_listed": true
+            },
+            {
+              "subject": "CIS",
+              "number": "351",
+              "title": "Database Programming and Design"
+            },
+            {
+              "subject": "ENT",
+              "number": "210",
+              "title": "Introduction to Entrepreneurial Thinking and Practice"
+            },
+            {
+              "subject": "ENT",
+              "number": "250",
+              "title": "Idea Validation and Business Model Development"
+            },
+            {
+              "subject": "ENT",
+              "number": "350",
+              "title": "Social Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "360",
+              "title": "Small and Family Business"
+            },
+            {
+              "subject": "FIN",
+              "number": "201",
+              "title": "Fundamentals of Financial Management"
+            },
+            {
+              "subject": "FIN",
+              "number": "345",
+              "title": "Risk Management & Insurance"
+            },
+            {
+              "subject": "HM",
+              "number": "320",
+              "title": "Introduction to Health Insurance"
+            },
+            {
+              "subject": "MG",
+              "number": "211",
+              "title": "Operations and Supply Chain Management"
+            },
+            {
+              "subject": "IER",
+              "number": "360",
+              "title": "Operations Planning and Control",
+              "alternative": true
+            },
+            {
+              "subject": "MG",
+              "number": "301",
+              "title": "Group and Virtual Team Processes"
+            },
+            {
+              "subject": "MG",
+              "number": "302",
+              "title": "Managing People, Projects and Change"
+            },
+            {
+              "subject": "MG",
+              "number": "306",
+              "title": "Staffing: Recruitment, Selection and Placement"
+            },
+            {
+              "subject": "MG",
+              "number": "311",
+              "title": "Advancing Employment Relations"
+            },
+            {
+              "subject": "MG",
+              "number": "320",
+              "title": "Emotional Intelligence in the Workplace"
+            },
+            {
+              "subject": "MG",
+              "number": "335",
+              "title": "Project Management"
+            },
+            {
+              "subject": "MG",
+              "number": "341",
+              "title": "Service Operations Management"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in International Business",
+      "url": "https://catalog.qu.edu/business/entrepreneurship-strategy/international-business-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "Required courses",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Select two of the following:"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "IB",
+              "number": "201",
+              "title": "Globalization and International Business (Business majors must take IB 201 . Non-business majors can take IB 105 )"
+            },
+            {
+              "subject": "IB",
+              "number": "105",
+              "title": "International Business Environment",
+              "alternative": true
+            },
+            {
+              "subject": "IB",
+              "number": "311",
+              "title": "International Marketing"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally"
+            },
+            {
+              "subject": "ENT",
+              "number": "340",
+              "title": "Opportunity Recognition and Negotiation",
+              "alternative": true
+            },
+            {
+              "subject": "IB",
+              "number": "352",
+              "title": "International Management"
+            },
+            {
+              "subject": "ENT",
+              "number": "110",
+              "title": "Entrepreneurship and Innovative Responses to the Coronavirus"
+            },
+            {
+              "subject": "ENT",
+              "number": "210",
+              "title": "Introduction to Entrepreneurial Thinking and Practice"
+            },
+            {
+              "subject": "ENT",
+              "number": "220",
+              "title": "The Business of Music"
+            },
+            {
+              "subject": "ENT",
+              "number": "250",
+              "title": "Idea Validation and Business Model Development"
+            },
+            {
+              "subject": "ENT",
+              "number": "290",
+              "title": "Business Accelerator"
+            },
+            {
+              "subject": "ENT",
+              "number": "299",
+              "title": "Special Topics in Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "320",
+              "title": "Small Business Marketing"
+            },
+            {
+              "subject": "ENT",
+              "number": "330",
+              "title": "Entrepreneurial Finance"
+            },
+            {
+              "subject": "ENT",
+              "number": "331",
+              "title": "Family or Small Business Financing"
+            },
+            {
+              "subject": "ENT",
+              "number": "350",
+              "title": "Social Entrepreneurship"
+            },
+            {
+              "subject": "ENT",
+              "number": "360",
+              "title": "Small and Family Business"
+            },
+            {
+              "subject": "ENT",
+              "number": "371",
+              "title": "Business Plan Competition"
+            },
+            {
+              "subject": "ENT",
+              "number": "490",
+              "title": "Field Projects"
+            },
+            {
+              "subject": "IB",
+              "number": "120",
+              "title": "Introduction to Doing Business in the European Union"
+            },
+            {
+              "subject": "IB",
+              "number": "313",
+              "title": "International Marketing Research"
+            },
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research",
+              "alternative": true
+            },
+            {
+              "subject": "IB",
+              "number": "320",
+              "title": "Introduction to Global Entrepreneurship"
+            },
+            {
+              "subject": "IB",
+              "number": "335",
+              "title": "International Finance"
+            },
+            {
+              "subject": "IB",
+              "number": "345",
+              "title": "Global Supply Chain"
+            },
+            {
+              "subject": "IB",
+              "number": "401",
+              "title": "International Strategy and Business Plan"
+            },
+            {
+              "subject": "ENT",
+              "number": "420",
+              "title": "Business Launch",
+              "alternative": true
+            },
+            {
+              "subject": "MG",
+              "number": "342",
+              "title": "Supply Chain Analytics"
+            },
+            {
+              "subject": "MG",
+              "number": "343",
+              "title": "Procurement and Sourcing"
+            },
+            {
+              "subject": "PO",
+              "number": "332",
+              "title": "European Politics"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion (This is a short-term study abroad course)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Management",
+      "url": "https://catalog.qu.edu/business/management/management-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "Management Minor Curriculum",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Select five additional courses",
+            "HM 201 or any 200-300 level MG course"
+          ],
+          "rules": [
+            "HM 201 or any 200-300 level MG course"
+          ],
+          "courses": [
+            {
+              "subject": "MG",
+              "number": "205",
+              "title": "Organizational Management"
+            },
+            {
+              "subject": "HM",
+              "number": "201",
+              "title": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Marketing",
+      "url": "https://catalog.qu.edu/business/marketing/marketing-minor/",
+      "level": "undergraduate",
+      "category": "Minors",
+      "groups": [
+        {
+          "name": "Marketing Minor Curriculum",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "Select 9 additional credits of marketing courses"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "MK",
+              "number": "201",
+              "title": "Marketing Principles"
+            },
+            {
+              "subject": "MK",
+              "number": "210",
+              "title": "Consumer Behavior and Marketing Communications"
+            },
+            {
+              "subject": "MK",
+              "number": "320",
+              "title": "Marketing Research"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bachelor of Business Administration",
+      "url": "https://catalog.qu.edu/business/business-admin-bba/",
+      "level": "undergraduate",
+      "category": "Undergraduate programs",
+      "groups": [
+        {
+          "name": "BBA Core Curriculum (24 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BBA",
+              "number": "205",
+              "title": "Introduction to Information Systems"
+            },
+            {
+              "subject": "BBA",
+              "number": "215",
+              "title": "Financial Accounting"
+            },
+            {
+              "subject": "BBA",
+              "number": "220",
+              "title": "Managerial Accounting"
+            },
+            {
+              "subject": "BBA",
+              "number": "225",
+              "title": "Essentials of Management and Organizational Behavior"
+            },
+            {
+              "subject": "BBA",
+              "number": "230",
+              "title": "Business Law and Society"
+            },
+            {
+              "subject": "BBA",
+              "number": "240",
+              "title": "Fundamentals of Financial Management"
+            },
+            {
+              "subject": "BBA",
+              "number": "245",
+              "title": "Marketing Principles"
+            },
+            {
+              "subject": "BBA",
+              "number": "490",
+              "title": "Strategic Management"
+            }
+          ]
+        },
+        {
+          "name": "University Curriculum (46 credits)",
+          "credits": "",
+          "is_elective": false,
+          "notes": [
+            "UC Core and Advanced Core 1"
+          ],
+          "rules": [],
+          "courses": [
+            {
+              "subject": "BBA",
+              "number": "210",
+              "title": "Globalization and International Business"
+            },
+            {
+              "subject": "BBA",
+              "number": "420",
+              "title": "Corporate Sustainability"
+            },
+            {
+              "subject": "EC",
+              "number": "111",
+              "title": "Principles of Microeconomics"
+            },
+            {
+              "subject": "EC",
+              "number": "112",
+              "title": "Principles of Macroeconomics"
+            },
+            {
+              "subject": "EN",
+              "number": "101",
+              "title": "Introduction to College-Level Reading And Writing"
+            },
+            {
+              "subject": "EN",
+              "number": "102",
+              "title": "Reading, Writing, & Research In College and Beyond"
+            },
+            {
+              "subject": "MA",
+              "number": "170",
+              "title": "Probability and Data Analysis"
+            }
+          ]
+        },
+        {
+          "name": "BBA Electives",
+          "credits": "21",
+          "is_elective": true,
+          "notes": [
+            "Complete 21 credits of any 300 or 400 level business course"
+          ],
+          "rules": [
+            "Complete 21 credits of any 300 or 400 level business course"
+          ],
+          "courses": []
+        }
+      ]
+    },
+    {
+      "name": "Global Business Affairs EU Certificate Program",
+      "url": "https://catalog.qu.edu/business/gba-polish-certificate/",
+      "level": "undergraduate",
+      "category": "Undergraduate programs",
+      "groups": [
+        {
+          "name": "Required",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Choose two electives from list below or from approved courses taken during semester abroad in any EU country."
+          ],
+          "rules": [
+            "Choose two electives from list below or from approved courses taken during semester abroad in any EU country."
+          ],
+          "courses": [
+            {
+              "subject": "IB",
+              "number": "120",
+              "title": "Introduction to Doing Business in the European Union"
+            },
+            {
+              "subject": "SB",
+              "number": "488",
+              "title": "Business Internship *"
+            },
+            {
+              "subject": "SB",
+              "number": "360",
+              "title": "International Business Immersion **"
+            },
+            {
+              "subject": "EC",
+              "number": "350",
+              "title": "International Economics"
+            },
+            {
+              "subject": "HS",
+              "number": "209",
+              "title": "Twentieth-Century Europe"
+            },
+            {
+              "subject": "IB",
+              "number": "105",
+              "title": "International Business Environment"
+            },
+            {
+              "subject": "IB",
+              "number": "201",
+              "title": "Globalization and International Business",
+              "alternative": true
+            },
+            {
+              "subject": "IB",
+              "number": "320",
+              "title": "Introduction to Global Entrepreneurship"
+            },
+            {
+              "subject": "IB",
+              "number": "324",
+              "title": "Negotiating Internationally"
+            },
+            {
+              "subject": "IB",
+              "number": "335",
+              "title": "International Finance"
+            },
+            {
+              "subject": "IB",
+              "number": "352",
+              "title": "International Management"
+            },
+            {
+              "subject": "LE",
+              "number": "317",
+              "title": "International Law"
+            },
+            {
+              "subject": "LE",
+              "number": "319",
+              "title": "International Law and the Individual"
+            },
+            {
+              "subject": "PO",
+              "number": "211",
+              "title": "Introduction to International Relations"
+            },
+            {
+              "subject": "POL",
+              "number": "101",
+              "title": "Elementary Polish I (Only one may be taken for credit toward the certificate)"
+            },
+            {
+              "subject": "POL",
+              "number": "102",
+              "title": "Elementary Polish II",
+              "alternative": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Minor in Business",
+      "url": "https://catalog.qu.edu/business/business-minor/",
+      "level": "undergraduate",
+      "category": "Undergraduate programs",
+      "groups": [
+        {
+          "name": "Business Minor Curriculum",
+          "credits": "",
+          "is_elective": true,
+          "notes": [
+            "Select any two electives from business disciplines AC, BAN, BLW, CIS, ENT, FIN, HM, IB, MG, MK, SB. Selection can include one of either IER 220 , IER 310 , or IER 360"
+          ],
+          "rules": [
+            "Select any two electives from business disciplines AC, BAN, BLW, CIS, ENT, FIN, HM, IB, MG, MK, SB. Selection can include one of either IER 220 , IER 310 , or IER 360"
+          ],
+          "courses": [
+            {
+              "subject": "AC",
+              "number": "211",
+              "title": "Financial Accounting"
+            },
+            {
+              "subject": "FIN",
+              "number": "201",
+              "title": "Fundamentals of Financial Management 1"
+            },
+            {
+              "subject": "MG",
+              "number": "205",
+              "title": "Organizational Management"
+            },
+            {
+              "subject": "MK",
+              "number": "201",
+              "title": "Marketing Principles"
+            },
+            {
+              "subject": "IER",
+              "number": "220",
+              "title": ""
+            },
+            {
+              "subject": "IER",
+              "number": "310",
+              "title": ""
+            },
+            {
+              "subject": "IER",
+              "number": "360",
+              "title": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,8 @@
 # What AdvisingBot checks for open seats.
 #
-# This file is hand-maintained. The elective courses in other disciplines
-# (MK, MG, IB, FIN, HM, MBA, SB, AC) are NOT listed here - they are harvested
-# from the catalog into electives.toml by `python3 build_electives.py`, and
-# picked up automatically.
+# This file is hand-maintained. Elective courses in other disciplines are NOT
+# listed here - they are read from the catalog into programs.json by
+# `python3 build_catalog.py` and picked up automatically.
 #
 # Each [[watch]] block is one search in Self-Service:
 #
@@ -40,6 +39,15 @@ levels = ["UG"]
 #
 # Write them as "SUBJ NUM". Anything already in electives.toml is ignored, so
 # duplicates are harmless.
+
+# Which catalog programs to draw electives from. programs.json holds every
+# School of Business curriculum; without this filter, "electives" would mean
+# every elective in the school. Matched as case-insensitive substrings.
+[electives]
+programs = [
+  "Applied AI and Business Analytics",
+  "Computer Information Systems",
+]
 
 [manual]
 courses = [

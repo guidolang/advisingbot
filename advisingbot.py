@@ -24,6 +24,8 @@ import json
 import re
 import sys
 import tomllib
+
+ELECTIVE_PROGRAMS: list[str] = []
 from dataclasses import asdict
 from pathlib import Path
 
@@ -36,7 +38,7 @@ from selfservice import (
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_WATCHLIST = HERE / "watchlist.toml"
-DEFAULT_ELECTIVES = HERE / "electives.toml"
+DEFAULT_ELECTIVES = HERE / "programs.json"
 SNAPSHOT_PATH = HERE / ".last_run.json"
 
 LEVEL_NAMES = {
@@ -89,6 +91,11 @@ def load_watchlist(path: Path) -> tuple[list[Watch], list[tuple[str, str]]]:
     manual_raw = (data.get("manual") or {}).get("courses") or []
     manual = [_split_code(str(c), source=str(path)) for c in manual_raw]
 
+    global ELECTIVE_PROGRAMS
+    ELECTIVE_PROGRAMS = [
+        str(x) for x in (data.get("electives") or {}).get("programs") or []
+    ]
+
     if not watches and not manual:
         raise SystemExit(f"{path} has no [[watch]] blocks and no [manual] courses.")
     return watches, manual
@@ -108,16 +115,36 @@ def _split_code(value: str, *, source: str) -> tuple[str, str]:
 
 
 def load_electives(path: Path) -> tuple[list[tuple[str, str]], str | None]:
-    """Read the catalog-derived elective list, if it has been built."""
+    """Elective courses from the catalog, narrowed to the programs we advise.
+
+    programs.json holds every School of Business curriculum. The CLI only
+    wants electives from the programs named under [electives] in
+    watchlist.toml - without that filter, "electives" would mean every
+    elective in the school.
+    """
     if not path.exists():
         return [], None
-    with path.open("rb") as handle:
-        data = tomllib.load(handle)
-    courses = [
-        (str(c["subject"]).upper(), str(c["number"]).upper())
-        for c in data.get("course") or []
-        if c.get("subject") and c.get("number")
-    ]
+    data = json.loads(path.read_text())
+
+    needles = [p.lower() for p in ELECTIVE_PROGRAMS]
+    courses: list[tuple[str, str]] = []
+    seen: set[tuple[str, str]] = set()
+
+    for program in data.get("programs") or []:
+        if needles and not any(n in program["name"].lower() for n in needles):
+            continue
+        for group in program.get("groups") or []:
+            if not group.get("is_elective"):
+                continue
+            for course in group.get("courses") or []:
+                key = (
+                    str(course["subject"]).upper(),
+                    str(course["number"]).upper(),
+                )
+                if key not in seen:
+                    seen.add(key)
+                    courses.append(key)
+
     return courses, data.get("generated")
 
 
@@ -167,7 +194,7 @@ def _warn_if_stale(generated: str | None, verbose: bool) -> None:
     built = _parse_date(generated)
     if built and (dt.date.today() - built).days > 365:
         print(
-            f"Note: electives.toml was built {built.isoformat()}, over a year "
+            f"Note: programs.json was built {built.isoformat()}, over a year "
             "ago.\n      Rerun `python3 build_electives.py` to pick up the "
             "new catalog.",
             file=sys.stderr,
@@ -542,8 +569,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--electives",
         type=Path,
         default=DEFAULT_ELECTIVES,
-        help="Path to the catalog-derived elective list "
-             "(default: electives.toml).",
+        help="Catalog curricula to draw electives from "
+             "(default: programs.json).",
     )
     parser.add_argument(
         "--no-electives",
@@ -587,7 +614,9 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.list_subjects:
-            _, payload = client.search(open_only=False, page_size=1, max_pages=1)
+            _, payload = client.search(
+                open_only=False, page_size=1, complete=False
+            )
             print("\nSubject codes currently offering courses:\n")
             for item in payload.get("Subjects") or []:
                 print(f"  {item['Value']:<6} {item['Description']:<40} "
@@ -639,9 +668,9 @@ def main(argv: list[str] | None = None) -> int:
                 catalog_courses, generated = load_electives(args.electives)
                 if not catalog_courses and verbose:
                     print(
-                        f"No electives found at {args.electives} - run "
-                        "`python3 build_electives.py` to harvest them "
-                        "from the catalog.",
+                        f"No electives found in {args.electives} - run "
+                        "`python3 build_catalog.py` to read them from the "
+                        "catalog, and check [electives] in watchlist.toml.",
                         file=sys.stderr,
                     )
                 _warn_if_stale(generated, verbose)
