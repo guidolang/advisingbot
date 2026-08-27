@@ -1,48 +1,48 @@
-# Which courses AdvisingBot checks for open seats.
+# What AdvisingBot checks for open seats.
 #
-# Each [[watch]] block is one search in Self-Service: a subject code, plus the
-# academic levels to include. Optionally narrow it to specific course numbers.
+# This file is hand-maintained. The elective courses in other disciplines
+# (MK, MG, IB, FIN, HM, MBA, SB, AC) are NOT listed here - they are harvested
+# from the catalog into electives.toml by `python3 build_electives.py`, and
+# picked up automatically.
 #
-#   subject  Self-Service subject code (BAN, CIS, MK, MG, IB, FIN, AC, EC, ...)
-#            Run `python3 advisingbot.py --list-subjects` to see them all.
+# Each [[watch]] block is one search in Self-Service:
+#
+#   subject  Self-Service subject code. Run `--list-subjects` to see them all.
 #   levels   "UG" undergraduate, "GR" graduate, "DL" doctorate, "LW" law.
 #            Omit to include every level.
-#   courses  Optional. Only these course numbers. Omit to take the whole
-#            subject at the levels above.
+#   courses  Optional. Only these course numbers. Omit for the whole subject.
 #   exclude  Optional. Course numbers to skip.
 #   label    Optional. How this block is titled in the report.
 
 # --- Business Analytics: everything, undergraduate and graduate -------------
+# Also satisfies the "Any BAN course" elective rule in the AI & BAN minor.
 [[watch]]
 label = "Business Analytics (all levels)"
 subject = "BAN"
 levels = ["UG", "GR"]
 
 # --- Computer Information Systems: all undergraduate ------------------------
+# Also satisfies the CIS elective rules in the BS and the minor, both of which
+# read "any 200 level or above CIS class".
 [[watch]]
 label = "Computer Information Systems (undergraduate)"
 subject = "CIS"
 levels = ["UG"]
 
-# --- Selected courses in other disciplines ----------------------------------
-# These are seeded as whole-subject watches so you see everything on the first
-# run. Once you know which courses you actually advise into, uncomment the
-# `courses` line and list them, e.g. courses = ["101", "210", "350"].
 
-[[watch]]
-label = "Marketing (selected)"
-subject = "MK"
-levels = ["UG", "GR"]
-# courses = ["101", "310"]
+# ---------------------------------------------------------------------------
+# Electives the catalog misses
+# ---------------------------------------------------------------------------
+# The catalog states some elective requirements as prose rather than a course
+# list - "Take one 600-level MK course", for instance - and those courses
+# never make it into electives.toml. List them here and they get checked
+# alongside the harvested ones.
+#
+# Write them as "SUBJ NUM". Anything already in electives.toml is ignored, so
+# duplicates are harmless.
 
-[[watch]]
-label = "Management (selected)"
-subject = "MG"
-levels = ["UG", "GR"]
-# courses = ["210", "220"]
-
-[[watch]]
-label = "International Business (selected)"
-subject = "IB"
-levels = ["UG", "GR"]
-# courses = ["201"]
+[manual]
+courses = [
+  # "MK 630",   # covers "Take one 600-level MK course" (MS AI & BAN)
+  # "HM 610",   # covers "Take one other 600-level HM or BAN elective"
+]

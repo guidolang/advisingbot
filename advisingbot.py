@@ -21,6 +21,7 @@ import argparse
 import csv
 import datetime as dt
 import json
+import re
 import sys
 import tomllib
 from dataclasses import asdict
@@ -35,6 +36,7 @@ from selfservice import (
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_WATCHLIST = HERE / "watchlist.toml"
+DEFAULT_ELECTIVES = HERE / "electives.toml"
 SNAPSHOT_PATH = HERE / ".last_run.json"
 
 LEVEL_NAMES = {
@@ -70,7 +72,8 @@ class Watch:
         return True
 
 
-def load_watchlist(path: Path) -> list[Watch]:
+def load_watchlist(path: Path) -> tuple[list[Watch], list[tuple[str, str]]]:
+    """Returns the [[watch]] blocks and any [manual] course additions."""
     if not path.exists():
         raise SystemExit(
             f"No watchlist at {path}.\n"
@@ -79,13 +82,96 @@ def load_watchlist(path: Path) -> list[Watch]:
         )
     with path.open("rb") as handle:
         data = tomllib.load(handle)
+
     entries = data.get("watch") or []
-    if not entries:
-        raise SystemExit(f"{path} has no [[watch]] blocks.")
-    return [Watch(raw, i) for i, raw in enumerate(entries, start=1)]
+    watches = [Watch(raw, i) for i, raw in enumerate(entries, start=1)]
+
+    manual_raw = (data.get("manual") or {}).get("courses") or []
+    manual = [_split_code(str(c), source=str(path)) for c in manual_raw]
+
+    if not watches and not manual:
+        raise SystemExit(f"{path} has no [[watch]] blocks and no [manual] courses.")
+    return watches, manual
+
+
+def _split_code(value: str, *, source: str) -> tuple[str, str]:
+    """Accept "MK 321", "MK-321" or "MK321" and split into subject + number."""
+    match = re.fullmatch(
+        r"\s*([A-Za-z]{2,4})[\s\-_]*([0-9]{3}[A-Za-z]?)\s*", value
+    )
+    if not match:
+        raise SystemExit(
+            f'{source}: "{value}" is not a course code. '
+            'Write them like "MK 321".'
+        )
+    return match.group(1).upper(), match.group(2).upper()
+
+
+def load_electives(path: Path) -> tuple[list[tuple[str, str]], str | None]:
+    """Read the catalog-derived elective list, if it has been built."""
+    if not path.exists():
+        return [], None
+    with path.open("rb") as handle:
+        data = tomllib.load(handle)
+    courses = [
+        (str(c["subject"]).upper(), str(c["number"]).upper())
+        for c in data.get("course") or []
+        if c.get("subject") and c.get("number")
+    ]
+    return courses, data.get("generated")
+
+
+def elective_watches(
+    catalog_courses: list[tuple[str, str]],
+    manual_courses: list[tuple[str, str]],
+) -> list[Watch]:
+    """One watch per subject, so each subject is searched only once."""
+    from_catalog: dict[str, set[str]] = {}
+    for subject, number in catalog_courses:
+        from_catalog.setdefault(subject, set()).add(number)
+
+    from_manual: dict[str, set[str]] = {}
+    for subject, number in manual_courses:
+        from_manual.setdefault(subject, set()).add(number)
+
+    watches: list[Watch] = []
+    for subject in sorted(set(from_catalog) | set(from_manual)):
+        catalog_numbers = from_catalog.get(subject, set())
+        manual_numbers = from_manual.get(subject, set())
+        if manual_numbers - catalog_numbers and catalog_numbers:
+            label = f"Electives - {subject} (catalog + manual)"
+        elif manual_numbers - catalog_numbers:
+            label = f"Electives - {subject} (added by hand)"
+        else:
+            label = f"Electives - {subject} (from catalog)"
+        watches.append(
+            Watch(
+                {
+                    "subject": subject,
+                    "courses": sorted(catalog_numbers | manual_numbers),
+                    "label": label,
+                },
+                0,
+            )
+        )
+    return watches
 
 
 # -- term selection --------------------------------------------------------
+
+
+def _warn_if_stale(generated: str | None, verbose: bool) -> None:
+    """The catalog turns over yearly; a year-old harvest is probably behind."""
+    if not generated or not verbose:
+        return
+    built = _parse_date(generated)
+    if built and (dt.date.today() - built).days > 365:
+        print(
+            f"Note: electives.toml was built {built.isoformat()}, over a year "
+            "ago.\n      Rerun `python3 build_electives.py` to pick up the "
+            "new catalog.",
+            file=sys.stderr,
+        )
 
 
 def _parse_date(value: str | None) -> dt.date | None:
@@ -175,8 +261,15 @@ def collect(
     """For each watch: search, then open the sections for each hit."""
     results: list[dict] = []
     unpublished: list[str] = []
+    # A course can be reached by more than one watch - BAN 629 is both a BAN
+    # course and an MS elective. Report it once, under the first watch that
+    # claims it, and don't fetch its sections twice.
+    seen_courses: set[str] = set()
+    empty_watches: list[str] = []
 
     for watch in watches:
+        found_any = False
+        fully_covered = False
         if verbose:
             levels = "/".join(watch.levels) if watch.levels else "all levels"
             print(f"  searching {watch.subject} ({levels}) ...", file=sys.stderr)
@@ -192,6 +285,13 @@ def collect(
             open_only=False,
         )
         courses = [c for c in courses if watch.wants(c)]
+        matched = len(courses)
+        courses = [c for c in courses if c.course_id not in seen_courses]
+        # Every course this watch wanted was already reported under an earlier
+        # one - the BAN electives all sit inside the BAN subject watch. That is
+        # full coverage, not an empty result, so don't flag it as nothing open.
+        fully_covered = matched > 0 and not courses
+        seen_courses.update(c.course_id for c in courses)
         courses.sort(key=lambda c: (c.subject, c.number))
 
         for course in courses:
@@ -211,6 +311,7 @@ def collect(
             )
             if not sections:
                 continue
+            found_any = True
             results.append(
                 {
                     "watch": watch.label,
@@ -223,7 +324,10 @@ def collect(
                 }
             )
 
-    return results, unpublished
+        if not found_any and not fully_covered:
+            empty_watches.append(watch.label)
+
+    return results, unpublished, empty_watches
 
 
 # -- output ----------------------------------------------------------------
@@ -233,6 +337,7 @@ def print_report(
     results: list[dict],
     terms: list[Term],
     unpublished: list[str],
+    empty_watches: list[str],
     *,
     include_closed: bool = False,
 ) -> None:
@@ -244,6 +349,7 @@ def print_report(
 
     if not results:
         print("\nNo sections with open seats matched the watchlist.")
+        _print_empty(empty_watches)
         _print_unpublished(unpublished)
         return
 
@@ -289,7 +395,20 @@ def print_report(
         f"\n{total_sections} section(s) with open seats, "
         f"{total_seats} seat(s) total, across {len(results)} course(s)."
     )
+    _print_empty(empty_watches)
     _print_unpublished(unpublished)
+
+
+def _print_empty(empty_watches: list[str]) -> None:
+    """An absent heading reads as "not checked". Say it was checked."""
+    if not empty_watches:
+        return
+    print(
+        "\nChecked, nothing open (courses are full, or not offered this "
+        "term):"
+    )
+    for label in empty_watches:
+        print(f"  {label}")
 
 
 def _print_unpublished(unpublished: list[str]) -> None:
@@ -420,6 +539,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Academic levels for --subject (UG GR DL LW). Default: all.",
     )
     parser.add_argument(
+        "--electives",
+        type=Path,
+        default=DEFAULT_ELECTIVES,
+        help="Path to the catalog-derived elective list "
+             "(default: electives.toml).",
+    )
+    parser.add_argument(
+        "--no-electives",
+        action="store_true",
+        help="Check only the [[watch]] blocks, ignoring catalog electives.",
+    )
+    parser.add_argument(
         "--include-closed",
         action="store_true",
         help="Also list sections with no seats left.",
@@ -500,7 +631,21 @@ def main(argv: list[str] | None = None) -> int:
                 for i, code in enumerate(args.subject, start=1)
             ]
         else:
-            watches = load_watchlist(args.watchlist)
+            watches, manual = load_watchlist(args.watchlist)
+            if args.no_electives:
+                catalog_courses, generated = [], None
+                manual = []
+            else:
+                catalog_courses, generated = load_electives(args.electives)
+                if not catalog_courses and verbose:
+                    print(
+                        f"No electives found at {args.electives} - run "
+                        "`python3 build_electives.py` to harvest them "
+                        "from the catalog.",
+                        file=sys.stderr,
+                    )
+                _warn_if_stale(generated, verbose)
+            watches += elective_watches(catalog_courses, manual)
 
         if verbose:
             print(
@@ -509,7 +654,7 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
 
-        results, unpublished = collect(
+        results, unpublished, empty_watches = collect(
             client,
             watches,
             term_codes,
@@ -525,7 +670,11 @@ def main(argv: list[str] | None = None) -> int:
         return 130
 
     print_report(
-        results, chosen, unpublished, include_closed=args.include_closed
+        results,
+        chosen,
+        unpublished,
+        empty_watches,
+        include_closed=args.include_closed,
     )
 
     if args.diff:
@@ -536,6 +685,7 @@ def main(argv: list[str] | None = None) -> int:
         "terms": [asdict(t) for t in chosen],
         "results": results,
         "sections_without_published_seats": sorted(set(unpublished)),
+        "watches_with_nothing_open": empty_watches,
     }
     try:
         SNAPSHOT_PATH.write_text(json.dumps(snapshot, indent=2))

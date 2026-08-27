@@ -7,10 +7,19 @@ Out of the box it checks, for the current semester:
 
 - **BAN** — Business Analytics, undergraduate *and* graduate
 - **CIS** — Computer Information Systems, undergraduate
-- **MK / MG / IB** — Marketing, Management, International Business
+- **Every elective** named by the AI & Business Analytics and CIS programs —
+  currently 35 courses across AC, BAN, CIS, FIN, HM, IB, MBA, MG, MK and SB,
+  read straight out of the catalog
 
 ...and prints every section with a seat left, including how many, when it
 meets, where, and who teaches it.
+
+There are two scripts, because they run on very different clocks:
+
+| | | |
+| --- | --- | --- |
+| `advisingbot.py` | checks seats | run it whenever you like |
+| `build_electives.py` | reads the catalog | run it once a year, when a new catalog goes live |
 
 ## Requirements
 
@@ -67,22 +76,67 @@ Changes since 2026-08-26T09:15:02
 
 ## Choosing what to watch
 
-Edit [`watchlist.toml`](watchlist.toml). Each block is one search:
+Two files feed the check, and they have different jobs.
+
+### `watchlist.toml` — hand-maintained
+
+Whole subjects you want swept, plus any electives the catalog misses.
 
 ```toml
 [[watch]]
-label = "Marketing (selected)"
-subject = "MK"
+label = "Business Analytics (all levels)"
+subject = "BAN"
 levels = ["UG", "GR"]     # UG, GR, DL, LW — omit for all levels
-courses = ["101", "310"]  # omit to take the whole subject
+courses = ["220", "330"]  # omit to take the whole subject
 exclude = ["484"]         # optional
+
+[manual]
+courses = ["MK 630", "HM 610"]
 ```
 
-The MK / MG / IB blocks ship as whole-subject watches so the first run shows
-you everything. Once you know which courses you actually advise into,
-uncomment `courses` and list them.
-
 `python3 advisingbot.py --list-subjects` prints every valid subject code.
+
+### `electives.toml` — generated, don't edit
+
+Built by `build_electives.py` from these five curriculum pages:
+
+- [BS Applied AI & Business Analytics](https://catalog.qu.edu/business/computer-information-systems/bs-applied-ai-business-analytics/#curriculumtext)
+- [Applied AI & Business Analytics minor](https://catalog.qu.edu/business/computer-information-systems/applied-ai-business-analytics-minor/#curriculumtext)
+- [BS Computer Information Systems](https://catalog.qu.edu/business/computer-information-systems/computer-information-systems-bs/#curriculumtext)
+- [Computer Information Systems minor](https://catalog.qu.edu/business/computer-information-systems/computer-information-systems-minor/#curriculumtext)
+- [MS Applied AI & Business Analytics](https://catalog.qu.edu/graduate-studies/business/business-applied-ai-business-analytics-ms/#curriculumtext)
+
+```bash
+python3 build_electives.py            # rewrite electives.toml
+python3 build_electives.py --diff     # what changed since the current file
+python3 build_electives.py --dry-run  # print it instead of writing
+```
+
+Commit the result. `advisingbot.py` picks it up automatically, and warns if
+it's more than a year old.
+
+### When the catalog states a rule instead of a list
+
+Some elective requirements can't be reduced to courses:
+
+```
+[Computer Information Systems minor]     Choose four CIS electives
+[BS Computer Information Systems]        Select any 200 level or above CIS class
+[Applied AI & Business Analytics minor]  Any BAN course
+[MS Applied AI & Business Analytics]     Take one 600-level MK course
+```
+
+`build_electives.py` prints these at the end of every run and writes them into
+`electives.toml` as comments, so they can't quietly go missing. Cover them one
+of two ways:
+
+- **A subject watch**, when the rule is broad. The `BAN` and `CIS` blocks in
+  `watchlist.toml` already answer the first three above.
+- **`[manual]`**, when it's a handful of courses — `"Take one 600-level MK
+  course"` is best handled by naming the ones you'd actually approve.
+
+Anything in `[manual]` that's already in `electives.toml` is ignored, so
+duplicates are harmless.
 
 ## How it works
 
@@ -108,6 +162,10 @@ free seat but that filter excludes it. AdvisingBot pulls every section in the
 term and checks the seat counts itself, which is why it finds a few sections
 the website's own filter hides.
 
+**A heading that isn't there doesn't mean "not checked".** Watches that
+found nothing are listed under *"Checked, nothing open"* at the end, so a
+full-or-not-offered elective can't be mistaken for one that was skipped.
+
 **Some sections publish no seat count at all** (Self-Service shows
 `0 / 0 / 0`, mostly distance-ed `-DE` sections). Their numbers mean nothing,
 so they aren't counted as open — but they're listed at the bottom of every
@@ -117,9 +175,12 @@ report so you can check them by hand rather than have them vanish silently.
 
 | File | What it is |
 | --- | --- |
-| `advisingbot.py` | The command-line tool — run this |
+| `advisingbot.py` | The seat checker — run this |
 | `selfservice.py` | Client for the Self-Service JSON API |
-| `watchlist.toml` | Which subjects/courses to check — edit this |
+| `watchlist.toml` | Subjects to sweep + manual electives — **edit this** |
+| `build_electives.py` | Rebuilds the elective list from the catalog — run yearly |
+| `catalog.py` | Parser for the catalog's curriculum tables |
+| `electives.toml` | Electives harvested from the catalog — generated |
 | `.last_run.json` | Previous run, written automatically, used by `--diff` |
 
 ## If it breaks
@@ -132,3 +193,7 @@ notice. Two failure modes to expect:
 
 In both cases the fix is to open the page in a browser, watch the network tab
 while clicking the filters, and update `selfservice.py` to match.
+
+The catalog is a CourseLeaf site and is far more stable, but if
+`build_electives.py` reports *"No elective courses found at all"*, its table
+markup has changed — check `catalog.py` against a curriculum page.
