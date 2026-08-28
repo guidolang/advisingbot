@@ -9,3 +9,6 @@ cache/
 
 # Never commit anything derived from a student's audit.
 *audit*.json
+
+# Leftovers from the old public site; nothing here is served now.
+docs/
