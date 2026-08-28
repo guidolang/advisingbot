@@ -60,26 +60,18 @@ select{font:inherit;padding:8px 10px;border:1px solid var(--line);
 .error{background:var(--warn-soft);color:var(--warn);padding:12px 14px;
   border-radius:8px;border-left:3px solid currentColor;margin:14px 0}
 
-.req{background:var(--card);border:1px solid var(--line);
-  border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
-.req h2{margin:0;font-size:1rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.tag{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
-  padding:2px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
-.rule{margin:8px 0 0;padding:8px 11px;border-radius:7px;background:var(--warn-soft);
-  color:var(--warn);font-size:.84rem;border-left:3px solid currentColor}
-.left{color:var(--muted);font-weight:400;font-size:.85rem}
+.listcard{background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:4px 16px 10px}
 
-.course{border-top:1px solid var(--line);padding:11px 0 4px}
-.course:first-of-type{border-top:0;margin-top:8px}
+.course{border-top:1px solid var(--line);padding:12px 0 4px}
+.course:first-of-type{border-top:0}
 .chead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
 .code{font-weight:700;font-variant-numeric:tabular-nums}
 .ctitle{color:var(--muted);font-size:.92rem;flex:1;min-width:140px}
 .pill{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:999px;
   background:var(--good-soft);color:var(--good);white-space:nowrap}
-.pill.none{background:transparent;color:var(--dim);border:1px solid var(--line)}
 .mode{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
   padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
-.course.empty .code,.course.empty .ctitle{color:var(--dim)}
 
 .secs{list-style:none;margin:7px 0 0;padding:0}
 .sec{padding:6px 0 6px 11px;border-left:2px solid var(--line);margin-bottom:5px}
@@ -195,86 +187,63 @@ function render() {
   out.replaceChildren();
   if (!DATA) return;
 
-  // One line per course, however many requirements it could satisfy.
-  const listed = new Map();
+  // One entry per course, in the order the audit first asks for it, so
+  // required courses come before elective options. A course that could
+  // satisfy several requirements is still just one course to register for.
+  const unique = new Map();
+  for (const req of DATA.requirements)
+    for (const course of req.courses)
+      if (!unique.has(course.code)) unique.set(course.code, course);
 
-  for (const req of DATA.requirements) {
-    const rows = req.courses.map(c => {
-      const secs = (c.sections||[]).filter(s => matches(s, term, mode));
-      return {course:c, secs};
-    }).filter(r => r.secs.length);
-
-    if (!rows.length && !req.rules.length && !req.open_units) continue;
-
-    const box = el("div","req");
-    box.style.marginLeft = Math.min(req.depth,3) * 14 + "px";
-    const h = el("h2");
-    h.append(document.createTextNode(req.name));
-    if (req.slots) h.append(el("span","left",
-      `${req.slots} more course${req.slots===1?"":"s"} needed`));
-    else if (req.units_remaining) h.append(el("span","left",
-      `${req.units_remaining} units left`));
-    const pool = rows.some(r => r.course.candidate);
-    if (pool) h.append(el("span","tag","choose from"));
-    box.append(h);
-
-    for (const rule of req.rules) box.append(el("div","rule", rule));
-    if (req.open_units)
-      box.append(el("div","rule",
-        `${req.open_units} units with no set course list — check the audit.`));
-
-    const headed = [];
-    for (const {course, secs} of rows) {
-      const c = el("div","course" + (secs.length ? "" : " empty"));
-      const head = el("div","chead");
-      head.append(el("span","code",course.code));
-      head.append(el("span","ctitle",course.title || ""));
-      if (secs.length) {
-        head.append(el("span","pill",
-          secs.reduce((n,s)=>n+(s.seats||0),0) + " seats"));
-        head.append(el("span","mode", DELIVERY_LABEL[deliveryOf(secs)]));
-      } else {
-        head.append(el("span","pill none","no open seats"));
-      }
-      c.append(head);
-
-      if (secs.length) {
-        headed.push({course, secs});
-        const list = el("ul","secs");
-        if (secs.length === 1) {
-          list.append(renderSection(secs[0]));
-          c.append(list);
-        } else {
-          const d = el("details");
-          d.append(el("summary",null,`${secs.length} sections with open seats`));
-          secs.forEach(s => list.append(renderSection(s)));
-          d.append(list);
-          c.append(d);
-        }
-      }
-      box.append(c);
-    }
-
-    for (const {course, secs} of headed) {
-      if (listed.has(course.code)) continue;   // first requirement wins
-      const seats = secs.reduce((n,s)=>n+(s.seats||0),0);
-      listed.set(course.code,
-        `${course.code.padEnd(9)} ${(course.title||"").slice(0,38).padEnd(40)}`
-        + `${String(seats).padStart(3)} seats  [${DELIVERY_LABEL[deliveryOf(secs)]}]`);
-    }
-    out.append(box);
+  const rows = [];
+  for (const course of unique.values()) {
+    const secs = (course.sections || []).filter(s => matches(s, term, mode));
+    if (secs.length) rows.push({course, secs});
   }
 
-  if (!out.childNodes.length)
-    out.append(el("p","status","Nothing still needed has open seats for these filters."));
+  if (rows.length) {
+    const card = el("div","listcard");
+    rows.forEach(r => card.append(renderCourse(r.course, r.secs)));
+    out.append(card);
+  } else {
+    out.append(el("p","status",
+      "Nothing still needed has open seats this semester."));
+  }
 
-  document.getElementById("plain").value =
-    [...listed.values()].join("\n").trimEnd();
-  document.getElementById("copypanel").hidden = listed.size === 0;
+  document.getElementById("plain").value = rows.map(({course, secs}) =>
+    `${course.code.padEnd(9)} ${(course.title||"").slice(0,38).padEnd(40)}`
+    + `${String(secs.reduce((n,s)=>n+(s.seats||0),0)).padStart(3)} seats  `
+    + `[${DELIVERY_LABEL[deliveryOf(secs)]}]`).join("\n");
+  document.getElementById("copypanel").hidden = rows.length === 0;
+
   const c = DATA.cache;
   document.getElementById("status").textContent =
-    `${listed.size} course${listed.size===1?"":"s"} with open seats · `
+    `${rows.length} course${rows.length===1?"":"s"} with open seats · `
     + `${c.live} looked up just now, ${c.hits} already checked today`;
+}
+
+function renderCourse(course, secs) {
+  const box = el("div","course");
+  const head = el("div","chead");
+  head.append(el("span","code", course.code));
+  head.append(el("span","ctitle", course.title || ""));
+  head.append(el("span","pill",
+    secs.reduce((n,s)=>n+(s.seats||0),0) + " seats"));
+  head.append(el("span","mode", DELIVERY_LABEL[deliveryOf(secs)]));
+  box.append(head);
+
+  const list = el("ul","secs");
+  if (secs.length === 1) {
+    list.append(renderSection(secs[0]));
+    box.append(list);
+  } else {
+    const d = el("details");
+    d.append(el("summary", null, `${secs.length} sections with open seats`));
+    secs.forEach(x => list.append(renderSection(x)));
+    d.append(list);
+    box.append(d);
+  }
+  return box;
 }
 
 function showStudent() {
