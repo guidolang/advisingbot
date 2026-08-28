@@ -93,7 +93,6 @@ def check(url: str) -> dict:
                     "units": course.units,
                     "candidate": course.candidate,
                     "checked_on": entry.get("checked_on"),
-                    "checked_at": entry.get("checked_at"),
                     "sections": [
                         {
                             "name": s.name,
@@ -140,14 +139,7 @@ def check(url: str) -> dict:
     ]
     terms.sort(key=lambda t: (t.get("start") or "9999", t["code"]))
 
-    # The oldest reading among the courses we looked up: seat counts are only
-    # as fresh as the least recently checked course on the page.
-    stamps = [
-        e.get("checked_at") for e in seats.values() if e.get("checked_at")
-    ]
-
     return {
-        "as_of": min(stamps) if stamps else None,
         "student": {
             "name": audit.student_name,
             "level": audit.level,

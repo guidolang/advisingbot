@@ -142,16 +142,6 @@ const el = (tag, cls, text) => {
 };
 const MODE = {online:"Online", "on-ground":"On ground", hybrid:"Hybrid"};
 
-// "Aug 27, 2026, 11:38 PM EDT"
-function stamp(iso) {
-  const d = new Date(iso);
-  if (isNaN(d)) return iso;
-  return d.toLocaleString("en-US", {
-    month: "short", day: "numeric", year: "numeric",
-    hour: "numeric", minute: "2-digit", timeZoneName: "short",
-  });
-}
-
 function matches(sec, term, mode) {
   if (sec.term !== term) return false;
   if (mode === "any") return true;
@@ -228,9 +218,8 @@ function render() {
     + `[${DELIVERY_LABEL[deliveryOf(secs)]}]`).join("\n");
   document.getElementById("copypanel").hidden = rows.length === 0;
 
-  const count = `${rows.length} course${rows.length===1?"":"s"} with open seats`;
   document.getElementById("status").textContent =
-    DATA.as_of ? `${count} as of ${stamp(DATA.as_of)}` : count;
+    `${rows.length} course${rows.length===1?"":"s"} with open seats`;
 }
 
 function renderCourse(course, secs) {
