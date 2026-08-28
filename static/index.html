@@ -195,15 +195,8 @@ function render() {
   out.replaceChildren();
   if (!DATA) return;
 
-  let withSeats = 0;
-  const lines = [];
-  const student = DATA.student;
-  const termName = (DATA.terms.find(t => t.code === term)||{}).description || term;
-  lines.push(`${student.name}${student.level ? " — " + student.level : ""}`);
-  if (student.programs.length) lines.push(student.programs.join(", "));
-  lines.push(`Courses still needed with open seats — ${termName}`
-    + (mode === "online" ? " (online only)" : ""));
-  lines.push("");
+  // One line per course, however many requirements it could satisfy.
+  const listed = new Map();
 
   for (const req of DATA.requirements) {
     const rows = req.courses.map(c => {
@@ -246,7 +239,6 @@ function render() {
       c.append(head);
 
       if (secs.length) {
-        withSeats++;
         headed.push({course, secs});
         const list = el("ul","secs");
         if (secs.length === 1) {
@@ -263,15 +255,12 @@ function render() {
       box.append(c);
     }
 
-    if (headed.length) {
-      lines.push(req.name + (req.slots
-        ? ` (${req.slots} more course${req.slots===1?"":"s"} needed)` : ""));
-      for (const {course, secs} of headed) {
-        const seats = secs.reduce((n,s)=>n+(s.seats||0),0);
-        lines.push(`  ${course.code.padEnd(9)} ${(course.title||"").slice(0,38).padEnd(40)}`
-          + `${String(seats).padStart(3)} seats  [${DELIVERY_LABEL[deliveryOf(secs)]}]`);
-      }
-      lines.push("");
+    for (const {course, secs} of headed) {
+      if (listed.has(course.code)) continue;   // first requirement wins
+      const seats = secs.reduce((n,s)=>n+(s.seats||0),0);
+      listed.set(course.code,
+        `${course.code.padEnd(9)} ${(course.title||"").slice(0,38).padEnd(40)}`
+        + `${String(seats).padStart(3)} seats  [${DELIVERY_LABEL[deliveryOf(secs)]}]`);
     }
     out.append(box);
   }
@@ -279,11 +268,12 @@ function render() {
   if (!out.childNodes.length)
     out.append(el("p","status","Nothing still needed has open seats for these filters."));
 
-  document.getElementById("plain").value = lines.join("\n").trimEnd();
-  document.getElementById("copypanel").hidden = !withSeats;
+  document.getElementById("plain").value =
+    [...listed.values()].join("\n").trimEnd();
+  document.getElementById("copypanel").hidden = listed.size === 0;
   const c = DATA.cache;
   document.getElementById("status").textContent =
-    `${withSeats} course${withSeats===1?"":"s"} with open seats · `
+    `${listed.size} course${listed.size===1?"":"s"} with open seats · `
     + `${c.live} looked up just now, ${c.hits} already checked today`;
 }
 
