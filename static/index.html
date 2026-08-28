@@ -23,8 +23,7 @@
 body{margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:1000px;margin:0 auto;padding:24px 18px 64px}
-h1{margin:0 0 4px;font-size:1.4rem;letter-spacing:-.01em}
-.sub{color:var(--muted);font-size:.875rem;margin:0 0 20px}
+h1{margin:0 0 18px;font-size:2rem;letter-spacing:-.02em}
 
 .panel{background:var(--card);border:1px solid var(--line);
   border-radius:var(--radius);padding:16px;margin-bottom:18px}
@@ -37,8 +36,15 @@ button.ghost{background:transparent;color:var(--accent)}
 button:disabled{opacity:.55;cursor:default}
 input:focus-visible,select:focus-visible,button:focus-visible{
   outline:2px solid var(--accent);outline-offset:1px}
-.filters{display:grid;gap:12px;margin-top:14px;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.studentbar{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;
+  justify-content:space-between;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:13px 16px;margin-bottom:16px}
+.studentbar .field{min-width:190px}
+.onlyterm{font-weight:600;padding:8px 0}
+.badge{display:inline-block;margin-left:8px;font-size:.66rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;
+  border-radius:999px;background:var(--accent-soft);color:var(--accent)}
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{font-size:.72rem;font-weight:700;text-transform:uppercase;
   letter-spacing:.05em;color:var(--muted)}
@@ -95,7 +101,6 @@ textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
 <body>
 <div class="wrap">
 <h1>AdvisingBot</h1>
-<p class="sub">Which courses a student still needs — and which of them have open seats.</p>
 
 <div class="panel">
   <form class="row" id="form">
@@ -103,31 +108,18 @@ textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
       placeholder="https://qu.stellic.com/app/audit?student_username=…">
     <button type="submit" id="go">Check</button>
   </form>
-  <div class="filters" id="filters" hidden>
-    <div class="field">
-      <label for="term">Semester</label>
-      <select id="term"></select>
-    </div>
-    <div class="field">
-      <label for="mode">Delivery</label>
-      <select id="mode">
-        <option value="any">Online or on-ground</option>
-        <option value="online">Online only</option>
-        <option value="on-ground">On-ground only</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="show">Show</label>
-      <select id="show">
-        <option value="open">Only courses with open seats</option>
-        <option value="all">Everything still needed</option>
-      </select>
-    </div>
+</div>
+
+<div class="studentbar" id="who" hidden>
+  <div class="whotext"></div>
+  <div class="field" id="termfield" hidden>
+    <label for="term">Semester</label>
+    <select id="term"></select>
+    <span class="onlyterm" id="termone" hidden></span>
   </div>
 </div>
 
 <div id="status" class="status"></div>
-<div id="who"></div>
 <main id="out"></main>
 
 <div class="panel" id="copypanel" hidden>
@@ -193,8 +185,9 @@ function renderSection(s) {
 
 function render() {
   const term = document.getElementById("term").value;
-  const mode = document.getElementById("mode").value;
-  const showAll = document.getElementById("show").value === "all";
+  // Students in an online programme cannot attend classroom sections, so the
+  // delivery filter follows their programme instead of being a choice.
+  const mode = DATA && DATA.student.online_only ? "online" : "any";
   const out = document.getElementById("out");
   out.replaceChildren();
   if (!DATA) return;
@@ -205,14 +198,15 @@ function render() {
   const termName = (DATA.terms.find(t => t.code === term)||{}).description || term;
   lines.push(`${student.name}${student.level ? " — " + student.level : ""}`);
   if (student.programs.length) lines.push(student.programs.join(", "));
-  lines.push(`Courses still needed with open seats — ${termName}`);
+  lines.push(`Courses still needed with open seats — ${termName}`
+    + (mode === "online" ? " (online only)" : ""));
   lines.push("");
 
   for (const req of DATA.requirements) {
     const rows = req.courses.map(c => {
       const secs = (c.sections||[]).filter(s => matches(s, term, mode));
       return {course:c, secs};
-    }).filter(r => showAll || r.secs.length);
+    }).filter(r => r.secs.length);
 
     if (!rows.length && !req.rules.length && !req.open_units) continue;
 
@@ -291,13 +285,18 @@ function render() {
 }
 
 function showStudent() {
-  const w = document.getElementById("who");
-  w.replaceChildren();
-  if (!DATA) return;
-  w.append(el("p","who", DATA.student.name
+  const bar = document.getElementById("who");
+  const text = bar.querySelector(".whotext");
+  text.replaceChildren();
+  if (!DATA) { bar.hidden = true; return; }
+
+  text.append(el("p","who", DATA.student.name
     + (DATA.student.level ? ` — ${DATA.student.level}` : "")));
-  if (DATA.student.programs.length)
-    w.append(el("p","meta", DATA.student.programs.join(" · ")));
+  const meta = el("p","meta", DATA.student.programs.join(" · "));
+  if (DATA.student.online_only)
+    meta.append(el("span","badge","online — online sections only"));
+  text.append(meta);
+  bar.hidden = false;
 }
 
 async function check(ev) {
@@ -307,7 +306,7 @@ async function check(ev) {
   const go = document.getElementById("go");
   go.disabled = true;
   document.getElementById("out").replaceChildren();
-  document.getElementById("who").replaceChildren();
+  document.getElementById("who").hidden = true;
   document.getElementById("copypanel").hidden = true;
   document.getElementById("status").textContent =
     "Opening the audit in Stellic and checking Self-Service — this takes a moment…";
@@ -324,8 +323,15 @@ async function check(ev) {
     for (const t of DATA.terms) {
       const o = el("option",null,t.description); o.value = t.code; termSel.append(o);
     }
-    termSel.value = currentTerm(DATA.terms);
-    document.getElementById("filters").hidden = false;
+    if (DATA.terms.length) termSel.value = currentTerm(DATA.terms);
+    // A dropdown holding one option is furniture, but the term still has to
+    // be visible - so show it as plain text instead.
+    const field = document.getElementById("termfield");
+    const only = document.getElementById("termone");
+    field.hidden = DATA.terms.length === 0;
+    termSel.hidden = DATA.terms.length < 2;
+    only.hidden = DATA.terms.length !== 1;
+    if (DATA.terms.length === 1) only.textContent = DATA.terms[0].description;
     showStudent();
     render();
   } catch (err) {
@@ -340,8 +346,7 @@ async function check(ev) {
 }
 
 document.getElementById("form").addEventListener("submit", check);
-for (const id of ["term","mode","show"])
-  document.getElementById(id).addEventListener("change", render);
+document.getElementById("term").addEventListener("change", render);
 
 document.getElementById("copy").addEventListener("click", async () => {
   const box = document.getElementById("plain");

@@ -138,6 +138,11 @@ class Requirement:
         return bool(self.open_units) and not self.needed
 
 
+# Quinnipiac names its distance programs "... Online - MS". A student in one
+# should not be shown classroom sections they cannot attend.
+_ONLINE_RE = re.compile(r"\bonline\b", re.I)
+
+
 @dataclass
 class Audit:
     student_name: str
@@ -145,6 +150,7 @@ class Audit:
     level: str
     programs: list[str]
     requirements: list[Requirement]
+    online_only: bool = False
 
     @property
     def all_codes(self) -> list[str]:
@@ -442,13 +448,26 @@ def parse(payload: dict) -> Audit:
     for program in tree.get("programs") or []:
         emit(program, 0)
 
+    # The profile's `degrees` comes back empty, so take the declared programs
+    # from the audit itself. University-wide blocks ("Total 122 Credits for
+    # University Degree Completion") are scaffolding, not programs.
+    declared = [
+        str(program.get("screen_name") or "").strip()
+        for program in tree.get("programs") or []
+        if not program.get("is_uni_req")
+    ]
+    declared = [name for name in declared if name]
+    if not declared:
+        declared = [p for p in ((payload.get("student") or {}).get("programs") or []) if p]
+
     student = payload.get("student") or {}
     return Audit(
         student_name=student.get("name") or student.get("username") or "Student",
         username=student.get("username") or "",
         level=student.get("level") or "",
-        programs=[p for p in (student.get("programs") or []) if p],
+        programs=declared,
         requirements=requirements,
+        online_only=any(_ONLINE_RE.search(name) for name in declared),
     )
 
 
@@ -461,6 +480,8 @@ if __name__ == "__main__":
     print(f"{result.student_name} ({result.level})")
     for program in result.programs:
         print(f"  program: {program}")
+    if result.online_only:
+        print("  online program - only online sections are relevant")
     print(f"\n{len(result.requirements)} unmet requirement(s):\n")
     for req in result.requirements:
         pad = "  " * req.depth

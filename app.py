@@ -144,6 +144,7 @@ def check(url: str) -> dict:
             "name": audit.student_name,
             "level": audit.level,
             "programs": audit.programs,
+            "online_only": audit.online_only,
         },
         "terms": terms,
         "requirements": requirements,
