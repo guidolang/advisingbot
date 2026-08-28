@@ -20,6 +20,9 @@
     --dim:#6c7787; }
 }
 *{box-sizing:border-box}
+/* Author display rules outrank the browser's [hidden] rule, so anything
+   using display:flex would stay on screen while marked hidden. */
+[hidden]{display:none !important}
 body{margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:1000px;margin:0 auto;padding:24px 18px 64px}
