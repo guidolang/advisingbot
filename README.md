@@ -35,12 +35,21 @@ cached. Don't expose the port, and don't deploy this.
 
 ## Use it
 
+**Double-click `bin/AdvisingBot.command`** in Finder. It starts the server,
+waits for the port, and opens the app in Chrome.
+
+Paste an audit URL and press Check. A bare username works too.
+
+While it runs, press Ctrl-C or type `q` and Return to stop it. Other modes:
+
 ```bash
-python3 app.py
+bin/AdvisingBot.command --restart   # stop whatever holds the port, start fresh
+bin/AdvisingBot.command --stop      # stop and exit, no browser
+bin/AdvisingBot.command --help
 ```
 
-Open <http://127.0.0.1:8765>, paste an audit URL, press Check. A bare username
-works too.
+Restart after changing the code — a running server keeps serving what it
+started with. Or start it by hand with `python3 app.py`.
 
 A first check takes a minute or two on a cold cache: it opens the audit in a
 background tab, expands the open requirements, then looks up every candidate
@@ -77,6 +86,7 @@ you ─► app.py ─► stellic.py ─► opentabs.py ─► OpenTabs ─► yo
 | `seatcache.py` | Day-old-is-fine cache in front of Self-Service |
 | `selfservice.py` | Client for the Self-Service course API |
 | `static/index.html` | The interface |
+| `bin/AdvisingBot.command` | Double-click launcher (start / --restart / --stop) |
 | `cache/seats.json` | Cached seat data — gitignored |
 
 ### Reading the audit
