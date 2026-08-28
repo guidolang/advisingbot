@@ -1,260 +1,163 @@
 # AdvisingBot
 
-Finds Quinnipiac courses that still have **open seats**, so nobody has to click
-through Self-Service one subject at a time.
+Paste a Stellic audit link. Get back the courses that student still needs to
+graduate, grouped exactly the way Stellic groups them, with the ones that have
+**open seats** in Self-Service marked online, on-ground, or both — plus a plain
+text version you can copy into notes or an email.
 
-It is two things sharing one engine:
+```
+Elijah Alston — Junior
+Courses still needed with open seats — Fall 2026
 
-| | | |
-| --- | --- | --- |
-| **A web page** | Pick a semester, a program, and a delivery mode; see every course with a seat left, grouped the way the Catalog groups it | for faculty and students |
-| **A command-line tool** | Sweep a watchlist of subjects and print what's open | for you |
+Computer Information Systems Core (3 more courses needed)
+  CIS 440   IT Project Management                    17 seats  [on-ground]
 
-Both read the same public sources, and neither ever logs in.
+Business Essentials (1 more course needed)
+  EC 272    Advanced Applied Statistics               6 seats  [on-ground]
+```
 
-## The three scripts
+## This runs on your machine only
 
-They run on very different clocks, which is why they're separate:
+Not a hosted app, and it must not become one:
 
-| Script | What it does | How often |
-| --- | --- | --- |
-| `build_catalog.py` | Reads all 40 School of Business curricula from the Catalog → `programs.json` | once a year, when a new Catalog edition goes live |
-| `build_site.py` | Combines `programs.json` with live Self-Service seat data → `docs/data.json` | daily, from GitHub Actions |
-| `advisingbot.py` | Prints open seats for your own watchlist | whenever you like |
+- Stellic is behind Microsoft SSO. The only way in is your own signed-in
+  browser, borrowed through OpenTabs, which listens on `127.0.0.1`.
+- A degree audit is a protected education record under FERPA.
+
+So the server binds the loopback interface, audits are held in memory for a
+single request and never written to disk, and only public course/seat data is
+cached. Don't expose the port, and don't deploy this.
 
 ## Requirements
 
-Python 3.11 or newer. **No packages to install** — standard library only.
+- Python 3.11+, **no packages to install** — standard library only.
+- **OpenTabs** running, with its Chrome extension connected.
+- You, signed in to Stellic in that Chrome.
 
-## The web page
-
-`docs/index.html` is a single static file that reads `docs/data.json`. No
-server, no framework, no build step.
-
-### Publishing it
-
-1. **Settings → Pages → Source: GitHub Actions.**
-   On a private repo this needs a paid plan; otherwise make the repo public —
-   it contains no secrets and no student data.
-2. **Actions → "Refresh open seats" → Run workflow.**
-
-That collects fresh data, commits `docs/data.json`, and publishes the page.
-
-### Making it automatic
-
-The workflow is manual on purpose right now. To run it every morning,
-uncomment the `schedule:` block in
-[`.github/workflows/refresh.yml`](.github/workflows/refresh.yml):
-
-```yaml
-schedule:
-  - cron: "0 10 * * *"   # 6:00 a.m. Eastern during EDT
-```
-
-GitHub cron is always UTC and ignores daylight saving, so one entry can't be
-6:00 a.m. year-round. The file explains the two-entry workaround.
-
-### What it shows
-
-- **Semester** — every term Self-Service currently offers, defaulting to the
-  one in session.
-- **Program** — all 40 SoB programs: bachelor's, minors, certificates,
-  master's, dual degrees.
-- **Delivery** — online only, on-ground only, or either. Hybrid sections
-  (part web, part classroom) show up under both.
-
-Courses appear under the Catalog's own group names — *Accounting Core*,
-*BAN Elective Courses*, *Concentration in Finance* — rather than categories
-we invent. A course with several open sections collapses to one line and
-expands on click, so a long program stays scannable. Selections are
-remembered between visits.
-
-## The command-line tool
+## Use it
 
 ```bash
-python3 advisingbot.py
+python3 app.py
 ```
 
-```
-Open seats - Fall 2026 (26/FA)
-==============================
+Open <http://127.0.0.1:8765>, paste an audit URL, press Check. A bare username
+works too.
 
-Business Analytics (all levels)
--------------------------------
+The first check for a student takes ~15 seconds: it opens the audit in a
+background tab, reads it, then looks up each course in Self-Service. Later
+checks that day are much faster — see caching below.
 
-  BAN-615  Predictive Business Analytics
-    BAN*615-01       25 of 35 open
-                     M/W 11:00 AM-12:15 PM (Lecture) | Mount Carmel | Friday, C
-...
-15 section(s) with open seats, 190 seat(s) total, across 14 course(s).
-```
+Three controls: **Semester** (defaults to the term in session), **Delivery**
+(online only / on-ground only / either), and **Show** (only courses with open
+seats, or everything still needed). The copy box tracks whatever you've
+filtered to.
+
+## Checking it works
 
 ```bash
-python3 advisingbot.py --term "Spring 2027"    # a specific term
-python3 advisingbot.py --term next             # the upcoming term
-python3 advisingbot.py --list-terms            # what terms exist right now
-python3 advisingbot.py --list-subjects         # every subject code + count
-python3 advisingbot.py --subject CIS --levels UG   # one-off, ignores watchlist
-python3 advisingbot.py --include-closed        # show full sections too
-python3 advisingbot.py --csv seats.csv --json seats.json
-python3 advisingbot.py --diff                  # what changed since last run
+python3 opentabs.py                  # "connected to opentabs v0.0.109"
+python3 stellic.py <username>        # requirements + courses still needed
+python3 seatcache.py BAN-610 CIS-440 # run twice: live, then all cached
 ```
-
-`--diff` is the one to run repeatedly during registration season:
-
-```
-Changes since 2026-08-26T09:15:02
-----------------------------------------
-  NEWLY OPEN   MG-312 MG*312-01  (2 seat(s))
-  DOWN         BAN-615 BAN*615-01  25 -> 21
-  NOW FULL     IB-335 IB*335-01
-```
-
-## Configuration
-
-### `watchlist.toml` — hand-maintained, drives the CLI only
-
-```toml
-[[watch]]                       # whole subjects to sweep
-label = "Business Analytics (all levels)"
-subject = "BAN"
-levels = ["UG", "GR"]           # UG, GR, DL, LW — omit for all
-courses = ["220", "330"]        # omit to take the whole subject
-exclude = ["484"]
-
-[electives]                     # draw electives from these programs
-programs = ["Applied AI and Business Analytics",
-            "Computer Information Systems"]
-
-[manual]                        # electives the Catalog states as prose
-courses = ["MK 630", "HM 610"]
-```
-
-Without `[electives].programs`, "electives" would mean every elective in the
-School of Business. The web page is not filtered this way — it shows each
-program's own electives.
-
-### `programs.json` — generated, don't edit
-
-```bash
-python3 build_catalog.py            # rewrite it
-python3 build_catalog.py --diff     # what changed since the current file
-python3 build_catalog.py --dry-run  # print a summary, write nothing
-```
-
-Commit the result. Everything downstream reads this file instead of hitting
-the Catalog, and `advisingbot.py` warns if it's over a year old.
-
-### When the Catalog states a rule instead of a list
-
-40 requirements across the School of Business can't be reduced to courses:
-
-```
-[Minor in Computer Information Systems]  Choose four CIS electives
-[BS Computer Information Systems]        Select any 200 level or above CIS class
-[MS Applied AI & Business Analytics]     Take one 600-level MK course
-[Full-Time MBA]                          Take two other 600-level FIN electives
-```
-
-These are printed after every `build_catalog.py` run, kept on their group in
-`programs.json`, and shown on the web page in a callout marked *"stated as a
-rule, not a course list"* — so a student can see that a requirement exists
-even where no course list does. For the CLI, cover them with a subject watch
-or by naming courses under `[manual]`.
 
 ## How it works
 
-Self-Service is a single-page app, and its UI actions map onto three JSON
-endpoints. AdvisingBot calls those directly instead of driving a browser:
+```
+you ─► app.py ─► stellic.py ─► opentabs.py ─► OpenTabs ─► your Chrome ─► Stellic
+          └────► seatcache.py ─► selfservice.py ────────────────────► Self-Service
+```
 
-| What you'd click | What the script calls |
+| File | Purpose |
 | --- | --- |
-| Opening the course search page | `GET /student/Courses/Search` (session cookie + CSRF token) |
-| Picking a subject, term, level | `POST /student/Courses/PostSearchCriteria` |
-| "View Available Sections for BAN-610" | `POST /student/Courses/Sections` |
+| `app.py` | Local server + JSON API. Loopback only. |
+| `stellic.py` | Fetches and parses a degree audit |
+| `opentabs.py` | Minimal MCP-over-HTTP client for OpenTabs |
+| `seatcache.py` | Day-old-is-fine cache in front of Self-Service |
+| `selfservice.py` | Client for the Self-Service course API |
+| `static/index.html` | The interface |
+| `cache/seats.json` | Cached seat data — gitignored |
 
-The Catalog is a CourseLeaf site whose curriculum tables are read directly.
-Both sources are public, so **no login, password, or student data is involved
-anywhere**.
+### Reading the audit
 
-### Keeping the load off Self-Service
+Stellic's UI is a React tree that changes shape often, so we don't scrape it.
+Instead we open the audit and call Stellic's own API from inside the
+authenticated page:
 
-A full refresh of all 40 programs is **183 requests in about 75 seconds**,
-once a day. Four things get it there:
+```
+POST /planner/getstudentprofile/   form-encoded  -> default_plan_id
+POST /planner/getauditinfo/        JSON          -> req_tree + audit_data
+```
 
-- **One search covers every subject.** The endpoint accepts a list, so 43
-  subjects cost one request rather than 43.
-- **One search covers every term.** Omitting the term filter makes sections
-  come back bucketed by term, so terms are separated afterwards instead of
-  re-running the whole scrape per semester.
-- **Courses are deduplicated first.** SB 488 sits in a dozen curricula and is
-  fetched once.
-- **Unoffered courses are skipped.** The search says which courses have no
-  sections at all — 137 of 318 — and those cost nothing.
+Both responses carry a `)]}',` XSSI prefix that has to come off first, and the
+result is pulled back in slices because script results truncate around 50 KB.
 
-That leaves one request per offered course, paced 0.4s apart. Requests are
-serial on purpose: for a nightly job there's nothing to gain from
-parallelism, and staying gentle is what makes this defensible.
+**How the audit says "still to take".** `req_tree` is the requirement
+structure; `audit_data` is keyed by requirement id and carries
+`cards_remaining` — one entry per unfilled slot, identified by a *composite* of
+the sub-requirement id and a zero-padded course-parent id. Each card resolves
+one of two ways:
 
-Everyone viewing the page reads a static file, so traffic to the site costs
-Self-Service nothing at all.
+- the composite matches a leaf's `course_parent_id` → **a specific course is
+  missing** (CIS 440)
+- it doesn't → the card belongs to an open requirement ("Fulfill any 3 of the
+  following") → we expand that requirement's own options into **candidates**,
+  tagged *choose from* in the UI
 
-### Three things worth knowing about the data
+That second path is what turns "any 3 CIS electives" into a list you can act
+on. Candidates are labelled as such: Stellic decides what actually counts.
 
-**We do not use Self-Service's "Open Sections Only" checkbox.** It drops
-sections that genuinely have seats — as of this writing `CIS*101-01` has a
-free seat but that filter excludes it. AdvisingBot pulls every section and
-checks the seat counts itself.
+Requirements stated as attributes rather than courses ("a course with attribute
+UC_NS") can't be expanded from the audit alone. Those keep their wording and
+show as a rule, so a requirement never looks emptier than it is.
 
-**`currentPageIndex` does not work.** Asking `PostSearchCriteria` for page 2
-returns page 1 again, so paging silently yields duplicates. We request a
-single page large enough for the whole result set and raise if the server
-reports more rows than it returned.
+Parent requirements repeat every card their children carry — the same slot can
+appear a dozen times across `audit_data` — so cards are collapsed by composite
+id, and the "N more courses needed" count comes from Stellic's own
+`num_remaining` rather than from counting cards.
 
-**Some sections publish no seat count** (Self-Service shows `0 / 0 / 0`,
-mostly distance-ed `-DE` sections). Their numbers mean nothing, so they are
-never counted as open — but they're shown as *"no seat count published"*
-rather than hidden, because a section that might be registerable shouldn't
-vanish.
+### Caching
 
-## Files
+Seat counts move slowly enough that checking a course twice in a day tells you
+nothing new, and every lookup is load on a system we don't own. So each course
+records the date it was last checked and is served from `cache/seats.json` if
+that date is today.
 
-| File | What it is |
-| --- | --- |
-| `advisingbot.py` | The command-line seat checker |
-| `build_site.py` | Builds `docs/data.json` for the web page |
-| `build_catalog.py` | Rebuilds `programs.json` from the Catalog — run yearly |
-| `selfservice.py` | Client for the Self-Service JSON API |
-| `catalog.py` | Parser for the Catalog's curriculum tables |
-| `watchlist.toml` | CLI configuration — **edit this** |
-| `programs.json` | All 40 SoB curricula — generated |
-| `docs/index.html` | The web page |
-| `docs/data.json` | Seat data the page reads — generated |
-| `.github/workflows/refresh.yml` | The daily refresh |
-| `.last_run.json` | Previous CLI run, used by `--diff` |
+The cache is keyed by course, not by student, which is what makes it pay: your
+second and third advisee of the morning mostly share courses with the first.
+Each result shows how many courses were looked up live versus already checked.
+
+A stale course costs one request. The subject index and term list refresh once
+a day, in one request each.
+
+### Two things about Self-Service data
+
+**We ignore its "Open Sections Only" filter.** It drops sections that genuinely
+have seats, so we pull every section and check the counts ourselves.
+
+**Some sections publish no seat count** (`0 / 0 / 0`, mostly distance-ed
+sections). They're never counted as open, but they aren't silently dropped
+either.
 
 ## If it breaks
 
-Self-Service is a vendor product (Ellucian Colleague) and can change without
-notice:
+| Message | Cause |
+| --- | --- |
+| `No OpenTabs token found` | OpenTabs isn't configured. Set `OPENTABS_TOKEN`, or check `~/.claude.json`. |
+| `Could not reach OpenTabs` | The OpenTabs app isn't running. |
+| `Stellic redirected to the sign-in page` | Sign in to Stellic in Chrome, then retry. |
+| `Stellic did not return an audit` | Its internal API changed — see `stellic.py`. |
+| `Could not find the antiforgery token` | Self-Service's HTML changed — see `selfservice.py`. |
 
-- *"Could not find the antiforgery token"* — the search page's HTML changed.
-- *"Expected JSON from ..."* — an endpoint changed shape.
-- *"reported N courses but returned M"* — raise `page_size`.
+Both Stellic and Self-Service are vendor products with undocumented internals
+and can change without notice. All knowledge of each is confined to its own
+module, and both fail loudly rather than returning a quietly empty list.
 
-The fix is to open the page in a browser, watch the network tab while
-clicking the filters, and update `selfservice.py` to match.
+## Confidentiality
 
-The Catalog is more stable, but if `build_catalog.py` reports *"No programs
-parsed at all"*, its table markup has changed — check `catalog.py` against a
-curriculum page.
-
-## Notice
-
-This project aggregates information from two publicly accessible sources, the
-Quinnipiac University Academic Catalog and the Quinnipiac University
-Self-Service course catalog. It performs no authentication and accesses no
-student, enrollment, or other non-public record. It is not affiliated with,
-endorsed by, or an official publication of Quinnipiac University, and seat
-data is a periodic snapshot rather than a live feed. The full notice appears
-on the web page itself.
+This tool reads degree audits through your authenticated Stellic session. Use
+it only for students you are authorized to advise. It performs no action on the
+student's record and writes no audit data to disk. Seat information is a
+snapshot and may be up to a day old; eligibility, prerequisites, and whether a
+course actually satisfies a requirement are determined by Quinnipiac
+University. Verify in Self-Service and Stellic before advising a student to
+register.

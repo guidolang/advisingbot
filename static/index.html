@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AdvisingBot</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg:#f6f7f9; --card:#fff; --ink:#14181f; --muted:#5b6472; --line:#dfe3e9;
+  --accent:#0b4d8f; --accent-soft:#e8f0fa;
+  --good:#126b3f; --good-soft:#e4f4ea;
+  --warn:#8a5a00; --warn-soft:#fdf1dc;
+  --dim:#8b95a3; --radius:10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0f1216; --card:#171c22; --ink:#e8ecf1; --muted:#9aa5b4;
+    --line:#2a323c; --accent:#6ba9ee; --accent-soft:#17293d;
+    --good:#6bd39b; --good-soft:#14301f; --warn:#e3b25f; --warn-soft:#33270f;
+    --dim:#6c7787; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 18px 64px}
+h1{margin:0 0 4px;font-size:1.4rem;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:.875rem;margin:0 0 20px}
+
+.panel{background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px;margin-bottom:18px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row input[type=text]{flex:1;min-width:280px;font:inherit;padding:9px 11px;
+  border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink)}
+button{font:inherit;font-weight:600;padding:9px 16px;border-radius:7px;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+button:disabled{opacity:.55;cursor:default}
+input:focus-visible,select:focus-visible,button:focus-visible{
+  outline:2px solid var(--accent);outline-offset:1px}
+.filters{display:grid;gap:12px;margin-top:14px;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--muted)}
+select{font:inherit;padding:8px 10px;border:1px solid var(--line);
+  border-radius:7px;background:var(--card);color:var(--ink);width:100%}
+
+.who{margin:0 0 6px;font-size:1.05rem;font-weight:700}
+.meta{color:var(--muted);font-size:.85rem;margin:0}
+.status{color:var(--muted);font-size:.9rem;padding:10px 0}
+.error{background:var(--warn-soft);color:var(--warn);padding:12px 14px;
+  border-radius:8px;border-left:3px solid currentColor;margin:14px 0}
+
+.req{background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:14px 16px;margin-bottom:12px}
+.req h2{margin:0;font-size:1rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tag{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  padding:2px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.rule{margin:8px 0 0;padding:8px 11px;border-radius:7px;background:var(--warn-soft);
+  color:var(--warn);font-size:.84rem;border-left:3px solid currentColor}
+.left{color:var(--muted);font-weight:400;font-size:.85rem}
+
+.course{border-top:1px solid var(--line);padding:11px 0 4px}
+.course:first-of-type{border-top:0;margin-top:8px}
+.chead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.code{font-weight:700;font-variant-numeric:tabular-nums}
+.ctitle{color:var(--muted);font-size:.92rem;flex:1;min-width:140px}
+.pill{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:999px;
+  background:var(--good-soft);color:var(--good);white-space:nowrap}
+.pill.none{background:transparent;color:var(--dim);border:1px solid var(--line)}
+.mode{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+  padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.course.empty .code,.course.empty .ctitle{color:var(--dim)}
+
+.secs{list-style:none;margin:7px 0 0;padding:0}
+.sec{padding:6px 0 6px 11px;border-left:2px solid var(--line);margin-bottom:5px}
+.sec-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sec-name{font-weight:600;font-size:.9rem;font-variant-numeric:tabular-nums}
+.sec-meta{color:var(--muted);font-size:.83rem;margin-top:2px}
+.sec-meta span::after{content:" · "}
+.sec-meta span:last-child::after{content:""}
+details>summary{cursor:pointer;font-size:.85rem;color:var(--accent);font-weight:600;
+  padding:3px 0;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"▸ ";display:inline-block;width:1em}
+details[open]>summary::before{content:"▾ "}
+
+.copybox{position:relative}
+textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
+  Menlo,Consolas,monospace;padding:12px;padding-right:52px;border-radius:8px;
+  border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
+.copy{position:absolute;top:10px;right:10px;padding:6px 10px;font-size:.8rem}
+footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:.76rem;line-height:1.6}
+footer h2{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--ink);margin:0 0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>AdvisingBot</h1>
+<p class="sub">Which courses a student still needs — and which of them have open seats.</p>
+
+<div class="panel">
+  <form class="row" id="form">
+    <input type="text" id="url" autocomplete="off" spellcheck="false"
+      placeholder="https://qu.stellic.com/app/audit?student_username=…">
+    <button type="submit" id="go">Check</button>
+  </form>
+  <div class="filters" id="filters" hidden>
+    <div class="field">
+      <label for="term">Semester</label>
+      <select id="term"></select>
+    </div>
+    <div class="field">
+      <label for="mode">Delivery</label>
+      <select id="mode">
+        <option value="any">Online or on-ground</option>
+        <option value="online">Online only</option>
+        <option value="on-ground">On-ground only</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="show">Show</label>
+      <select id="show">
+        <option value="open">Only courses with open seats</option>
+        <option value="all">Everything still needed</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div id="status" class="status"></div>
+<div id="who"></div>
+<main id="out"></main>
+
+<div class="panel" id="copypanel" hidden>
+  <div class="field"><label for="plain">Copy for notes or email</label></div>
+  <div class="copybox">
+    <textarea id="plain" readonly></textarea>
+    <button class="ghost copy" id="copy" type="button" title="Copy to clipboard">
+      ⧉ Copy
+    </button>
+  </div>
+</div>
+
+<footer>
+  <h2>Confidentiality</h2>
+  <p>
+    This tool reads degree audits through your authenticated Stellic session.
+    Audit contents are protected education records under FERPA. Use it only for
+    students you are authorized to advise. Data is held in memory for the length
+    of a single request and is never written to disk; only public course and
+    seat information is cached. The server listens on the loopback interface
+    only and must not be exposed to a network or deployed to a host.
+  </p>
+  <p>
+    Seat counts come from Self-Service and may be up to a day old — the exact
+    time each course was checked is shown beside it. Availability, eligibility,
+    prerequisites, and whether a course actually satisfies a requirement are
+    determined by Quinnipiac University. Verify in Self-Service and Stellic
+    before advising a student to register.
+  </p>
+</footer>
+</div>
+
+<script>
+let DATA = null;
+
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined) n.textContent = text;  // textContent: never inject
+  return n;
+};
+const MODE = {online:"Online", "on-ground":"On ground", hybrid:"Hybrid"};
+
+function matches(sec, term, mode) {
+  if (sec.term !== term) return false;
+  if (mode === "any") return true;
+  if (mode === "online") return sec.delivery === "online" || sec.delivery === "hybrid";
+  return sec.delivery === "on-ground" || sec.delivery === "hybrid";
+}
+
+function deliveryOf(secs) {
+  const on = secs.some(s => s.delivery === "online" || s.delivery === "hybrid");
+  const gr = secs.some(s => s.delivery === "on-ground" || s.delivery === "hybrid");
+  return on && gr ? "both" : on ? "online" : gr ? "on-ground" : "none";
+}
+const DELIVERY_LABEL = {both:"online + on-ground", online:"online", "on-ground":"on-ground"};
+
+function currentTerm(terms) {
+  const today = new Date().toISOString().slice(0,10);
+  const now = terms.find(t => t.start && t.end && t.start <= today && today <= t.end);
+  if (now) return now.code;
+  const next = terms.filter(t => t.start && t.start > today)
+                    .sort((a,b) => a.start.localeCompare(b.start))[0];
+  return (next || terms[0] || {}).code;
+}
+
+function renderSection(s) {
+  const li = el("li","sec");
+  const top = el("div","sec-top");
+  top.append(el("span","sec-name",s.name));
+  top.append(el("span","pill", s.seats === null ? s.display
+                              : `${s.seats} of ${s.capacity} open`));
+  top.append(el("span","mode", MODE[s.delivery] || s.delivery));
+  li.append(top);
+  const meta = el("div","sec-meta");
+  for (const bit of [s.meets, s.location, s.instructor, s.credits ? s.credits+" cr" : ""])
+    if (bit) meta.append(el("span",null,bit));
+  if (meta.childNodes.length) li.append(meta);
+  return li;
+}
+
+function render() {
+  const term = document.getElementById("term").value;
+  const mode = document.getElementById("mode").value;
+  const showAll = document.getElementById("show").value === "all";
+  const out = document.getElementById("out");
+  out.replaceChildren();
+  if (!DATA) return;
+
+  let withSeats = 0;
+  const lines = [];
+  const student = DATA.student;
+  const termName = (DATA.terms.find(t => t.code === term)||{}).description || term;
+  lines.push(`${student.name}${student.level ? " — " + student.level : ""}`);
+  if (student.programs.length) lines.push(student.programs.join(", "));
+  lines.push(`Courses still needed with open seats — ${termName}`);
+  lines.push("");
+
+  for (const req of DATA.requirements) {
+    const rows = req.courses.map(c => {
+      const secs = (c.sections||[]).filter(s => matches(s, term, mode));
+      return {course:c, secs};
+    }).filter(r => showAll || r.secs.length);
+
+    if (!rows.length && !req.rules.length && !req.open_units) continue;
+
+    const box = el("div","req");
+    box.style.marginLeft = Math.min(req.depth,3) * 14 + "px";
+    const h = el("h2");
+    h.append(document.createTextNode(req.name));
+    if (req.slots) h.append(el("span","left",
+      `${req.slots} more course${req.slots===1?"":"s"} needed`));
+    else if (req.units_remaining) h.append(el("span","left",
+      `${req.units_remaining} units left`));
+    const pool = rows.some(r => r.course.candidate);
+    if (pool) h.append(el("span","tag","choose from"));
+    box.append(h);
+
+    for (const rule of req.rules) box.append(el("div","rule", rule));
+    if (req.open_units)
+      box.append(el("div","rule",
+        `${req.open_units} units with no set course list — check the audit.`));
+
+    const headed = [];
+    for (const {course, secs} of rows) {
+      const c = el("div","course" + (secs.length ? "" : " empty"));
+      const head = el("div","chead");
+      head.append(el("span","code",course.code));
+      head.append(el("span","ctitle",course.title || ""));
+      if (secs.length) {
+        head.append(el("span","pill",
+          secs.reduce((n,s)=>n+(s.seats||0),0) + " seats"));
+        head.append(el("span","mode", DELIVERY_LABEL[deliveryOf(secs)]));
+      } else {
+        head.append(el("span","pill none","no open seats"));
+      }
+      c.append(head);
+
+      if (secs.length) {
+        withSeats++;
+        headed.push({course, secs});
+        const list = el("ul","secs");
+        if (secs.length === 1) {
+          list.append(renderSection(secs[0]));
+          c.append(list);
+        } else {
+          const d = el("details");
+          d.append(el("summary",null,`${secs.length} sections with open seats`));
+          secs.forEach(s => list.append(renderSection(s)));
+          d.append(list);
+          c.append(d);
+        }
+      }
+      box.append(c);
+    }
+
+    if (headed.length) {
+      lines.push(req.name + (req.slots
+        ? ` (${req.slots} more course${req.slots===1?"":"s"} needed)` : ""));
+      for (const {course, secs} of headed) {
+        const seats = secs.reduce((n,s)=>n+(s.seats||0),0);
+        lines.push(`  ${course.code.padEnd(9)} ${(course.title||"").slice(0,38).padEnd(40)}`
+          + `${String(seats).padStart(3)} seats  [${DELIVERY_LABEL[deliveryOf(secs)]}]`);
+      }
+      lines.push("");
+    }
+    out.append(box);
+  }
+
+  if (!out.childNodes.length)
+    out.append(el("p","status","Nothing still needed has open seats for these filters."));
+
+  document.getElementById("plain").value = lines.join("\n").trimEnd();
+  document.getElementById("copypanel").hidden = !withSeats;
+  const c = DATA.cache;
+  document.getElementById("status").textContent =
+    `${withSeats} course${withSeats===1?"":"s"} with open seats · `
+    + `${c.live} looked up just now, ${c.hits} already checked today`;
+}
+
+function showStudent() {
+  const w = document.getElementById("who");
+  w.replaceChildren();
+  if (!DATA) return;
+  w.append(el("p","who", DATA.student.name
+    + (DATA.student.level ? ` — ${DATA.student.level}` : "")));
+  if (DATA.student.programs.length)
+    w.append(el("p","meta", DATA.student.programs.join(" · ")));
+}
+
+async function check(ev) {
+  ev.preventDefault();
+  const url = document.getElementById("url").value.trim();
+  if (!url) return;
+  const go = document.getElementById("go");
+  go.disabled = true;
+  document.getElementById("out").replaceChildren();
+  document.getElementById("who").replaceChildren();
+  document.getElementById("copypanel").hidden = true;
+  document.getElementById("status").textContent =
+    "Opening the audit in Stellic and checking Self-Service — this takes a moment…";
+
+  try {
+    const r = await fetch("/api/check?url=" + encodeURIComponent(url));
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.error || ("HTTP " + r.status));
+    DATA = body;
+    try { localStorage.setItem("advisingbot.url", url); } catch (e) {}
+
+    const termSel = document.getElementById("term");
+    termSel.replaceChildren();
+    for (const t of DATA.terms) {
+      const o = el("option",null,t.description); o.value = t.code; termSel.append(o);
+    }
+    termSel.value = currentTerm(DATA.terms);
+    document.getElementById("filters").hidden = false;
+    showStudent();
+    render();
+  } catch (err) {
+    document.getElementById("status").textContent = "";
+    const box = el("div","error");
+    box.append(el("strong",null,"Could not read that audit. "));
+    box.append(document.createTextNode(err.message));
+    document.getElementById("out").append(box);
+  } finally {
+    go.disabled = false;
+  }
+}
+
+document.getElementById("form").addEventListener("submit", check);
+for (const id of ["term","mode","show"])
+  document.getElementById(id).addEventListener("change", render);
+
+document.getElementById("copy").addEventListener("click", async () => {
+  const box = document.getElementById("plain");
+  const btn = document.getElementById("copy");
+  try {
+    await navigator.clipboard.writeText(box.value);
+  } catch (e) {
+    box.select(); document.execCommand("copy");   // older browsers
+  }
+  btn.textContent = "✓ Copied";
+  setTimeout(() => { btn.textContent = "⧉ Copy"; }, 1600);
+});
+
+try {
+  const last = localStorage.getItem("advisingbot.url");
+  if (last) document.getElementById("url").value = last;
+} catch (e) {}
+</script>
+</body>
+</html>

@@ -2,12 +2,10 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
-
-# CLI run artifacts
-.last_run.json
-seats.csv
-seats.json
 .DS_Store
 
-# docs/data.json is generated but IS committed - the page reads it and the
-# history doubles as a record of how seats moved.
+# Cached seat data. Public course information only, but machine-local.
+cache/
+
+# Never commit anything derived from a student's audit.
+*audit*.json
