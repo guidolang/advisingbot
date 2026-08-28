@@ -218,10 +218,8 @@ function render() {
     + `[${DELIVERY_LABEL[deliveryOf(secs)]}]`).join("\n");
   document.getElementById("copypanel").hidden = rows.length === 0;
 
-  const c = DATA.cache;
   document.getElementById("status").textContent =
-    `${rows.length} course${rows.length===1?"":"s"} with open seats · `
-    + `${c.live} looked up just now, ${c.hits} already checked today`;
+    `${rows.length} course${rows.length===1?"":"s"} with open seats`;
 }
 
 function renderCourse(course, secs) {
