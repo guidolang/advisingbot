@@ -85,6 +85,7 @@ _FETCH_JS = r"""
     throw new Error('getauditinfo: ' + JSON.stringify(audit.message));
   }
   window.__advisingbot = JSON.stringify({
+    plan_id: planId,
     student: {
       name: [profile.first_name, profile.last_name].filter(Boolean).join(' '),
       username: username,
@@ -97,7 +98,52 @@ _FETCH_JS = r"""
 })()
 """
 
+# Stellic's own "Search qualifying courses" control behind each requirement.
+# `counts_for` is the requirement id; the reply lists every course that
+# satisfies it, which is the only way to resolve requirements written as
+# attributes ("a course carrying UC_NS") rather than as a course list.
+_EXPAND_JS = r"""
+(async () => {
+  const ids = __IDS__, planId = __PLAN__, maxPages = __PAGES__;
+  const maxMatches = __MAXMATCH__;
+  const strip = t => JSON.parse(t.replace(/^\)\]\}'[,]?\s*/, ''));
+  const out = {};
+  for (const id of ids) {
+    const courses = [];
+    let total = null, from = 0, page = 0;
+    try {
+      // The endpoint caps a page at 20 rows whatever `size` asks for, so walk
+      // it until it says last_page.
+      while (page < maxPages) {
+        const url = '/planner/searchcourses/?counts_for=' + encodeURIComponent(id)
+          + '&brief_mode=true&mode=search&only_prereq_met=false'
+          + '&plan_id=' + encodeURIComponent(planId)
+          + '&size=20&from=' + from + '&sort_by=code&view_type=list';
+        const r = await fetch(url, {credentials: 'same-origin',
+          headers: {'X-Requested-With': 'XMLHttpRequest'}});
+        if (!r.ok) { out[id] = {error: r.status}; break; }
+        const d = strip(await r.text());
+        total = d.num_matches;
+        // A requirement that thousands of courses satisfy is a free-credit
+        // bucket, not a choice. Listing the catalogue is not advice.
+        if (total > maxMatches) { out[id] = {total: total, courses: [], broad: true}; break; }
+        // Keep only code and name: the raw reply carries every offering and
+        // instructor going back years, far past what can be returned here.
+        for (const c of d.data_list || []) courses.push([c.code, c.short_name || c.name]);
+        page++;
+        from = d.till != null ? d.till : from + 20;
+        if (d.last_page || !(d.data_list || []).length) break;
+      }
+      if (!out[id]) out[id] = {total: total, courses: courses};
+    } catch (e) { out[id] = {error: String(e)}; }
+  }
+  return JSON.stringify(out);
+})()
+"""
+
 _CHUNK = 40_000
+_EXPAND_PAGES = 12      # 12 pages x 20 = 240 courses per requirement
+_EXPAND_MAX_MATCHES = 200   # above this a requirement is a free-credit bucket
 _AUDIT_PATH = "/app/audit"
 
 
@@ -188,35 +234,24 @@ def normalise_url(url: str) -> str:
     return f"{parsed.scheme}://{parsed.netloc}{_AUDIT_PATH}?student_username={username}"
 
 
-def _pull(session: ot.OpenTabs, url: str) -> dict:
-    """Open the audit and bring the JSON back in slices."""
-    tab = ot.open_tab(session, url)
+def _slurp(session: ot.OpenTabs, tab: int) -> dict:
+    """Run the audit fetch in the page and bring the JSON back in slices."""
     try:
-        info = ot.wait_for_load(session, tab)
-        landed = info.get("url") or ""
-        if "login.microsoftonline.com" in landed or "/login" in landed:
-            raise AuditError(
-                "Stellic redirected to the sign-in page. Sign in to Stellic in "
-                "Chrome, then try again."
-            )
-        try:
-            total = int(ot.run_script(session, tab, _FETCH_JS))
-        except OpenTabsError as exc:
-            raise AuditError(f"Stellic did not return an audit: {exc}") from exc
+        total = int(ot.run_script(session, tab, _FETCH_JS))
+    except OpenTabsError as exc:
+        raise AuditError(f"Stellic did not return an audit: {exc}") from exc
 
-        parts = []
-        for start in range(0, total, _CHUNK):
-            parts.append(
-                ot.run_script(
-                    session, tab,
-                    f"window.__advisingbot.slice({start},{start + _CHUNK})",
-                )
+    parts = []
+    for start in range(0, total, _CHUNK):
+        parts.append(
+            ot.run_script(
+                session, tab,
+                f"window.__advisingbot.slice({start},{start + _CHUNK})",
             )
-        ot.run_script(session, tab, "delete window.__advisingbot; 1")
-    finally:
-        ot.close_tab(session, tab)
+        )
+    ot.run_script(session, tab, "delete window.__advisingbot; 1")
 
-    blob = "".join(p for p in parts if isinstance(p, str))
+    blob = "".join(part for part in parts if isinstance(part, str))
     if len(blob) != total:
         raise AuditError(
             f"Audit came back incomplete ({len(blob)} of {total} characters)."
@@ -227,25 +262,111 @@ def _pull(session: ot.OpenTabs, url: str) -> dict:
         raise AuditError(f"Audit JSON would not parse: {exc}") from exc
 
 
-def fetch(url: str, *, session: ot.OpenTabs | None = None,
-          attempts: int = 2) -> Audit:
+def _expand(
+    session: ot.OpenTabs, tab: int, plan_id: str, ids: list[str]
+) -> dict[str, dict]:
+    """Ask Stellic which courses satisfy each of these requirements."""
+    if not ids or not plan_id:
+        return {}
+    script = (
+        _EXPAND_JS.replace("__IDS__", json.dumps(ids))
+        .replace("__PLAN__", json.dumps(plan_id))
+        .replace("__PAGES__", str(_EXPAND_PAGES))
+        .replace("__MAXMATCH__", str(_EXPAND_MAX_MATCHES))
+    )
+    try:
+        raw = ot.run_script(session, tab, script)
+    except OpenTabsError:
+        # Expansion is a bonus; a failure here must not lose the audit.
+        return {}
+    if isinstance(raw, str):
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            return {}
+    return raw if isinstance(raw, dict) else {}
+
+
+def _apply_expansion(audit: "Audit", found: dict[str, dict]) -> None:
+    """Turn "any course carrying UC_NS" into the courses that carry it."""
+    for requirement in audit.requirements:
+        entry = found.get(requirement.id)
+        if not entry or entry.get("error"):
+            continue
+        courses = entry.get("courses") or []
+        if not courses:
+            if entry.get("broad"):
+                requirement.rules.append(
+                    f"Any of {entry.get('total')} courses counts here - too "
+                    "broad to list."
+                )
+            continue
+        known = {c.code for c in requirement.needed}
+        for code, title in courses:
+            if code and code not in known:
+                known.add(code)
+                requirement.needed.append(
+                    NeededCourse(code=code, title=title or "", candidate=True)
+                )
+        requirement.open_units = 0.0
+        total = entry.get("total")
+        if isinstance(total, int) and total > len(courses):
+            requirement.rules.append(
+                f"Showing {len(courses)} of {total} qualifying courses."
+            )
+
+
+def fetch(
+    url: str,
+    *,
+    session: ot.OpenTabs | None = None,
+    attempts: int = 2,
+    expand: bool = True,
+) -> Audit:
     """Fetch and parse one student's audit."""
     target = normalise_url(url)
     session = session or ot.OpenTabs()
     session.connect()
 
-    last: Exception | None = None
     for attempt in range(attempts):
         try:
-            return parse(_pull(session, target))
+            tab = ot.open_tab(session, target)
+            try:
+                info = ot.wait_for_load(session, tab)
+                landed = info.get("url") or ""
+                if "login.microsoftonline.com" in landed or "/login" in landed:
+                    raise AuditError(
+                        "Stellic redirected to the sign-in page. Sign in to "
+                        "Stellic in Chrome, then try again."
+                    )
+                payload = _slurp(session, tab)
+                audit = parse(payload)
+
+                # Requirements written as a rule rather than a course list are
+                # resolved with the same call Stellic's own UI makes.
+                if expand:
+                    open_ended = [
+                        r.id for r in audit.requirements if r.is_open_ended
+                    ]
+                    if open_ended:
+                        _apply_expansion(
+                            audit,
+                            _expand(
+                                session, tab,
+                                str(payload.get("plan_id") or ""),
+                                open_ended,
+                            ),
+                        )
+                return audit
+            finally:
+                ot.close_tab(session, tab)
         except (OpenTabsError, AuditError) as exc:
-            last = exc
             # Tabs occasionally vanish mid-run; one retry clears it.
             if attempt + 1 < attempts and ot.is_transient(exc):
                 time.sleep(1.0)
                 continue
             raise
-    raise AuditError(str(last))
+    raise AuditError("Could not read the audit.")
 
 
 # -- parsing ---------------------------------------------------------------

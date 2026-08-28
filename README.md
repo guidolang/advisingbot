@@ -1,20 +1,19 @@
 # AdvisingBot
 
-Paste a Stellic audit link. Get back the courses that student still needs to
-graduate, grouped exactly the way Stellic groups them, with the ones that have
-**open seats** in Self-Service marked online, on-ground, or both — plus a plain
-text version you can copy into notes or an email.
+Paste a Stellic audit link. Get back one clean list of the courses that
+student still needs and that have **open seats** in Self-Service right now,
+each marked online, on-ground, or both — plus a plain text version you can copy
+into notes or an email.
 
 ```
-Elijah Alston — Junior
-Courses still needed with open seats — Fall 2026
-
-Computer Information Systems Core (3 more courses needed)
-  CIS 440   IT Project Management                    17 seats  [on-ground]
-
-Business Essentials (1 more course needed)
-  EC 272    Advanced Applied Statistics               6 seats  [on-ground]
+CIS 440   IT Project Management                    17 seats  [on-ground]
+EC 272    Advanced Applied Statistics               6 seats  [on-ground]
+EN 103H   Advanced Academic Writing and Research   11 seats  [on-ground]
+BIO 101   General Biology I                        22 seats  [on-ground]
 ```
+
+Required courses come first, then options for elective and general-education
+requirements. A course that could satisfy several requirements appears once.
 
 ## This runs on your machine only
 
@@ -43,9 +42,12 @@ python3 app.py
 Open <http://127.0.0.1:8765>, paste an audit URL, press Check. A bare username
 works too.
 
-The first check for a student takes ~15 seconds: it opens the audit in a
-background tab, reads it, then looks up each course in Self-Service. Later
-checks that day are much faster — see caching below.
+A first check takes a minute or two on a cold cache: it opens the audit in a
+background tab, expands the open requirements, then looks up every candidate
+course in Self-Service. Most of that is one-time — for one junior, 235
+candidate courses needed only 81 live section lookups, because the index search
+reveals in one request which courses are not offered at all. Later checks that
+day mostly hit the cache and take seconds.
 
 Three controls: **Semester** (defaults to the term in session), **Delivery**
 (online only / on-ground only / either), and **Show** (only courses with open
@@ -100,15 +102,30 @@ one of two ways:
 - the composite matches a leaf's `course_parent_id` → **a specific course is
   missing** (CIS 440)
 - it doesn't → the card belongs to an open requirement ("Fulfill any 3 of the
-  following") → we expand that requirement's own options into **candidates**,
-  tagged *choose from* in the UI
+  following", "a course carrying UC_NS")
 
-That second path is what turns "any 3 CIS electives" into a list you can act
-on. Candidates are labelled as such: Stellic decides what actually counts.
+### Expanding open requirements
 
-Requirements stated as attributes rather than courses ("a course with attribute
-UC_NS") can't be expanded from the audit alone. Those keep their wording and
-show as a rule, so a requirement never looks emptier than it is.
+An open requirement is resolved with the same call Stellic's own
+*"Search qualifying courses"* button makes:
+
+```
+GET /planner/searchcourses/?counts_for=<requirement_id>&plan_id=<uuid>
+    &brief_mode=true&size=20&from=<n>&sort_by=code
+```
+
+`counts_for` is the requirement id, and the reply lists every course that
+satisfies it — including requirements written as attributes rather than course
+lists, which cannot be resolved from the audit payload alone. The endpoint caps
+a page at 20 rows whatever `size` asks for, so it is walked until `last_page`.
+
+Two limits keep this sane. A requirement is not expanded past 240 courses, and
+one matching more than 200 is skipped outright: a free-credit bucket where
+"any of 359 courses counts" is a fact about the catalogue, not advice. Expanded
+courses are options, not approvals — Stellic decides what actually counts.
+
+The difference is large. One junior went from 3 courses with open seats to 53
+once general-education requirements were expanded.
 
 Parent requirements repeat every card their children carry — the same slot can
 appear a dozen times across `audit_data` — so cards are collapsed by composite
