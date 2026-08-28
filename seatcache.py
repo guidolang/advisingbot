@@ -30,6 +30,11 @@ def today() -> str:
     return dt.date.today().isoformat()
 
 
+def now() -> str:
+    """Local wall-clock time, with offset, for "seats as of ..."."""
+    return dt.datetime.now().astimezone().isoformat(timespec="seconds")
+
+
 class SeatCache:
     def __init__(
         self,
@@ -71,7 +76,12 @@ class SeatCache:
 
     @staticmethod
     def _fresh(entry: dict | None) -> bool:
-        return bool(entry) and entry.get("checked_on") == today()
+        # `checked_at` is also required so entries written before it existed
+        # are treated as stale and refreshed once, rather than reporting an
+        # unknown time forever.
+        return bool(entry) and entry.get("checked_on") == today() and bool(
+            entry.get("checked_at")
+        )
 
     def is_fresh(self, code: str) -> bool:
         return self._fresh(self.data["courses"].get(code))
@@ -108,7 +118,9 @@ class SeatCache:
                 }
             )
         found.sort(key=lambda t: (t["start"] or "9999", t["code"]))
-        self.data["terms"] = {"checked_on": today(), "terms": found}
+        self.data["terms"] = {
+            "checked_on": today(), "checked_at": now(), "terms": found
+        }
         self.save()
         return found
 
@@ -140,6 +152,7 @@ class SeatCache:
         }
         self.data["index"] = {
             "checked_on": today(),
+            "checked_at": now(),
             "subjects": sorted(known | set(missing)),
             "courses": mapping,
         }
@@ -162,7 +175,10 @@ class SeatCache:
 
             for code in stale:
                 found = index.get(code)
-                entry = {"checked_on": today(), "title": "", "sections": []}
+                entry = {
+                    "checked_on": today(), "checked_at": now(),
+                    "title": "", "sections": [],
+                }
                 if found and found.get("sections"):
                     course = Course(
                         course_id=found["id"],
@@ -189,7 +205,7 @@ class SeatCache:
             self.save()
 
         return {code: self.data["courses"].get(code, {
-            "checked_on": None, "title": "", "sections": []
+            "checked_on": None, "checked_at": None, "title": "", "sections": []
         }) for code in wanted}
 
 
