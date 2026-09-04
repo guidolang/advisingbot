@@ -26,6 +26,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
+import eligibility
 import opentabs as ot
 import seatcache
 import stellic
@@ -69,14 +70,52 @@ def delivery_of(sections: list[Section]) -> str:
     return "none"
 
 
+def blocker(code: str, entry: dict, audit: stellic.Audit) -> dict | None:
+    """Why this student should not be shown this course, if there is a reason.
+
+    Three reasons, in the order an adviser would reach them: they have it
+    already, they cannot take it yet, or it was written for somebody else's
+    programme. Anything the catalogue states unclearly is not a reason - see
+    eligibility.py.
+    """
+    if code in audit.completed:
+        return {"reason": "taken", "detail": "Already taken or under way"}
+
+    missing = eligibility.missing_prerequisites(
+        entry.get("requisites") or [], audit.completed
+    )
+    if missing:
+        return {
+            "reason": "prerequisite",
+            "detail": "Needs " + ", ".join(missing),
+        }
+
+    # A business course is written for business students, so its description
+    # has nothing to say about whether this one belongs in it.
+    if code.split("-")[0] not in eligibility.BUSINESS_SUBJECTS:
+        restricted = eligibility.restriction(
+            entry.get("description") or "", audit.programs
+        )
+        if restricted:
+            return {"reason": "programme", "detail": restricted}
+
+    return None
+
+
 def check(url: str) -> dict:
-    """The whole job: audit -> needed courses -> seats."""
+    """The whole job: audit -> needed courses -> seats -> who may take them."""
     audit = stellic.fetch(url, session=session())
 
     store = cache()
     before_live, before_hits = store.live_lookups, store.cache_hits
     known_terms = {t["code"]: t for t in store.terms()}
     seats = store.lookup(audit.all_codes)
+
+    # One verdict per course, not per requirement: a course that shows up
+    # under three requirements is the same course to register for.
+    blocked = {
+        code: blocker(code, entry, audit) for code, entry in seats.items()
+    }
 
     requirements = []
     for requirement in audit.requirements:
@@ -92,6 +131,7 @@ def check(url: str) -> dict:
                     "title": course.title or entry.get("title") or "",
                     "units": course.units,
                     "candidate": course.candidate,
+                    "blocked": blocked.get(course.lookup_code),
                     "checked_on": entry.get("checked_on"),
                     "sections": [
                         {

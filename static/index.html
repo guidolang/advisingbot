@@ -197,10 +197,14 @@ function render() {
     for (const course of req.courses)
       if (!unique.has(course.code)) unique.set(course.code, course);
 
-  const rows = [];
+  // A course the student has already taken, cannot take yet, or that is
+  // written for another programme has open seats and is still not advice.
+  // It is set aside rather than dropped, so the reason stays checkable.
+  const rows = [], held = [];
   for (const course of unique.values()) {
     const secs = (course.sections || []).filter(s => matches(s, term, mode));
-    if (secs.length) rows.push({course, secs});
+    if (!secs.length) continue;
+    (course.blocked ? held : rows).push({course, secs});
   }
 
   if (rows.length) {
@@ -211,15 +215,54 @@ function render() {
     out.append(el("p","status",
       "Nothing still needed has open seats this semester."));
   }
+  if (held.length) out.append(renderHeld(held));
 
-  document.getElementById("plain").value = rows.map(({course, secs}) =>
-    `${course.code.padEnd(9)} ${(course.title||"").slice(0,38).padEnd(40)}`
-    + `${String(secs.reduce((n,s)=>n+(s.seats||0),0)).padStart(3)} seats  `
-    + `[${DELIVERY_LABEL[deliveryOf(secs)]}]`).join("\n");
+  document.getElementById("plain").value =
+    rows.map(({course, secs}) => copyLine(course, secs)).join("\n");
   document.getElementById("copypanel").hidden = rows.length === 0;
 
-  document.getElementById("status").textContent =
-    `${rows.length} course${rows.length===1?"":"s"} with open seats`;
+  const status = `${rows.length} course${rows.length===1?"":"s"} with open seats`;
+  document.getElementById("status").textContent = held.length
+    ? `${status} · ${held.length} set aside`
+    : status;
+}
+
+// "CIS 101: Introduction to Applied AI & Analytics (Online: 3 available seats,
+//  In-person: 6 available seats)" - one course per line, nothing padded, so it
+// reads as a sentence wherever it is pasted.
+function copyLine(course, secs) {
+  const seats = mode => secs
+    .filter(s => s.delivery === mode || s.delivery === "hybrid")
+    .reduce((n, s) => n + (s.seats || 0), 0);
+  const parts = [];
+  for (const [m, label] of [["online","Online"], ["on-ground","In-person"]]) {
+    const n = seats(m);
+    if (n) parts.push(`${label}: ${n} available seat${n === 1 ? "" : "s"}`);
+  }
+  const tail = parts.length ? ` (${parts.join(", ")})` : "";
+  return `${course.code}: ${course.title || ""}${tail}`;
+}
+
+const HELD_LABEL = {taken:"Already taken", prerequisite:"Prerequisite not met",
+                    programme:"Written for another programme"};
+
+function renderHeld(held) {
+  const box = el("details","panel");
+  box.append(el("summary", null,
+    `${held.length} course${held.length===1?"":"s"} with seats, set aside`));
+  const list = el("ul","secs");
+  for (const {course} of held) {
+    const li = el("li","sec");
+    const top = el("div","sec-top");
+    top.append(el("span","sec-name", course.code));
+    top.append(el("span","ctitle", course.title || ""));
+    top.append(el("span","mode", HELD_LABEL[course.blocked.reason] || ""));
+    li.append(top);
+    li.append(el("div","sec-meta", course.blocked.detail || ""));
+    list.append(li);
+  }
+  box.append(list);
+  return box;
 }
 
 function renderCourse(course, secs) {

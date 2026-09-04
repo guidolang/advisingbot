@@ -106,11 +106,22 @@ class Section:
 
 
 @dataclass
+class Requisite:
+    """One prerequisite or corequisite rule, as the catalogue prints it."""
+
+    text: str                 # "Take CIS*101."
+    order: str                # "Previous" / "Concurrent" / "PreviousOrConcurrent"
+    required: bool            # False => "Recommended ... but is not required."
+
+
+@dataclass
 class Course:
     course_id: str
     subject: str
     number: str
     title: str
+    description: str = ""
+    requisites: list[Requisite] = field(default_factory=list)
     academic_levels: list[str] = field(default_factory=list)
     matching_section_ids: list[str] = field(default_factory=list)
     sections: list[Section] = field(default_factory=list)
@@ -317,7 +328,16 @@ class SelfServiceClient:
                 return [], payload
             raise SelfServiceError(f"Self-Service said: {message}")
 
-        courses = [_parse_course(c) for c in payload.get("Courses") or []]
+        # `Courses` carries the requisite rules only as opaque requirement
+        # codes; `CourseFullModels` carries the same rules as the sentence the
+        # catalogue prints. Both lists cover the same courses, so join them.
+        full = {
+            str(m.get("Id")): m for m in payload.get("CourseFullModels") or []
+        }
+        courses = [
+            _parse_course(c, full.get(str(c.get("Id"))))
+            for c in payload.get("Courses") or []
+        ]
 
         total = int(payload.get("TotalItems") or 0)
         if complete and total > len(courses):
@@ -388,12 +408,45 @@ class SelfServiceClient:
 # -- parsing --------------------------------------------------------------
 
 
-def _parse_course(raw: dict) -> Course:
+def _parse_requisites(raw: dict, full: dict | None) -> list[Requisite]:
+    """Pair each printed requisite sentence with how it has to be met.
+
+    `raw["Requisites"]` says whether a rule must be finished first or may be
+    taken alongside, and whether it is required at all, but names the rule only
+    by an internal code. `full["CourseRequisites"]` carries the sentence under
+    the same code. Neither half is usable alone.
+    """
+    if not full:
+        return []
+    timing = {
+        str(r.get("RequirementCode")): r for r in raw.get("Requisites") or []
+    }
+    out = []
+    for entry in full.get("CourseRequisites") or []:
+        text = (entry.get("DisplayText") or "").strip()
+        if not text:
+            continue
+        rule = timing.get(str(entry.get("RequisiteId"))) or {}
+        out.append(
+            Requisite(
+                text=text,
+                order=rule.get("CompletionOrder") or "Previous",
+                required=bool(
+                    entry.get("IsRequired", rule.get("IsRequired", True))
+                ),
+            )
+        )
+    return out
+
+
+def _parse_course(raw: dict, full: dict | None = None) -> Course:
     return Course(
         course_id=str(raw.get("Id") or ""),
         subject=raw.get("SubjectCode") or "",
         number=raw.get("Number") or "",
         title=raw.get("Title") or "",
+        description=(raw.get("Description") or "").strip(),
+        requisites=_parse_requisites(raw, full),
         matching_section_ids=[str(s) for s in raw.get("MatchingSectionIds") or []],
     )
 
