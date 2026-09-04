@@ -321,7 +321,6 @@ async function check(ev) {
     const body = await r.json();
     if (!r.ok) throw new Error(body.error || ("HTTP " + r.status));
     DATA = body;
-    try { localStorage.setItem("advisingbot.url", url); } catch (e) {}
 
     const termSel = document.getElementById("term");
     termSel.replaceChildren();
@@ -365,10 +364,10 @@ document.getElementById("copy").addEventListener("click", async () => {
   setTimeout(() => { btn.textContent = "⧉ Copy"; }, 1600);
 });
 
-try {
-  const last = localStorage.getItem("advisingbot.url");
-  if (last) document.getElementById("url").value = last;
-} catch (e) {}
+// The box starts empty every time: an audit URL carries a student's username,
+// which has no business outliving the session that looked it up. Clear anything
+// an earlier version stored.
+try { localStorage.removeItem("advisingbot.url"); } catch (e) {}
 </script>
 </body>
 </html>
