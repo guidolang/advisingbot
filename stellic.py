@@ -189,6 +189,12 @@ class Requirement:
 _ONLINE_RE = re.compile(r"\bonline\b", re.I)
 
 
+def _normalise_code(code: str) -> str:
+    """Stellic writes "CIS 101"; Self-Service wants "CIS-101"."""
+    parts = (code or "").split()
+    return f"{parts[0]}-{parts[1]}" if len(parts) >= 2 else (code or "").strip()
+
+
 @dataclass
 class Audit:
     student_name: str
@@ -197,6 +203,10 @@ class Audit:
     programs: list[str]
     requirements: list[Requirement]
     online_only: bool = False
+    # Everything this student has already passed or is sitting in right now,
+    # in Self-Service form ("CIS-101"). Two jobs: never suggest one of these
+    # again, and treat them as satisfying other courses' prerequisites.
+    completed: set[str] = field(default_factory=set)
 
     @property
     def all_codes(self) -> list[str]:
@@ -453,6 +463,28 @@ def _rule_texts(node: dict) -> list[str]:
     return out
 
 
+def _completed(audit: dict) -> set[str]:
+    """Courses the student has passed or is currently taking.
+
+    `course_plan_info` is keyed by course code and holds one entry per
+    attempt, each carrying a status and, once graded, the grade itself. A
+    failed attempt leaves the course still to take, so it does not count; a
+    course under way this term does, because it will be finished before
+    anything we are recommending starts.
+    """
+    done: set[str] = set()
+    for code, attempts in (audit.get("course_plan_info") or {}).items():
+        for attempt in attempts or []:
+            grade = attempt.get("grade") or {}
+            if grade.get("is_fail"):
+                continue
+            status = attempt.get("progress_status") or attempt.get("status")
+            if status in ("taken", "in_progress") or attempt.get("is_registered"):
+                done.add(_normalise_code(code))
+                break
+    return done
+
+
 def parse(payload: dict) -> Audit:
     audit = payload.get("audit") or {}
     if audit.get("success") is False:
@@ -589,6 +621,7 @@ def parse(payload: dict) -> Audit:
         programs=declared,
         requirements=requirements,
         online_only=any(_ONLINE_RE.search(name) for name in declared),
+        completed=_completed(audit),
     )
 
 

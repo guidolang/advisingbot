@@ -135,6 +135,11 @@ class SeatCache:
                 "id": course.course_id,
                 "sections": course.matching_section_ids,
                 "title": course.title,
+                # Catalogue text, not seat data: it changes once a year, and
+                # keeping it here means eligibility can be judged for a course
+                # that has no sections to look up at all.
+                "description": course.description,
+                "requisites": [asdict(r) for r in course.requisites],
             }
             for course in courses
         }
@@ -162,7 +167,13 @@ class SeatCache:
 
             for code in stale:
                 found = index.get(code)
-                entry = {"checked_on": today(), "title": "", "sections": []}
+                entry = {
+                    "checked_on": today(), "title": "", "sections": [],
+                    "description": "", "requisites": [],
+                }
+                if found:
+                    entry["description"] = found.get("description") or ""
+                    entry["requisites"] = found.get("requisites") or []
                 if found and found.get("sections"):
                     course = Course(
                         course_id=found["id"],
@@ -189,7 +200,8 @@ class SeatCache:
             self.save()
 
         return {code: self.data["courses"].get(code, {
-            "checked_on": None, "title": "", "sections": []
+            "checked_on": None, "title": "", "sections": [],
+            "description": "", "requisites": [],
         }) for code in wanted}
 
 
