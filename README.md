@@ -30,6 +30,25 @@ You need:
 - Chrome signed in to Quinnipiac Stellic.
 - OpenTabs running and connected to Chrome.
 
+## Set up with an AI assistant
+
+If you have been given this folder and would like help setting it up locally,
+copy the prompt below into your AI coding assistant. Do not include a student
+audit link or student name in the prompt.
+
+```text
+I am a non-technical faculty adviser and want to run the AdvisingBot application
+on my own Mac. Please inspect the README in this project, help me install any
+needed local prerequisites, and start the application. Explain each step in
+plain language and stop if you need me to sign in or take an action in Chrome.
+
+This application handles FERPA-protected student records. Keep it local to my
+computer, do not deploy it, do not expose its local server, do not upload or
+commit any student data, and do not put student audit links, names, or records
+into files, logs, or messages. Confirm that the local course-seat cache is not
+tracked by Git before making any commit.
+```
+
 ## Use it
 
 1. Double-click `bin/AdvisingBot.command`.
