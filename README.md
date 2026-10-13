@@ -1,7 +1,7 @@
 # AdvisingBot
 
-AdvisingBot helps an authorized adviser turn a student's Stellic degree audit
-into a practical list of courses with open seats in Self-Service.
+AdvisingBot helps faculty turn a student's Stellic degree audit into a
+practical list of courses with open seats in Self-Service.
 
 It keeps the same nested requirement order as Stellic, so you can see which
 requirement each course may fulfill. A course can appear under more than one
@@ -26,7 +26,6 @@ seats. Select the "more courses" control when you want to see the rest.
 
 You need:
 
-- Authorization to advise the student.
 - Chrome signed in to Quinnipiac Stellic.
 - OpenTabs running and connected to Chrome.
 
@@ -95,8 +94,7 @@ register before making a recommendation.
 
 ## Student privacy
 
-A degree audit is a FERPA-protected education record. Use AdvisingBot only for
-students you are authorized to advise.
+A degree audit is a FERPA-protected education record.
 
 - AdvisingBot runs only on your computer; it is not a hosted service.
 - The student audit is used for the current check and is not saved to disk.
