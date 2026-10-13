@@ -11,11 +11,9 @@ it can fulfill, within the limits Stellic applies.
 - MU 130: Understanding Music (Online: 1 available seat, In-person: 42 available seats)
 ```
 
-The tree follows the nested order in Stellic. Requirement categories use a
-light-gray card and connected tree lines; available course sections use a
-green marker and rail. A category's explanatory rule remains visible, while
-course cards are visually distinct. Courses ruled out by prerequisites or
-programme restrictions collapse into a "set aside" block with the reason.
+The tree follows the nested order in Stellic. A category's explanatory rule
+remains visible, and courses ruled out by prerequisites or programme
+restrictions collapse into a "set aside" block with the reason.
 
 The interface defaults to the furthest future semester and provides a
 **Modality** filter for Online, On-ground, or Online + On-ground. It initially
