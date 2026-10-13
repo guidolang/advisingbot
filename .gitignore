@@ -5,10 +5,7 @@ venv/
 .DS_Store
 
 # Cached seat data. Public course information only, but machine-local.
-cache/
+skills/advising-report/app/cache/
 
 # Never commit anything derived from a student's audit.
 *audit*.json
-
-# Leftovers from the old public site; nothing here is served now.
-docs/

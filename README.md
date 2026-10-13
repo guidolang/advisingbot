@@ -1,80 +1,54 @@
 # AdvisingBot
 
-AdvisingBot helps faculty turn a student's Stellic degree audit into a
-practical list of courses with open seats in Self-Service.
+AdvisingBot helps Quinnipiac faculty turn a student's Stellic degree audit into a clear list of courses with open seats in Self-Service.
 
-It keeps the same nested requirement order as Stellic, so you can see which
-requirement each course may fulfill. A course can appear under more than one
-requirement when it can count in more than one place.
+It follows the requirement structure in Stellic, so you can see what each course may count toward. A course can appear in more than one place when it can satisfy more than one requirement.
 
-## What it does
+## Install
 
-- Reads the student's current degree audit from Stellic.
-- Finds courses named in a requirement's rules or comments.
-- Finds courses that satisfy University Curriculum attributes, such as Fine
-  Arts, Humanities, Natural Sciences, and Social Sciences.
-- Checks current section availability in Self-Service.
-- Excludes courses the audit records as completed, in progress, or registered.
-- Flags courses that appear to be blocked by a prerequisite or a clear
-  programme restriction.
-- Lets you choose a semester and filter results to Online, On-ground, or both.
+In Codex, paste this prompt:
 
-For each requirement, AdvisingBot initially shows up to five courses with open
-seats. Select the "more courses" control when you want to see the rest.
+```text
+Install the advising-report Skill from https://github.com/guidolang/advisingbot/tree/main/skills/advising-report. Then open AdvisingBot in my regular browser.
+```
 
-## Before you begin
+Codex downloads and installs the Skill for you. You do not need to install GitHub, use Terminal, or install Python packages. If Codex asks you to sign in to GitHub, follow that one prompt so it can download the Skill.
 
-You need:
+The first time you use it, Codex checks the secure connection to Stellic. If anything needs attention, it gives you a plain-language message. You can simply ask Codex to fix the connection for AdvisingBot.
 
-- Chrome signed in to Quinnipiac Stellic.
-- [OpenTabs](https://opentabs.dev/) running and connected to Chrome.
+## Use AdvisingBot
 
-## Use it
+1. In Chrome, open the student's degree audit in Stellic.
+2. Copy the audit page address.
+3. Paste it into AdvisingBot and select **Check**.
+4. Choose a semester and, when helpful, Online, On-ground, or both.
+5. Review the available courses and sections. Use **Copy Notes** when you want a short list to paste elsewhere.
 
-1. Double-click `bin/AdvisingBot.command`.
-2. Paste the student's Stellic audit link. A link should include
-   `student_username=`. You may also enter the username by itself.
-3. Select **Check**.
-4. Wait for the status message to finish. The first check of the day can take
-   a minute or two; later checks are usually faster.
-5. Use the requirement tree, semester selector, and Modality selector to
-   review available choices.
+AdvisingBot reopens an existing local instance when one is already running. Closing a browser window does not erase its same-day public course cache.
 
-The default semester is the furthest future term currently available. Use
-**Copy Notes** to copy a concise course-and-availability list.
+## Example
 
-## Reading the results
+This example uses a test student report.
 
-- Requirement categories follow the order and nesting of the audit.
-- Course rows identify the course, title, credits, and available sections.
-- A course is listed only when at least one relevant section has an open seat.
-- If an available course can meet more than one open requirement, it appears
-  in each relevant place.
-- A requirement may show no course when there is no currently open eligible
-  section, or when Stellic permits an approved alternative that the audit does
-  not identify well enough for AdvisingBot to recommend a specific course.
-- The university-wide total-credit completion item is not expanded into a
-  course list.
+![Example AdvisingBot report](skills/advising-report/assets/example-report.png)
 
-Treat the results as advising support, not registration clearance. Confirm
-that a course satisfies the requirement in Stellic and that the student may
-register before making a recommendation.
+## Reading the report
+
+- Requirements follow the order and nesting shown in Stellic.
+- Courses appear only when a relevant section has an open seat.
+- A course may appear under more than one requirement when it can count toward each of them.
+- Courses that have seats but need a prerequisite or adviser review are set aside with a reason.
+- A requirement can have no recommendation when no eligible section is open or when Stellic does not identify a specific course well enough to recommend one.
+
+Use the report to support advising. Confirm the student's final eligibility and course fit in Stellic before recommending registration.
 
 ## If something goes wrong
 
 | What you see | What to do |
 | --- | --- |
-| A request to sign in | Sign in to Stellic in Chrome, then try again. |
-| An OpenTabs connection error | Start OpenTabs and confirm that its Chrome extension is connected. |
-| No courses for a requirement | Try another semester or modality. There may be no open eligible sections, or the requirement may need adviser review. |
-| Results look out of date | Seat information refreshes daily. Check Self-Service directly when an immediate change matters. |
+| A message asking you to sign in | Sign in to Stellic in Chrome, then select **Check** again. |
+| A message about the secure Stellic connection | In Codex, say: **Set up OpenTabs for AdvisingBot.** |
+| No courses for a requirement | Try a different semester or modality. There may be no open eligible sections, or the requirement may need adviser review. |
+| Results look out of date | Check Self-Service directly when an immediate seat change matters. |
 
-## Student privacy
-
-A degree audit is a FERPA-protected education record.
-
-- AdvisingBot runs only on your computer; it is not a hosted service.
-- The student audit is used for the current check and is not saved to disk.
-- The local cache contains public course and seat information only, not student
-  records.
-- Do not expose the local server or deploy this application to the web.
+The app runs locally. It holds the student's audit in memory for the current check and does not save it to disk. Its local cache contains public course and seat information only.

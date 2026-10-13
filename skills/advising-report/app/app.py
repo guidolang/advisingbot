@@ -72,6 +72,32 @@ def _progress() -> str:
         return _progress_message
 
 
+def friendly_error(exc: Exception) -> str:
+    """Keep connection failures useful without exposing implementation detail."""
+    if isinstance(exc, ot.OpenTabsError):
+        text = str(exc).lower()
+        if "token" in text or "authorization" in text:
+            return (
+                "AdvisingBot needs its secure Stellic connection. Ask Codex to "
+                "set up OpenTabs for AdvisingBot, then try again."
+            )
+        if "reach opentabs" in text or "connection" in text:
+            return (
+                "AdvisingBot could not reach its secure Stellic connection. "
+                "Ask Codex to start or repair OpenTabs, then try again."
+            )
+        return (
+            "AdvisingBot could not use its secure Stellic connection. Ask Codex "
+            "to check OpenTabs, then try again."
+        )
+    if isinstance(exc, stellic.AuditError):
+        text = str(exc).lower()
+        if "sign" in text or "login" in text:
+            return "Sign in to Stellic in Chrome, then try again."
+        return "Stellic could not read this audit. Refresh it in Stellic, then try again."
+    return "AdvisingBot could not complete that check. Try again, or ask Codex for help."
+
+
 def delivery_of(sections: list[Section]) -> str:
     """How a course can be taken, across the sections that have seats."""
     online = any(s.is_online for s in sections)
@@ -287,10 +313,10 @@ class Handler(BaseHTTPRequestHandler):
                 try:
                     self._json(200, check(url, progress=_set_progress))
                 except (stellic.AuditError, ot.OpenTabsError) as exc:
-                    self._json(502, {"error": str(exc)})
-                except Exception as exc:  # noqa: BLE001 - surface, don't crash
+                    self._json(502, {"error": friendly_error(exc)})
+                except Exception as exc:  # noqa: BLE001 - keep failures private
                     traceback.print_exc()
-                    self._json(500, {"error": f"{type(exc).__name__}: {exc}"})
+                    self._json(500, {"error": friendly_error(exc)})
             return
 
         if path == "/api/progress":
