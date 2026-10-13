@@ -20,6 +20,8 @@ Launch the bundled local app for one adviser.
 
 Use OpenTabs with Chrome signed in to Stellic. The application makes same-origin Stellic requests inside the authenticated browser tab. Read [Stellic retrieval](references/stellic.md) before changing that behavior.
 
+If OpenTabs is missing or not connected, use the [OpenTabs installation guide](https://opentabs.dev/docs/install) as the setup source. Complete installation and health checks where possible; ask the faculty member only for the one-time Chrome extension confirmation that Chrome requires.
+
 Use the public Self-Service course API for catalog metadata and seat availability. The same-day cache contains public catalog and seat data only. It never saves a student audit. Read [Self-Service retrieval](references/self-service.md) before changing retrieval behavior.
 
 Build a de-duplicated candidate map before asking for sections. Query a section only for a concrete course named in an open requirement or returned by an open-section-only University Curriculum course-type query. Reuse one section result wherever the same course appears in several requirements.

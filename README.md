@@ -16,6 +16,8 @@ Codex downloads and installs the Skill for you. You do not need to install GitHu
 
 The first time you use it, Codex checks the secure connection to Stellic. If anything needs attention, it gives you a plain-language message. You can simply ask Codex to fix the connection for AdvisingBot.
 
+AdvisingBot uses [OpenTabs](https://opentabs.dev/docs/install) to connect securely to Stellic in Chrome. Codex can handle the setup when possible. If Chrome needs a one-time extension confirmation, the OpenTabs guide explains it clearly.
+
 ## Use AdvisingBot
 
 1. In Chrome, open the student's degree audit in Stellic.
@@ -47,7 +49,7 @@ Use the report to support advising. Confirm the student's final eligibility and 
 | What you see | What to do |
 | --- | --- |
 | A message asking you to sign in | Sign in to Stellic in Chrome, then select **Check** again. |
-| A message about the secure Stellic connection | In Codex, say: **Set up OpenTabs for AdvisingBot.** |
+| A message about the secure Stellic connection | In Codex, say: **Set up OpenTabs for AdvisingBot.** You can also use the [OpenTabs setup guide](https://opentabs.dev/docs/install). |
 | No courses for a requirement | Try a different semester or modality. There may be no open eligible sections, or the requirement may need adviser review. |
 | Results look out of date | Check Self-Service directly when an immediate seat change matters. |
 
