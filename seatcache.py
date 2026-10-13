@@ -52,10 +52,11 @@ class SeatCache:
                 data.setdefault("courses", {})
                 data.setdefault("index", {})
                 data.setdefault("terms", {})
+                data.setdefault("course_types", {})
                 return data
             except (json.JSONDecodeError, OSError):
                 pass  # A corrupt cache is not worth failing over; rebuild it.
-        return {"courses": {}, "index": {}, "terms": {}}
+        return {"courses": {}, "index": {}, "terms": {}, "course_types": {}}
 
     def save(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -112,6 +113,41 @@ class SeatCache:
         self.save()
         return found
 
+    def courses_of_type(self, course_type: str) -> list[tuple[str, str]]:
+        """Catalogue courses carrying one Self-Service Course Type value.
+
+        University Curriculum attributes such as ``UC_FA`` are exposed as
+        Course Types by Self-Service. Cache that public catalogue membership
+        for the day, then let ``lookup`` handle the current seat data.
+        """
+        key = (course_type or "").upper()
+        entry = self.data["course_types"].get(key)
+        if self._fresh(entry):
+            return [tuple(course) for course in entry.get("courses") or []]
+
+        courses, _ = self.client.search(
+            course_types=[key], open_only=False, page_size=2000
+        )
+        found = [(course.code, course.title) for course in courses if course.code]
+        # The Course Type search already returned these courses' section ids.
+        # Keep them in the normal index so lookup() does not replace this
+        # precise result with a much broader subject-level search.
+        index = self.data["index"].setdefault("courses", {})
+        for course in courses:
+            if course.code:
+                index[course.code] = {
+                    "id": course.course_id,
+                    "sections": course.matching_section_ids,
+                    "title": course.title,
+                    "description": course.description,
+                    "requisites": [asdict(r) for r in course.requisites],
+                }
+        self.data["course_types"][key] = {
+            "checked_on": today(), "courses": found,
+        }
+        self.save()
+        return found
+
     # -- the lookup -------------------------------------------------------
 
     def _refresh_index(self, subjects: list[str]) -> dict:
@@ -162,8 +198,11 @@ class SeatCache:
         self.cache_hits += len(wanted) - len(stale)
 
         if stale:
-            subjects = sorted({c.split("-")[0] for c in stale})
-            index = self._refresh_index(subjects)
+            index = self.data["index"].get("courses") or {}
+            unindexed = [code for code in stale if code not in index]
+            if unindexed:
+                subjects = sorted({code.split("-")[0] for code in unindexed})
+                index = self._refresh_index(subjects)
 
             for code in stale:
                 found = index.get(code)

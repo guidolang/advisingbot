@@ -10,9 +10,11 @@ EC 272: Advanced Applied Statistics (In-person: 6 available seats)
 MU 130: Understanding Music (Online: 1 available seat, In-person: 42 available)
 ```
 
-Required courses first, then options for elective and gen-ed requirements; a
-course satisfying several requirements appears once. Courses ruled out are not
-discarded — they collapse into a "set aside" block with the reason.
+Requirements appear in the same nested order as the Stellic audit. Courses sit
+under every unmet requirement they can count toward, so one course may appear
+in more than one branch. Each branch retains the audit's rule or remaining
+slot count. Courses ruled out are not discarded — they collapse into a "set
+aside" block with the reason.
 
 ## Requirements
 
@@ -105,7 +107,9 @@ GET /planner/searchcourses/?counts_for=<requirement_id>&plan_id=<uuid>
 
 This is the only way to resolve requirements written as *attributes* rather
 than course lists. The endpoint caps a page at 20 rows whatever `size` asks
-for, so walk it until `last_page`.
+for, so walk it until `last_page`. When Stellic instead writes an explicit
+course list in the requirement text, AdvisingBot reads those course codes and
+checks them through the same eligibility and seat pipeline.
 
 Expansion matters — one junior went from 3 courses with open seats to 53. Two
 limits keep it sane: a requirement is not expanded past 240 courses, and one

@@ -245,6 +245,7 @@ class SelfServiceClient:
     def _criteria(
         *,
         subjects: list[str],
+        course_types: list[str],
         terms: list[str],
         academic_levels: list[str],
         open_only: bool,
@@ -257,7 +258,7 @@ class SelfServiceClient:
             "subjects": subjects,
             "academicLevels": academic_levels,
             "courseLevels": [],
-            "courseTypes": [],
+            "courseTypes": course_types,
             "topicCodes": [],
             "terms": terms,
             "locations": [],
@@ -284,6 +285,7 @@ class SelfServiceClient:
         self,
         *,
         subjects: list[str] | None = None,
+        course_types: list[str] | None = None,
         terms: list[str] | None = None,
         academic_levels: list[str] | None = None,
         open_only: bool = True,
@@ -312,6 +314,7 @@ class SelfServiceClient:
             POST_SEARCH_CRITERIA,
             self._criteria(
                 subjects=subjects or [],
+                course_types=course_types or [],
                 terms=terms or [],
                 academic_levels=academic_levels or [],
                 open_only=open_only,

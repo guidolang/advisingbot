@@ -22,6 +22,7 @@ import json
 import sys
 import threading
 import traceback
+from collections.abc import Callable
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -38,6 +39,8 @@ STATIC = HERE / "static"
 # One browser session and one cache, shared across requests. A lock keeps two
 # browser tabs from being driven at once.
 _lock = threading.Lock()
+_progress_lock = threading.Lock()
+_progress_message = "Waiting to start"
 _session: ot.OpenTabs | None = None
 _cache: seatcache.SeatCache | None = None
 
@@ -55,6 +58,18 @@ def cache() -> seatcache.SeatCache:
     if _cache is None:
         _cache = seatcache.SeatCache()
     return _cache
+
+
+def _set_progress(message: str) -> None:
+    """Expose a coarse, non-student-specific stage to the local page."""
+    global _progress_message
+    with _progress_lock:
+        _progress_message = message
+
+
+def _progress() -> str:
+    with _progress_lock:
+        return _progress_message
 
 
 def delivery_of(sections: list[Section]) -> str:
@@ -102,17 +117,49 @@ def blocker(code: str, entry: dict, audit: stellic.Audit) -> dict | None:
     return None
 
 
-def check(url: str) -> dict:
+def add_course_type_candidates(audit: stellic.Audit, store: seatcache.SeatCache) -> None:
+    """Add Self-Service Course Type matches to attribute-based requirements.
+
+    Stellic says a requirement carries ``UC_FA`` or ``UC_HU``; Self-Service is
+    the source that maps that attribute to its concrete course catalogue.
+    """
+    type_courses: dict[str, list[tuple[str, str]]] = {}
+    for requirement in audit.requirements:
+        if requirement.satisfied or stellic._is_university_total(requirement.name):
+            continue
+        for course_type in stellic.course_types_named_in_rules(requirement.rules):
+            if course_type not in type_courses:
+                type_courses[course_type] = store.courses_of_type(course_type)
+            known = {course.code for course in requirement.needed}
+            for code, title in type_courses[course_type]:
+                display_code = code.replace("-", " ", 1)
+                if code not in audit.completed and display_code not in known:
+                    known.add(display_code)
+                    requirement.needed.append(
+                        stellic.NeededCourse(
+                            code=display_code, title=title, candidate=True
+                        )
+                    )
+        requirement.needed.sort(key=lambda course: (course.candidate, course.code))
+
+
+def check(url: str, progress: Callable[[str], None] | None = None) -> dict:
     """The whole job: audit -> needed courses -> seats -> who may take them."""
+    update = progress or (lambda _message: None)
+    update("Opening the audit in Stellic")
     audit = stellic.fetch(url, session=session())
 
+    update("Finding courses that can satisfy each requirement")
     store = cache()
+    add_course_type_candidates(audit, store)
+    update("Checking availability in Self-Service")
     before_live, before_hits = store.live_lookups, store.cache_hits
     known_terms = {t["code"]: t for t in store.terms()}
     seats = store.lookup(audit.all_codes)
 
     # One verdict per course, not per requirement: a course that shows up
     # under three requirements is the same course to register for.
+    update("Checking prerequisites and programme restrictions")
     blocked = {
         code: blocker(code, entry, audit) for code, entry in seats.items()
     }
@@ -179,6 +226,7 @@ def check(url: str) -> dict:
     ]
     terms.sort(key=lambda t: (t.get("start") or "9999", t["code"]))
 
+    update("Preparing the course tree")
     return {
         "student": {
             "name": audit.student_name,
@@ -237,12 +285,16 @@ class Handler(BaseHTTPRequestHandler):
             # One browser at a time.
             with _lock:
                 try:
-                    self._json(200, check(url))
+                    self._json(200, check(url, progress=_set_progress))
                 except (stellic.AuditError, ot.OpenTabsError) as exc:
                     self._json(502, {"error": str(exc)})
                 except Exception as exc:  # noqa: BLE001 - surface, don't crash
                     traceback.print_exc()
                     self._json(500, {"error": f"{type(exc).__name__}: {exc}"})
+            return
+
+        if path == "/api/progress":
+            self._json(200, {"message": _progress()})
             return
 
         self._send(404, b"Not found", "text/plain")

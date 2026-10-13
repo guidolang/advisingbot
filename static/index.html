@@ -6,18 +6,11 @@
 <title>AdvisingBot</title>
 <style>
 :root {
-  color-scheme: light dark;
-  --bg:#f6f7f9; --card:#fff; --ink:#14181f; --muted:#5b6472; --line:#dfe3e9;
-  --accent:#0b4d8f; --accent-soft:#e8f0fa;
-  --good:#126b3f; --good-soft:#e4f4ea;
-  --warn:#8a5a00; --warn-soft:#fdf1dc;
-  --dim:#8b95a3; --radius:10px;
-}
-@media (prefers-color-scheme: dark) {
-  :root { --bg:#0f1216; --card:#171c22; --ink:#e8ecf1; --muted:#9aa5b4;
-    --line:#2a323c; --accent:#6ba9ee; --accent-soft:#17293d;
-    --good:#6bd39b; --good-soft:#14301f; --warn:#e3b25f; --warn-soft:#33270f;
-    --dim:#6c7787; }
+  color-scheme: light;
+  --bg:#fff; --card:#fff; --ink:#333; --muted:#333; --line:#d3d8de;
+  --accent:#333; --accent-soft:#f9f9f9; --good:#333; --good-soft:#f9f9f9;
+  --warn:#d30303; --warn-soft:#fff5f5; --available:rgb(47,167,127);
+  --dim:#333; --radius:4px;
 }
 *{box-sizing:border-box}
 /* Author display rules outrank the browser's [hidden] rule, so anything
@@ -32,8 +25,8 @@ h1{margin:0 0 18px;font-size:2rem;letter-spacing:-.02em}
   border-radius:var(--radius);padding:16px;margin-bottom:18px}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row input[type=text]{flex:1;min-width:280px;font:inherit;padding:9px 11px;
-  border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink)}
-button{font:inherit;font-weight:600;padding:9px 16px;border-radius:7px;
+  border:1px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink)}
+button{font:inherit;font-weight:600;padding:9px 16px;border-radius:4px;
   border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer}
 button.ghost{background:transparent;color:var(--accent)}
 button:disabled{opacity:.55;cursor:default}
@@ -44,6 +37,7 @@ input:focus-visible,select:focus-visible,button:focus-visible{
   border:1px solid var(--line);border-radius:var(--radius);
   padding:13px 16px;margin-bottom:16px}
 .studentbar .field{min-width:190px}
+.filters{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
 .onlyterm{font-weight:600;padding:8px 0}
 .badge{display:inline-block;margin-left:8px;font-size:.66rem;font-weight:700;
   text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;
@@ -52,29 +46,53 @@ input:focus-visible,select:focus-visible,button:focus-visible{
 .field label{font-size:.72rem;font-weight:700;text-transform:uppercase;
   letter-spacing:.05em;color:var(--muted)}
 select{font:inherit;padding:8px 10px;border:1px solid var(--line);
-  border-radius:7px;background:var(--card);color:var(--ink);width:100%}
+  border-radius:4px;background:var(--card);color:var(--ink);width:100%}
 
 .who{margin:0 0 6px;font-size:1.05rem;font-weight:700}
 .meta{color:var(--muted);font-size:.85rem;margin:0}
 .status{color:var(--muted);font-size:.9rem;padding:10px 0}
+.progress-detail{white-space:nowrap}
 .error{background:var(--warn-soft);color:var(--warn);padding:12px 14px;
-  border-radius:8px;border-left:3px solid currentColor;margin:14px 0}
+  border-radius:4px;border-left:3px solid currentColor;margin:14px 0}
 
-.listcard{background:var(--card);border:1px solid var(--line);
-  border-radius:var(--radius);padding:4px 16px 10px}
-
-.course{border-top:1px solid var(--line);padding:12px 0 4px}
-.course:first-of-type{border-top:0}
+.course{background:#fff;border:1px solid var(--line);border-radius:4px;
+  padding:11px 13px 10px;margin:8px 0}
 .chead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
-.code{font-weight:700;font-variant-numeric:tabular-nums}
-.ctitle{color:var(--muted);font-size:.92rem;flex:1;min-width:140px}
+.course-mark,.req-mark{display:inline-grid;place-items:center;flex:none;width:34px;height:34px;
+  border:1px solid var(--warn);border-radius:4px;color:var(--warn);font-weight:700;
+  font-variant-numeric:tabular-nums}
+.course-mark{width:34px;height:34px;border-color:var(--available);
+  background:var(--available);color:#fff;font-size:1.1rem}
+.code{font-weight:750;font-variant-numeric:tabular-nums;color:var(--ink)}
+.ctitle{color:var(--ink);font-size:.92rem;flex:1;min-width:140px}
 .pill{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:999px;
   background:var(--good-soft);color:var(--good);white-space:nowrap}
 .mode{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-  padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  padding:2px 7px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+.audit-tree{padding:2px 0 8px}
+.tree-children{position:relative;margin:10px 0 0 27px;padding-left:26px}
+.tree-children::before{content:"";position:absolute;left:0;top:-10px;bottom:23px;
+  border-left:1px solid var(--line)}
+.tree-node{position:relative}
+.tree-node + .tree-node{margin-top:10px}
+.tree-node.connected::before{content:"";position:absolute;left:-26px;top:23px;width:26px;
+  border-top:1px solid var(--line)}
+.tree-children > .tree-node:last-child::after{content:"";position:absolute;left:-27px;top:24px;bottom:0;width:2px;
+  background:var(--bg)}
+.requirement{background:#f9f9f9;border:1px solid var(--line);border-radius:4px;
+  padding:12px 12px 10px;margin:0}
+.req-head{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px;
+  align-items:baseline;background:#f9f9f9;padding:3px 0}
+.req-title{margin:0;font-size:.98rem;font-weight:750;color:var(--ink)}
+.req-meta{color:var(--muted);font-size:.83rem;margin:4px 0 8px}
+.req-rule{font-style:italic}
+.courses-label{display:block;color:var(--muted);font-size:.7rem;font-weight:750;
+  letter-spacing:.07em;text-transform:uppercase;margin:11px 0 5px}
+.course-list{padding-left:0}
+.more-courses{margin:8px 0 0}
 
 .secs{list-style:none;margin:7px 0 0;padding:0}
-.sec{padding:6px 0 6px 11px;border-left:2px solid var(--line);margin-bottom:5px}
+.sec{padding:6px 0 6px 11px;border-left:2px solid var(--available);margin-bottom:5px}
 .sec-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .sec-name{font-weight:600;font-size:.9rem;font-variant-numeric:tabular-nums}
 .sec-meta{color:var(--muted);font-size:.83rem;margin-top:2px}
@@ -88,7 +106,7 @@ details[open]>summary::before{content:"▾ "}
 
 .copybox{position:relative}
 textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
-  Menlo,Consolas,monospace;padding:12px;padding-right:52px;border-radius:8px;
+  Menlo,Consolas,monospace;padding:12px;padding-right:52px;border-radius:4px;
   border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
 .copy{position:absolute;top:10px;right:10px;padding:6px 10px;font-size:.8rem}
 /* Set the copy block apart from the course list above it. */
@@ -109,10 +127,20 @@ textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
 
 <div class="studentbar" id="who" hidden>
   <div class="whotext"></div>
-  <div class="field" id="termfield" hidden>
-    <label for="term">Semester</label>
-    <select id="term"></select>
-    <span class="onlyterm" id="termone" hidden></span>
+  <div class="filters" id="filters" hidden>
+    <div class="field" id="modalityfield">
+      <label for="modality">Modality</label>
+      <select id="modality">
+        <option value="any">Online + On-ground</option>
+        <option value="online">Online</option>
+        <option value="on-ground">On-ground</option>
+      </select>
+    </div>
+    <div class="field" id="termfield">
+      <label for="term">Semester</label>
+      <select id="term"></select>
+      <span class="onlyterm" id="termone" hidden></span>
+    </div>
   </div>
 </div>
 
@@ -120,7 +148,7 @@ textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
 <main id="out"></main>
 
 <div class="panel" id="copypanel" hidden>
-  <div class="field"><label for="plain">Copy for notes or email</label></div>
+  <div class="field"><label for="plain">Copy Notes</label></div>
   <div class="copybox">
     <textarea id="plain" readonly></textarea>
     <button class="ghost copy" id="copy" type="button" title="Copy to clipboard">
@@ -133,6 +161,7 @@ textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
 
 <script>
 let DATA = null;
+let CHECKING = false;
 
 const el = (tag, cls, text) => {
   const n = document.createElement(tag);
@@ -156,13 +185,10 @@ function deliveryOf(secs) {
 }
 const DELIVERY_LABEL = {both:"online + on-ground", online:"online", "on-ground":"on-ground"};
 
-function currentTerm(terms) {
-  const today = new Date().toISOString().slice(0,10);
-  const now = terms.find(t => t.start && t.end && t.start <= today && today <= t.end);
-  if (now) return now.code;
-  const next = terms.filter(t => t.start && t.start > today)
-                    .sort((a,b) => a.start.localeCompare(b.start))[0];
-  return (next || terms[0] || {}).code;
+function latestTerm(terms) {
+  const dated = terms.filter(t => t.start)
+    .sort((a, b) => a.start.localeCompare(b.start));
+  return (dated[dated.length - 1] || terms[terms.length - 1] || {}).code;
 }
 
 function renderSection(s) {
@@ -184,44 +210,48 @@ function render() {
   const term = document.getElementById("term").value;
   // Students in an online programme cannot attend classroom sections, so the
   // delivery filter follows their programme instead of being a choice.
-  const mode = DATA && DATA.student.online_only ? "online" : "any";
+  const mode = DATA && DATA.student.online_only ? "online"
+    : document.getElementById("modality").value;
   const out = document.getElementById("out");
   out.replaceChildren();
   if (!DATA) return;
 
-  // One entry per course, in the order the audit first asks for it, so
-  // required courses come before elective options. A course that could
-  // satisfy several requirements is still just one course to register for.
-  const unique = new Map();
-  for (const req of DATA.requirements)
-    for (const course of req.courses)
-      if (!unique.has(course.code)) unique.set(course.code, course);
-
   // A course the student has already taken, cannot take yet, or that is
   // written for another programme has open seats and is still not advice.
   // It is set aside rather than dropped, so the reason stays checkable.
-  const rows = [], held = [];
-  for (const course of unique.values()) {
-    const secs = (course.sections || []).filter(s => matches(s, term, mode));
-    if (!secs.length) continue;
-    (course.blocked ? held : rows).push({course, secs});
+  // Keep the audit's requirement branches. A course can deliberately appear
+  // under more than one branch when it can count toward more than one need.
+  const branches = [], held = [];
+  for (const requirement of DATA.requirements) {
+    const courses = [];
+    for (const course of requirement.courses) {
+      const secs = (course.sections || []).filter(s => matches(s, term, mode));
+      if (!secs.length) continue;
+      if (course.blocked) held.push({course, requirement});
+      else courses.push({course, secs});
+    }
+    branches.push({requirement, courses});
   }
+  const rows = branches.filter(branch => branch.courses.length);
 
-  if (rows.length) {
-    const card = el("div","listcard");
-    rows.forEach(r => card.append(renderCourse(r.course, r.secs)));
-    out.append(card);
-  } else {
+  if (!rows.length) {
     out.append(el("p","status",
       "Nothing still needed has open seats this semester."));
   }
+  out.append(renderRequirementTree(branches));
   if (held.length) out.append(renderHeld(held));
 
+  const copyCourses = new Map();
+  rows.flatMap(branch => branch.courses).forEach(item => {
+    if (!copyCourses.has(item.course.code)) copyCourses.set(item.course.code, item);
+  });
   document.getElementById("plain").value =
-    rows.map(({course, secs}) => copyLine(course, secs)).join("\n");
-  document.getElementById("copypanel").hidden = rows.length === 0;
+    [...copyCourses.values()].map(({course, secs}) => copyLine(course, secs)).join("\n");
+  document.getElementById("copypanel").hidden = !rows.length;
 
-  const status = `${rows.length} course${rows.length===1?"":"s"} with open seats`;
+  const available = new Set(rows.flatMap(branch =>
+    branch.courses.map(({course}) => course.code))).size;
+  const status = `${available} course${available===1?"":"s"} with open seats`;
   document.getElementById("status").textContent = held.length
     ? `${status} · ${held.length} set aside`
     : status;
@@ -240,7 +270,7 @@ function copyLine(course, secs) {
     if (n) parts.push(`${label}: ${n} available seat${n === 1 ? "" : "s"}`);
   }
   const tail = parts.length ? ` (${parts.join(", ")})` : "";
-  return `${course.code}: ${course.title || ""}${tail}`;
+  return `- ${course.code}: ${course.title || ""}${tail}`;
 }
 
 const HELD_LABEL = {taken:"Already taken", prerequisite:"Prerequisite not met",
@@ -251,14 +281,16 @@ function renderHeld(held) {
   box.append(el("summary", null,
     `${held.length} course${held.length===1?"":"s"} with seats, set aside`));
   const list = el("ul","secs");
-  for (const {course} of held) {
+  for (const {course, requirement} of held) {
     const li = el("li","sec");
     const top = el("div","sec-top");
     top.append(el("span","sec-name", course.code));
     top.append(el("span","ctitle", course.title || ""));
     top.append(el("span","mode", HELD_LABEL[course.blocked.reason] || ""));
     li.append(top);
-    li.append(el("div","sec-meta", course.blocked.detail || ""));
+    const detail = course.blocked.detail || "";
+    li.append(el("div","sec-meta",
+      `${requirement.name} — ${detail}`));
     list.append(li);
   }
   box.append(list);
@@ -268,6 +300,7 @@ function renderHeld(held) {
 function renderCourse(course, secs) {
   const box = el("div","course");
   const head = el("div","chead");
+  head.append(el("span", "course-mark", "?"));
   head.append(el("span","code", course.code));
   head.append(el("span","ctitle", course.title || ""));
   head.append(el("span","pill",
@@ -289,6 +322,81 @@ function renderCourse(course, secs) {
   return box;
 }
 
+function isUniversityTotal(requirement) {
+  return /\btotal\s+\d+\s+credits?\b.*\buniversity degree completion\b/i
+    .test(requirement.name || "");
+}
+
+function renderRequirement({requirement, courses}, descendantHasCourses) {
+  const box = el("section", "requirement");
+  const head = el("div", "req-head");
+  const marker = requirement.slots
+    ? String(requirement.slots).padStart(2, "0") : "!";
+  head.append(el("span", "req-mark", marker));
+  head.append(el("h2", "req-title", requirement.name));
+  box.append(head);
+  const detail = [];
+  if (requirement.units_remaining)
+    detail.push(`${requirement.units_remaining} units remaining`);
+  detail.push(...(requirement.rules || []));
+  if (detail.length) box.append(el("div", "req-meta", detail.join(" · ")));
+  if (courses.length) {
+    box.append(el("span", "courses-label", "Courses that count toward this requirement"));
+    const list = el("div", "course-list");
+    courses.slice(0, 5).forEach(({course, secs}) =>
+      list.append(renderCourse(course, secs)));
+    if (courses.length > 5) {
+      const more = el("details", "more-courses");
+      more.append(el("summary", null,
+        `${courses.length - 5} more ${courses.length - 5 === 1 ? "course" : "courses"} with open seats`));
+      courses.slice(5).forEach(({course, secs}) =>
+        more.append(renderCourse(course, secs)));
+      list.append(more);
+    }
+    box.append(list);
+  } else if (!descendantHasCourses && !isUniversityTotal(requirement)) {
+    box.append(el("p", "req-meta", "No currently eligible course with an open seat."));
+  }
+  return box;
+}
+
+function subtreeHasCourses(node) {
+  return node.branch.courses.length > 0
+    || node.children.some(child => subtreeHasCourses(child));
+}
+
+function requirementTree(branches) {
+  const root = {depth: -1, children: []};
+  const stack = [root];
+  for (const branch of branches) {
+    while (stack[stack.length - 1].depth >= branch.requirement.depth) stack.pop();
+    const node = {depth: branch.requirement.depth, branch, children: []};
+    stack[stack.length - 1].children.push(node);
+    stack.push(node);
+  }
+  return root;
+}
+
+function renderTreeNode(node, connected) {
+  const item = el("div", "tree-node");
+  if (connected) item.classList.add("connected");
+  const descendantHasCourses = node.children.some(child => subtreeHasCourses(child));
+  item.append(renderRequirement(node.branch, descendantHasCourses));
+  if (node.children.length) {
+    const children = el("div", "tree-children");
+    node.children.forEach(child => children.append(renderTreeNode(child, true)));
+    item.append(children);
+  }
+  return item;
+}
+
+function renderRequirementTree(branches) {
+  const tree = el("div", "audit-tree");
+  const root = requirementTree(branches);
+  root.children.forEach(node => tree.append(renderTreeNode(node, false)));
+  return tree;
+}
+
 function showStudent() {
   const bar = document.getElementById("who");
   const text = bar.querySelector(".whotext");
@@ -304,6 +412,31 @@ function showStudent() {
   bar.hidden = false;
 }
 
+function showProgress(message) {
+  const status = document.getElementById("status");
+  const prefix = "Opening Stellic and Self-Service – this may take a moment ";
+  const detail = `(${message || "Starting"}...)`;
+  status.replaceChildren(document.createTextNode(prefix));
+  const animated = el("span", "progress-detail");
+  animated.setAttribute("aria-label", detail);
+  animated.textContent = detail;
+  status.append(animated);
+}
+
+async function pollProgress() {
+  while (CHECKING) {
+    try {
+      const response = await fetch("/api/progress");
+      const body = await response.json();
+      if (CHECKING && body.message) showProgress(body.message);
+    } catch (err) {
+      // The audit request remains authoritative if this lightweight status
+      // request is interrupted.
+    }
+    await new Promise(resolve => setTimeout(resolve, 450));
+  }
+}
+
 async function check(ev) {
   ev.preventDefault();
   const url = document.getElementById("url").value.trim();
@@ -313,8 +446,9 @@ async function check(ev) {
   document.getElementById("out").replaceChildren();
   document.getElementById("who").hidden = true;
   document.getElementById("copypanel").hidden = true;
-  document.getElementById("status").textContent =
-    "Opening the audit in Stellic and checking Self-Service — this takes a moment…";
+  CHECKING = true;
+  showProgress("Starting");
+  const progressPoll = pollProgress();
 
   try {
     const r = await fetch("/api/check?url=" + encodeURIComponent(url));
@@ -327,12 +461,16 @@ async function check(ev) {
     for (const t of DATA.terms) {
       const o = el("option",null,t.description); o.value = t.code; termSel.append(o);
     }
-    if (DATA.terms.length) termSel.value = currentTerm(DATA.terms);
+    if (DATA.terms.length) termSel.value = latestTerm(DATA.terms);
     // A dropdown holding one option is furniture, but the term still has to
     // be visible - so show it as plain text instead.
+    const filters = document.getElementById("filters");
     const field = document.getElementById("termfield");
+    const modality = document.getElementById("modality");
     const only = document.getElementById("termone");
-    field.hidden = DATA.terms.length === 0;
+    filters.hidden = DATA.terms.length === 0;
+    modality.value = DATA.student.online_only ? "online" : "any";
+    modality.disabled = DATA.student.online_only;
     termSel.hidden = DATA.terms.length < 2;
     only.hidden = DATA.terms.length !== 1;
     if (DATA.terms.length === 1) only.textContent = DATA.terms[0].description;
@@ -345,12 +483,15 @@ async function check(ev) {
     box.append(document.createTextNode(err.message));
     document.getElementById("out").append(box);
   } finally {
+    CHECKING = false;
+    await progressPoll;
     go.disabled = false;
   }
 }
 
 document.getElementById("form").addEventListener("submit", check);
 document.getElementById("term").addEventListener("change", render);
+document.getElementById("modality").addEventListener("change", render);
 
 document.getElementById("copy").addEventListener("click", async () => {
   const box = document.getElementById("plain");

@@ -142,8 +142,8 @@ _EXPAND_JS = r"""
 """
 
 _CHUNK = 40_000
-_EXPAND_PAGES = 12      # 12 pages x 20 = 240 courses per requirement
-_EXPAND_MAX_MATCHES = 200   # above this a requirement is a free-credit bucket
+_EXPAND_PAGES = 50      # 50 pages x 20 = 1,000 courses per requirement
+_EXPAND_MAX_MATCHES = 1_000
 _AUDIT_PATH = "/app/audit"
 
 
@@ -187,11 +187,21 @@ class Requirement:
 # Quinnipiac names its distance programs "... Online - MS". A student in one
 # should not be shown classroom sections they cannot attend.
 _ONLINE_RE = re.compile(r"\bonline\b", re.I)
+_RULE_COURSE_RE = re.compile(r"\b([A-Z]{2,5})\s+(\d{3}[A-Z]{0,3})\b")
+_COURSE_TYPE_RE = re.compile(r"\b(UC_[A-Z0-9]+)\b")
+_UNIVERSITY_TOTAL_RE = re.compile(
+    r"\btotal\s+\d+\s+credits?\b.*\buniversity degree completion\b", re.I
+)
+
+
+def _is_university_total(name: str) -> bool:
+    """The university-wide credit total is not a useful course-choice pool."""
+    return bool(_UNIVERSITY_TOTAL_RE.search(name or ""))
 
 
 def _normalise_code(code: str) -> str:
     """Stellic writes "CIS 101"; Self-Service wants "CIS-101"."""
-    parts = (code or "").split()
+    parts = (code or "").replace("*", " ").replace("-", " ").split()
     return f"{parts[0]}-{parts[1]}" if len(parts) >= 2 else (code or "").strip()
 
 
@@ -212,6 +222,8 @@ class Audit:
     def all_codes(self) -> list[str]:
         seen: dict[str, None] = {}
         for req in self.requirements:
+            if _is_university_total(req.name):
+                continue
             for course in req.needed:
                 seen.setdefault(course.lookup_code, None)
         return list(seen)
@@ -352,11 +364,19 @@ def fetch(
                 payload = _slurp(session, tab)
                 audit = parse(payload)
 
-                # Requirements written as a rule rather than a course list are
-                # resolved with the same call Stellic's own UI makes.
+                # Attribute-based requirements are resolved with the same
+                # qualifying-course search that Stellic's own UI makes.
+                # Explicit course lists in requirement text are parsed below.
                 if expand:
                     open_ended = [
-                        r.id for r in audit.requirements if r.is_open_ended
+                        r.id for r in audit.requirements
+                        if not _is_university_total(r.name) and (
+                            r.is_open_ended or (
+                            not r.satisfied and r.slots and any(
+                                "attribute" in rule.lower() for rule in r.rules
+                            )
+                            )
+                        )
                     ]
                     if open_ended:
                         _apply_expansion(
@@ -455,12 +475,56 @@ def _descendant_courses(node: dict, limit: int = 60) -> list[tuple[str, str, flo
 
 def _rule_texts(node: dict) -> list[str]:
     """Human-readable constraint lines, e.g. "Fulfill any 3 of the following"."""
-    out = []
+    out: list[str] = []
+
+    def add(value) -> None:
+        values = value if isinstance(value, list) else [value]
+        for item in values:
+            text = re.sub(r"\s+", " ", item or "").strip() if isinstance(item, str) else ""
+            if text and text not in out:
+                out.append(text)
+
     for constraint in node.get("constraints") or []:
-        text = re.sub(r"\s+", " ", constraint.get("type_string") or "").strip()
-        if text and not constraint.get("is_hidden") and text not in out:
-            out.append(text)
+        if not constraint.get("is_hidden"):
+            add(constraint.get("type_string"))
+            add(constraint.get("comment"))
+            add(constraint.get("comments"))
+    add(node.get("comment"))
+    add(node.get("comments"))
     return out
+
+
+def _has_unmodelled_alternative(node: dict) -> bool:
+    """True when Stellic allows an approved substitute we cannot identify.
+
+    ``OTHERS_MAY_COUNT`` is an intentionally broad Stellic marker.  It means
+    that a named course (for example FYS 101) is only one possible route, so
+    presenting it as *the* remaining course would be misleading.  Leave such
+    a node out until Stellic has resolved the approved substitution.
+    """
+    for constraint in node.get("constraints") or []:
+        data = constraint.get("data") or {}
+        if data.get("name") == "OTHERS_MAY_COUNT":
+            return True
+    return False
+
+
+def _courses_named_in_rules(rules: list[str]) -> list[str]:
+    """Course codes Stellic names only in a requirement's explanatory text."""
+    seen: dict[str, None] = {}
+    for rule in rules:
+        for subject, number in _RULE_COURSE_RE.findall(rule or ""):
+            seen.setdefault(f"{subject} {number}", None)
+    return list(seen)
+
+
+def course_types_named_in_rules(rules: list[str]) -> list[str]:
+    """Self-Service Course Types named in a Stellic requirement rule."""
+    seen: dict[str, None] = {}
+    for rule in rules:
+        for code in _COURSE_TYPE_RE.findall(rule or ""):
+            seen.setdefault(code, None)
+    return list(seen)
 
 
 def _completed(audit: dict) -> set[str]:
@@ -479,7 +543,8 @@ def _completed(audit: dict) -> set[str]:
             if grade.get("is_fail"):
                 continue
             status = attempt.get("progress_status") or attempt.get("status")
-            if status in ("taken", "in_progress") or attempt.get("is_registered"):
+            if status in ("taken", "completed", "in_progress", "registered") \
+                    or attempt.get("is_registered"):
                 done.add(_normalise_code(code))
                 break
     return done
@@ -557,7 +622,7 @@ def parse(payload: dict) -> Audit:
     requirements: list[Requirement] = []
     seen_ids: set[str] = set()
 
-    def emit(node: dict, depth: int) -> None:
+    def emit(node: dict, depth: int, hidden_by_satisfied_ancestor: bool = False) -> None:
         node_id = str(node.get("id"))
         if node_id in seen_ids:
             return
@@ -565,10 +630,52 @@ def parse(payload: dict) -> Audit:
 
         entry = data.get(node_id) or {}
         summary = entry.get("units_summary") or {}
+        satisfied = bool(entry.get("satisfied"))
+        name = str(node.get("screen_name") or node.get("name") or "").strip()
+        name = name or "Requirement"
         courses = list((needed.get(node_id) or {}).values())
+        rules = _rule_texts(node)
+        # A choice branch without audit data is explanatory only.  In
+        # particular, the Capstone tree names every school alternative, while
+        # only the student's own branch receives an audit-data entry.  Do not
+        # turn the names in inactive branches into course recommendations.
+        if entry:
+            known_courses = {course.code for course in courses}
+            for code in _courses_named_in_rules(rules):
+                if code not in known_courses:
+                    known_courses.add(code)
+                    courses.append(NeededCourse(code=code, candidate=True))
         spare = open_units.get(node_id, 0.0)
+        has_unmodelled_alternative = _has_unmodelled_alternative(node)
+        # The University Curriculum's capstone umbrella is a menu of
+        # college-specific alternatives.  If Stellic does not attach an
+        # actionable course to the student's branch, we cannot reliably pick
+        # one from that menu.  Do not show every college's capstone as though
+        # it applied to this student.
+        unresolved_capstone = (
+            "integrative capstone experience" in name.lower()
+            and not courses
+            and not spare
+        )
+        # A satisfied requirement can still inherit a descendant's remaining
+        # cards in the audit tree. Its choice list is explanatory only, not a
+        # recommendation, so never surface those alternate courses.
+        if (
+            satisfied
+            or _is_university_total(name)
+            or has_unmodelled_alternative
+            or unresolved_capstone
+        ):
+            courses = []
+            spare = 0.0
 
-        if courses or spare or (entry and not entry.get("satisfied", True)):
+        if not (
+            hidden_by_satisfied_ancestor
+            or has_unmodelled_alternative
+            or unresolved_capstone
+        ) and (
+            courses or spare or (entry and not entry.get("satisfied", True))
+        ):
             total = summary.get("total")
             done = sum(
                 summary.get(k) or 0
@@ -578,16 +685,15 @@ def parse(payload: dict) -> Audit:
             requirements.append(
                 Requirement(
                     id=node_id,
-                    name=str(node.get("screen_name") or node.get("name") or "")
-                    .strip() or "Requirement",
-                    satisfied=bool(entry.get("satisfied")),
+                    name=name,
+                    satisfied=satisfied,
                     units_total=total,
                     units_remaining=(
                         max(0.0, total - done) if isinstance(total, (int, float))
                         else None
                     ),
                     needed=courses,
-                    rules=_rule_texts(node),
+                    rules=rules,
                     open_units=spare,
                     slots=int(entry.get("num_remaining") or 0),
                     depth=depth,
@@ -596,7 +702,12 @@ def parse(payload: dict) -> Audit:
 
         for child in node.get("choices") or []:
             if isinstance(child, dict) and child.get("choices") is not None:
-                emit(child, depth + 1)
+                emit(
+                    child,
+                    depth + 1,
+                    hidden_by_satisfied_ancestor or satisfied
+                    or has_unmodelled_alternative or unresolved_capstone,
+                )
 
     for program in tree.get("programs") or []:
         emit(program, 0)
@@ -613,6 +724,16 @@ def parse(payload: dict) -> Audit:
     if not declared:
         declared = [p for p in ((payload.get("student") or {}).get("programs") or []) if p]
 
+    completed = _completed(audit)
+    # A parent-level rule can name a course that is already complete while a
+    # different child keeps the larger University Curriculum block unmet.
+    # Stellic's completed record controls: do not surface that course again.
+    for requirement in requirements:
+        requirement.needed = [
+            course for course in requirement.needed
+            if course.lookup_code not in completed
+        ]
+
     student = payload.get("student") or {}
     return Audit(
         student_name=student.get("name") or student.get("username") or "Student",
@@ -621,7 +742,7 @@ def parse(payload: dict) -> Audit:
         programs=declared,
         requirements=requirements,
         online_only=any(_ONLINE_RE.search(name) for name in declared),
-        completed=_completed(audit),
+        completed=completed,
     )
 
 
