@@ -1,20 +1,28 @@
 # AdvisingBot
 
-Paste a Stellic audit link. Get back one list of the courses a student still
-needs, can actually take, and that have **open seats** in Self-Service now —
-plus a plain-text version to paste into notes or an email.
+Paste a Stellic audit link. Get a Stellic-style requirement tree showing the
+courses a student may still need, can actually take, and that have **open
+seats** in Self-Service now. A course appears beneath every open requirement
+it can fulfill, within the limits Stellic applies.
 
 ```
-CIS 440: IT Project Management (In-person: 17 available seats)
-EC 272: Advanced Applied Statistics (In-person: 6 available seats)
-MU 130: Understanding Music (Online: 1 available seat, In-person: 42 available)
+- CIS 440: IT Project Management (In-person: 17 available seats)
+- EC 272: Advanced Applied Statistics (In-person: 6 available seats)
+- MU 130: Understanding Music (Online: 1 available seat, In-person: 42 available seats)
 ```
 
-Requirements appear in the same nested order as the Stellic audit. Courses sit
-under every unmet requirement they can count toward, so one course may appear
-in more than one branch. Each branch retains the audit's rule or remaining
-slot count. Courses ruled out are not discarded — they collapse into a "set
-aside" block with the reason.
+The tree follows the nested order in Stellic. Requirement categories use a
+light-gray card and connected tree lines; available course sections use a
+green marker and rail. A category's explanatory rule remains visible, while
+course cards are visually distinct. Courses ruled out by prerequisites or
+programme restrictions collapse into a "set aside" block with the reason.
+
+The interface defaults to the furthest future semester and provides a
+**Modality** filter for Online, On-ground, or Online + On-ground. It initially
+shows five open courses per requirement; use the disclosure control to reveal
+the rest. Sticky requirement headers keep the current part of the tree in
+view while scrolling. **Copy Notes** produces the simple course-and-
+availability bullet list shown above.
 
 ## Requirements
 
@@ -33,9 +41,10 @@ bin/AdvisingBot.command --stop
 python3 app.py                      # start by hand
 ```
 
-Restart after changing code — a running server keeps serving what it started
-with. A first check takes a minute or two on a cold cache; later checks that
-day hit the cache and take seconds.
+Restart after changing Python code. A first check can take a minute or two on
+a cold cache; later checks that day hit the cache and take seconds. While a
+check is running, the page reports the current stage (opening Stellic,
+finding qualifying courses, checking Self-Service, and preparing the tree).
 
 Smoke tests:
 
@@ -92,9 +101,15 @@ the sub-requirement id and a zero-padded course-parent id:
   following", "a course carrying UC_NS")
 
 Parent requirements repeat every card their children carry — the same slot can
-appear a dozen times — so cards are collapsed by composite id, and the
-"N more needed" count comes from Stellic's `num_remaining`, not from counting
-cards.
+appear a dozen times — so cards are collapsed by composite id. A completed,
+registered, or in-progress course is never suggested again. Inactive choice
+branches are not treated as recommendations merely because their text names a
+course; this prevents school-specific alternatives from leaking into another
+student's tree.
+
+Some Stellic rules explicitly permit an approved substitution but do not name
+the substitute. AdvisingBot does not guess in those cases. It omits the
+unresolvable named-course route rather than presenting it as required.
 
 ### Expanding open requirements
 
@@ -105,25 +120,27 @@ GET /planner/searchcourses/?counts_for=<requirement_id>&plan_id=<uuid>
     &brief_mode=true&size=20&from=<n>&sort_by=code
 ```
 
-This is the only way to resolve requirements written as *attributes* rather
-than course lists. The endpoint caps a page at 20 rows whatever `size` asks
-for, so walk it until `last_page`. When Stellic instead writes an explicit
-course list in the requirement text, AdvisingBot reads those course codes and
-checks them through the same eligibility and seat pipeline.
+For University Curriculum attributes such as `UC_FA`, `UC_HU`, `UC_NS`, and
+`UC_SS`, Self-Service's **Course Type** filter is the source for the matching
+catalogue courses. The Stellic search remains useful for other open
+requirements. When Stellic writes an explicit course list in a rule or
+comment, AdvisingBot reads those course codes and checks them through the same
+eligibility and seat pipeline.
 
-Expansion matters — one junior went from 3 courses with open seats to 53. Two
-limits keep it sane: a requirement is not expanded past 240 courses, and one
-matching more than 200 is skipped, since "any of 359 courses counts" is a fact
-about the catalogue, not advice.
+The endpoint caps a page at 20 rows whatever `size` asks for, so it is walked
+until `last_page`. A requirement is not expanded past 1,000 courses, and one
+matching more than 1,000 is skipped: a catalogue-wide free-credit bucket is
+not useful course advice. The university-wide "Total credits ... University
+Degree Completion" block is intentionally never expanded or listed.
 
 ### Deciding who may take what
 
 Open seats are not eligibility. Three checks live in `eligibility.py`:
 
 **Already taken.** `course_plan_info` (from `getauditinfo`) is keyed by course
-code, one entry per attempt. Done if a non-failing grade; under way if
-registered now — a course finishing this term finishes before anything we
-recommend starts. A failed attempt leaves the course still to take.
+code, one entry per attempt. A non-failing course with a taken, completed,
+registered, or in-progress status counts as done. A failed attempt leaves the
+course still to take.
 
 **Prerequisites.** Self-Service publishes requisites twice, and neither half is
 usable alone, so they're joined on an internal requirement code: `Requisites`
@@ -164,6 +181,8 @@ courses with the first.
 The subject index and term list refresh once a day. The index carries each
 course's description and requisite rules alongside its section ids, so
 eligibility can be judged even for a course with no sections to look up.
+Course Type searches are also cached by type and day; they contain only public
+catalogue codes and titles.
 
 ### Two Self-Service quirks
 
