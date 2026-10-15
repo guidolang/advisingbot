@@ -20,11 +20,10 @@ AdvisingBot uses [OpenTabs](https://opentabs.dev/docs/install) to connect secure
 
 ## Use AdvisingBot
 
-1. In Chrome, open the student's degree audit in Stellic.
-2. Copy the audit page address (e.g., [https://qu.stellic.com/app/audit?student_username=test](https://qu.stellic.com/app/audit?student_username=test)).
-3. Paste it into AdvisingBot and select **Check**.
-4. Choose a semester and, when helpful, Online, On-ground, or both.
-5. Review the available courses and sections. Use **Copy Notes** when you want a short list to paste elsewhere.
+1. In Codex, start a chat and type `$AdvisingBot`. AdvisingBot opens in Chrome.
+2. In Chrome, open Stellic and the student’s degree audit. Copy the page address, for example: `https://qu.stellic.com/app/audit?student_username=test`.
+3. Paste the address into AdvisingBot and select **Check**.
+4. Choose a semester and modality, then review the available courses.
 
 ## Example
 
