@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import threading
 import traceback
@@ -43,6 +44,8 @@ _progress_lock = threading.Lock()
 _progress_message = "Waiting to start"
 _session: ot.OpenTabs | None = None
 _cache: seatcache.SeatCache | None = None
+_update_available = os.environ.get("ADVISINGBOT_UPDATE_AVAILABLE") == "1"
+_update_prompt = os.environ.get("ADVISINGBOT_UPDATE_PROMPT") or ""
 
 
 def session() -> ot.OpenTabs:
@@ -321,6 +324,13 @@ class Handler(BaseHTTPRequestHandler):
 
         if path == "/api/progress":
             self._json(200, {"message": _progress()})
+            return
+
+        if path == "/api/update":
+            self._json(200, {
+                "available": _update_available,
+                "prompt": _update_prompt if _update_available else "",
+            })
             return
 
         self._send(404, b"Not found", "text/plain")

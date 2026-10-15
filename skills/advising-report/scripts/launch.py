@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -16,6 +18,68 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 APP = HERE.parent / "app" / "app.py"
+SKILL_ROOT = HERE.parent
+GITHUB_TREE_URL = (
+    "https://api.github.com/repos/guidolang/advisingbot/git/trees/main?recursive=1"
+)
+# Only executable skill instructions and app files take part in update checks.
+# Documentation, examples, images, and public course-cache data do not.
+UPDATE_FILES = (
+    "SKILL.md",
+    "scripts/launch.py",
+    "app/app.py",
+    "app/eligibility.py",
+    "app/opentabs.py",
+    "app/seatcache.py",
+    "app/selfservice.py",
+    "app/stellic.py",
+    "app/static/index.html",
+)
+UPDATE_PROMPT = (
+    "Update and replace my installed advising-report Skill from "
+    "https://github.com/guidolang/advisingbot/tree/main/skills/advising-report. "
+    "Then stop the current AdvisingBot server and relaunch the updated skill "
+    "in Chrome."
+)
+
+
+def _git_blob_sha(path: Path) -> str:
+    """Return Git's blob hash for one local file without needing Git installed."""
+    body = path.read_bytes()
+    return hashlib.sha1(
+        f"blob {len(body)}\0".encode("ascii") + body
+    ).hexdigest()
+
+
+def update_available(
+    *, root: Path = SKILL_ROOT, opener=urllib.request.urlopen
+) -> bool:
+    """Compare only the executable skill allowlist with GitHub's main branch.
+
+    A failed or slow network request is deliberately silent: launch should
+    still work normally when GitHub is unavailable.
+    """
+    request = urllib.request.Request(
+        GITHUB_TREE_URL,
+        headers={"Accept": "application/vnd.github+json", "User-Agent": "AdvisingBot"},
+    )
+    try:
+        with opener(request, timeout=2) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return False
+
+    remote = {
+        entry.get("path"): entry.get("sha")
+        for entry in payload.get("tree") or []
+        if entry.get("type") == "blob"
+    }
+    for relative in UPDATE_FILES:
+        local = root / relative
+        upstream = remote.get(f"skills/advising-report/{relative}")
+        if not local.is_file() or not upstream or _git_blob_sha(local) != upstream:
+            return True
+    return False
 
 
 def responding(url: str) -> bool:
@@ -108,6 +172,10 @@ def main() -> int:
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
     url = f"http://127.0.0.1:{args.port}"
+    has_update = update_available()
+    if has_update:
+        print("An AdvisingBot update is available. In Codex, paste:")
+        print(UPDATE_PROMPT)
 
     # A previous call may have left the local app running after its browser
     # window closed. Reuse it without touching its OpenTabs connection.
@@ -122,7 +190,14 @@ def main() -> int:
         return 2
 
     try:
-        process = subprocess.Popen([sys.executable, str(APP), "--port", str(args.port)], cwd=APP.parent)
+        environment = os.environ.copy()
+        if has_update:
+            environment["ADVISINGBOT_UPDATE_AVAILABLE"] = "1"
+            environment["ADVISINGBOT_UPDATE_PROMPT"] = UPDATE_PROMPT
+        process = subprocess.Popen(
+            [sys.executable, str(APP), "--port", str(args.port)],
+            cwd=APP.parent, env=environment,
+        )
         for _ in range(40):
             if responding(url):
                 webbrowser.open(url, new=1)

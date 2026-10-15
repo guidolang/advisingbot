@@ -51,6 +51,12 @@ select{font:inherit;padding:8px 10px;border:1px solid var(--line);
 .who{margin:0 0 6px;font-size:1.05rem;font-weight:700}
 .meta{color:var(--muted);font-size:.85rem;margin:0}
 .status{color:var(--muted);font-size:.9rem;padding:10px 0}
+.update{background:var(--accent-soft);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:var(--radius);
+  padding:12px 14px;margin-bottom:18px}
+.update p{margin:0 0 8px}
+.update textarea{min-height:86px;padding-right:12px;font-size:.82rem}
+.update .copy{position:static;margin-top:8px}
 .error{background:var(--warn-soft);color:var(--warn);padding:12px 14px;
   border-radius:4px;border-left:3px solid currentColor;margin:14px 0}
 
@@ -115,6 +121,12 @@ textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
 <body>
 <div class="wrap">
 <h1>AdvisingBot</h1>
+
+<section class="update" id="update" hidden>
+  <p><strong>An AdvisingBot update is available.</strong> Copy this prompt into Codex to update it:</p>
+  <textarea id="updateprompt" readonly></textarea>
+  <button class="ghost copy" id="copyupdate" type="button">⧉ Copy update prompt</button>
+</section>
 
 <div class="panel">
   <form class="row" id="form">
@@ -418,6 +430,18 @@ function showProgress() {
   status.textContent = `Reading the audit in Stellic${".".repeat(loadingDots)}`;
 }
 
+async function showUpdate() {
+  try {
+    const response = await fetch("/api/update");
+    const update = await response.json();
+    if (!update.available || !update.prompt) return;
+    document.getElementById("updateprompt").value = update.prompt;
+    document.getElementById("update").hidden = false;
+  } catch (err) {
+    // The update notice is optional and must never interrupt advising work.
+  }
+}
+
 async function pollProgress() {
   while (CHECKING) {
     try {
@@ -506,10 +530,23 @@ document.getElementById("copy").addEventListener("click", async () => {
   setTimeout(() => { btn.textContent = "⧉ Copy"; }, 1600);
 });
 
+document.getElementById("copyupdate").addEventListener("click", async () => {
+  const box = document.getElementById("updateprompt");
+  const btn = document.getElementById("copyupdate");
+  try {
+    await navigator.clipboard.writeText(box.value);
+  } catch (e) {
+    box.select(); document.execCommand("copy");
+  }
+  btn.textContent = "✓ Copied";
+  setTimeout(() => { btn.textContent = "⧉ Copy update prompt"; }, 1600);
+});
+
 // The box starts empty every time: an audit URL carries a student's username,
 // which has no business outliving the session that looked it up. Clear anything
 // an earlier version stored.
 try { localStorage.removeItem("advisingbot.url"); } catch (e) {}
+showUpdate();
 </script>
 </body>
 </html>
