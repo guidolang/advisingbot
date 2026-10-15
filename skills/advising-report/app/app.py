@@ -172,7 +172,7 @@ def add_course_type_candidates(audit: stellic.Audit, store: seatcache.SeatCache)
 def check(url: str, progress: Callable[[str], None] | None = None) -> dict:
     """The whole job: audit -> needed courses -> seats -> who may take them."""
     update = progress or (lambda _message: None)
-    update("Opening the audit in Stellic")
+    update("Reading the audit in Stellic")
     audit = stellic.fetch(url, session=session())
 
     update("Finding courses that can satisfy each requirement")

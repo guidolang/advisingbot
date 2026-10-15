@@ -178,6 +178,9 @@ class Requirement:
     open_units: float = 0.0    # remaining units with no course list at all
     slots: int = 0             # how many more courses this requirement wants
     depth: int = 0
+    # A range, attribute, or other course-set rule whose concrete courses
+    # only Stellic's qualifying-course search can enumerate.
+    expand_qualifying_courses: bool = False
 
     @property
     def is_open_ended(self) -> bool:
@@ -192,6 +195,7 @@ _COURSE_TYPE_RE = re.compile(r"\b(UC_[A-Z0-9]+)\b")
 _UNIVERSITY_TOTAL_RE = re.compile(
     r"\btotal\s+\d+\s+credits?\b.*\buniversity degree completion\b", re.I
 )
+_CORE_RE = re.compile(r"\bcore\b", re.I)
 
 
 def _is_university_total(name: str) -> bool:
@@ -364,29 +368,30 @@ def fetch(
                 payload = _slurp(session, tab)
                 audit = parse(payload)
 
-                # Attribute-based requirements are resolved with the same
-                # qualifying-course search that Stellic's own UI makes.
-                # Explicit course lists in requirement text are parsed below.
+                # Some requirements hide their candidates behind a range or
+                # attribute rule. Healthcare Analytics, for example, exposes
+                # its 600-level HM elective this way. Ask only those leaf
+                # requirements for their qualifying courses: querying their
+                # parent concentration would merge every course from every
+                # child requirement into one misleading list.
                 if expand:
-                    open_ended = [
+                    expandable = [
                         r.id for r in audit.requirements
-                        if not _is_university_total(r.name) and (
-                            r.is_open_ended or (
-                            not r.satisfied and r.slots and any(
-                                "attribute" in rule.lower() for rule in r.rules
-                            )
-                            )
-                        )
+                        if not r.satisfied
+                        and r.slots
+                        and r.expand_qualifying_courses
+                        and not _is_university_total(r.name)
                     ]
-                    if open_ended:
+                    if expandable:
                         _apply_expansion(
                             audit,
                             _expand(
                                 session, tab,
                                 str(payload.get("plan_id") or ""),
-                                open_ended,
+                                expandable,
                             ),
                         )
+                    _exclude_core_courses_from_candidates(audit)
                 return audit
             finally:
                 ot.close_tab(session, tab)
@@ -509,6 +514,14 @@ def _has_unmodelled_alternative(node: dict) -> bool:
     return False
 
 
+def _needs_qualifying_course_search(node: dict) -> bool:
+    """Whether a concrete elective list is hidden behind a course-set rule."""
+    return any(
+        constraint.get("type") == "xfromcourseset"
+        for constraint in node.get("constraints") or []
+    )
+
+
 def _courses_named_in_rules(rules: list[str]) -> list[str]:
     """Course codes Stellic names only in a requirement's explanatory text."""
     seen: dict[str, None] = {}
@@ -548,6 +561,22 @@ def _completed(audit: dict) -> set[str]:
                 done.add(_normalise_code(code))
                 break
     return done
+
+
+def _exclude_core_courses_from_candidates(audit: Audit) -> None:
+    """Keep a programme's required-core courses out of elective choices."""
+    core_courses = {
+        course.lookup_code
+        for requirement in audit.requirements
+        if _CORE_RE.search(requirement.name)
+        for course in requirement.needed
+        if not course.candidate
+    }
+    for requirement in audit.requirements:
+        requirement.needed = [
+            course for course in requirement.needed
+            if not (course.candidate and course.lookup_code in core_courses)
+        ]
 
 
 def parse(payload: dict) -> Audit:
@@ -697,6 +726,7 @@ def parse(payload: dict) -> Audit:
                     open_units=spare,
                     slots=int(entry.get("num_remaining") or 0),
                     depth=depth,
+                    expand_qualifying_courses=_needs_qualifying_course_search(node),
                 )
             )
 
@@ -735,7 +765,7 @@ def parse(payload: dict) -> Audit:
         ]
 
     student = payload.get("student") or {}
-    return Audit(
+    result = Audit(
         student_name=student.get("name") or student.get("username") or "Student",
         username=student.get("username") or "",
         level=student.get("level") or "",
@@ -744,6 +774,8 @@ def parse(payload: dict) -> Audit:
         online_only=any(_ONLINE_RE.search(name) for name in declared),
         completed=completed,
     )
+    _exclude_core_courses_from_candidates(result)
+    return result
 
 
 if __name__ == "__main__":

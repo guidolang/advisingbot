@@ -1,6 +1,6 @@
 # AdvisingBot
 
-AdvisingBot helps Quinnipiac faculty turn a student's Stellic degree audit into a clear list of courses with open seats in Self-Service.
+AdvisingBot helps Quinnipiac student advisors turn a student's Stellic degree audit into a clear list of courses with open seats in Self-Service.
 
 It follows the requirement structure in Stellic, so you can see what each course may count toward. A course can appear in more than one place when it can satisfy more than one requirement.
 
@@ -9,7 +9,7 @@ It follows the requirement structure in Stellic, so you can see what each course
 In Codex, paste this prompt:
 
 ```text
-Install the advising-report Skill from https://github.com/guidolang/advisingbot/tree/main/skills/advising-report. If OpenTabs needs setup, use https://opentabs.dev/docs/install. Then open AdvisingBot in my regular browser.
+Install the advising-report Skill from https://github.com/guidolang/advisingbot/tree/main/skills/advising-report. If OpenTabs needs setup, use https://opentabs.dev/docs/install. Then open AdvisingBot in Chrome.
 ```
 
 Codex downloads and installs the Skill for you. You do not need to install GitHub, use Terminal, or install Python packages. If Codex asks you to sign in to GitHub, follow that one prompt so it can download the Skill.
@@ -21,16 +21,14 @@ AdvisingBot uses [OpenTabs](https://opentabs.dev/docs/install) to connect secure
 ## Use AdvisingBot
 
 1. In Chrome, open the student's degree audit in Stellic.
-2. Copy the audit page address.
+2. Copy the audit page address (e.g., [https://qu.stellic.com/app/audit?student_username=test](https://qu.stellic.com/app/audit?student_username=test)).
 3. Paste it into AdvisingBot and select **Check**.
 4. Choose a semester and, when helpful, Online, On-ground, or both.
 5. Review the available courses and sections. Use **Copy Notes** when you want a short list to paste elsewhere.
 
-AdvisingBot reopens an existing local instance when one is already running. Closing a browser window does not erase its same-day public course cache.
-
 ## Example
 
-This example uses a test student report.
+This example shows a fictitious student report.
 
 ![Example AdvisingBot report](skills/advising-report/assets/example-report.png)
 
@@ -51,6 +49,5 @@ Use the report to support advising. Confirm the student's final eligibility and 
 | A message asking you to sign in | Sign in to Stellic in Chrome, then select **Check** again. |
 | A message about the secure Stellic connection | In Codex, say: **Set up OpenTabs for AdvisingBot.** You can also use the [OpenTabs setup guide](https://opentabs.dev/docs/install). |
 | No courses for a requirement | Try a different semester or modality. There may be no open eligible sections, or the requirement may need adviser review. |
-| Results look out of date | Check Self-Service directly when an immediate seat change matters. |
 
 The app runs locally. It holds the student's audit in memory for the current check and does not save it to disk. Its local cache contains public course and seat information only.

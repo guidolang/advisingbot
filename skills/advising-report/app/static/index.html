@@ -51,7 +51,6 @@ select{font:inherit;padding:8px 10px;border:1px solid var(--line);
 .who{margin:0 0 6px;font-size:1.05rem;font-weight:700}
 .meta{color:var(--muted);font-size:.85rem;margin:0}
 .status{color:var(--muted);font-size:.9rem;padding:10px 0}
-.progress-detail{white-space:nowrap}
 .error{background:var(--warn-soft);color:var(--warn);padding:12px 14px;
   border-radius:4px;border-left:3px solid currentColor;margin:14px 0}
 
@@ -162,6 +161,8 @@ textarea{width:100%;min-height:220px;font:13px/1.5 ui-monospace,SFMono-Regular,
 <script>
 let DATA = null;
 let CHECKING = false;
+let loadingDots = 3;
+let loadingTimer = null;
 
 const el = (tag, cls, text) => {
   const n = document.createElement(tag);
@@ -412,23 +413,16 @@ function showStudent() {
   bar.hidden = false;
 }
 
-function showProgress(message) {
+function showProgress() {
   const status = document.getElementById("status");
-  const prefix = "Opening Stellic and Self-Service – this may take a moment ";
-  const detail = `(${message || "Starting"}...)`;
-  status.replaceChildren(document.createTextNode(prefix));
-  const animated = el("span", "progress-detail");
-  animated.setAttribute("aria-label", detail);
-  animated.textContent = detail;
-  status.append(animated);
+  status.textContent = `Reading the audit in Stellic${".".repeat(loadingDots)}`;
 }
 
 async function pollProgress() {
   while (CHECKING) {
     try {
       const response = await fetch("/api/progress");
-      const body = await response.json();
-      if (CHECKING && body.message) showProgress(body.message);
+      await response.json();
     } catch (err) {
       // The audit request remains authoritative if this lightweight status
       // request is interrupted.
@@ -447,7 +441,12 @@ async function check(ev) {
   document.getElementById("who").hidden = true;
   document.getElementById("copypanel").hidden = true;
   CHECKING = true;
-  showProgress("Starting");
+  loadingDots = 3;
+  showProgress();
+  loadingTimer = setInterval(() => {
+    loadingDots += 1;
+    showProgress();
+  }, 1000);
   const progressPoll = pollProgress();
 
   try {
@@ -484,6 +483,8 @@ async function check(ev) {
     document.getElementById("out").append(box);
   } finally {
     CHECKING = false;
+    clearInterval(loadingTimer);
+    loadingTimer = null;
     await progressPoll;
     go.disabled = false;
   }
