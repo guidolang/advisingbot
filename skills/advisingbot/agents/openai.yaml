@@ -1,4 +1,4 @@
 interface:
   display_name: "AdvisingBot"
   short_description: "Open the local Stellic advising web app"
-  default_prompt: "Use $advising-report to open AdvisingBot in my regular browser."
+  default_prompt: "Use $AdvisingBot to open AdvisingBot in Chrome."

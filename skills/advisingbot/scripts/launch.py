@@ -36,8 +36,8 @@ UPDATE_FILES = (
     "app/static/index.html",
 )
 UPDATE_PROMPT = (
-    "Update and replace my installed advising-report Skill from "
-    "https://github.com/guidolang/advisingbot/tree/main/skills/advising-report. "
+    "Update and replace my installed AdvisingBot Skill from "
+    "https://github.com/guidolang/advisingbot/tree/main/skills/advisingbot. "
     "Then stop the current AdvisingBot server and relaunch the updated skill "
     "in Chrome."
 )
@@ -76,7 +76,7 @@ def update_available(
     }
     for relative in UPDATE_FILES:
         local = root / relative
-        upstream = remote.get(f"skills/advising-report/{relative}")
+        upstream = remote.get(f"skills/advisingbot/{relative}")
         if not local.is_file() or not upstream or _git_blob_sha(local) != upstream:
             return True
     return False

@@ -1,5 +1,5 @@
 ---
-name: advising-report
+name: advisingbot
 description: Open Quinnipiac's local AdvisingBot web app to turn a Stellic audit into current course availability.
 metadata:
   short-description: Run the local Stellic advising app

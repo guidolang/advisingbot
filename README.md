@@ -9,7 +9,7 @@ It follows the requirement structure in Stellic, so you can see what each course
 In Codex, paste this prompt:
 
 ```text
-Install the advising-report Skill from https://github.com/guidolang/advisingbot/tree/main/skills/advising-report. If OpenTabs needs setup, use https://opentabs.dev/docs/install. Then open AdvisingBot in Chrome.
+Install the AdvisingBot Skill from https://github.com/guidolang/advisingbot/tree/main/skills/advisingbot. If OpenTabs needs setup, use https://opentabs.dev/docs/install. Then open AdvisingBot in Chrome.
 ```
 
 Codex downloads and installs the Skill for you. You do not need to install GitHub, use Terminal, or install Python packages. If Codex asks you to sign in to GitHub, follow that one prompt so it can download the Skill.
@@ -30,7 +30,7 @@ AdvisingBot uses [OpenTabs](https://opentabs.dev/docs/install) to connect secure
 
 This example shows a fictitious student report.
 
-![Example AdvisingBot report](skills/advising-report/assets/example-report.png)
+![Example AdvisingBot report](skills/advisingbot/assets/example-report.png)
 
 ## Reading the report
 
