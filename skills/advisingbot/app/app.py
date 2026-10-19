@@ -126,7 +126,7 @@ def blocker(code: str, entry: dict, audit: stellic.Audit) -> dict | None:
         return {"reason": "taken", "detail": "Already taken or under way"}
 
     missing = eligibility.missing_prerequisites(
-        entry.get("requisites") or [], audit.completed
+        entry.get("requisites") or [], audit.prerequisite_completed
     )
     if missing:
         return {
@@ -175,8 +175,12 @@ def add_course_type_candidates(audit: stellic.Audit, store: seatcache.SeatCache)
 def check(url: str, progress: Callable[[str], None] | None = None) -> dict:
     """The whole job: audit -> needed courses -> seats -> who may take them."""
     update = progress or (lambda _message: None)
-    update("Reading the audit in Stellic")
-    audit = stellic.fetch(url, session=session())
+    update("Reading and processing data from Stellic and Self-Service. This may take a minute...")
+    # Concrete courses are already present in the audit. Broad qualifying
+    # course expansion can turn one open-ended requirement into hundreds of
+    # speculative catalog choices, so UC candidates come only from the
+    # narrower, open-section-only Self-Service course-type query below.
+    audit = stellic.fetch(url, session=session(), expand=False)
 
     update("Finding courses that can satisfy each requirement")
     store = cache()
@@ -236,6 +240,7 @@ def check(url: str, progress: Callable[[str], None] | None = None) -> dict:
                 "open_units": requirement.open_units,
                 "units_total": requirement.units_total,
                 "units_remaining": requirement.units_remaining,
+                "review": requirement.review,
                 "courses": courses,
             }
         )

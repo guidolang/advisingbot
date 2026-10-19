@@ -181,6 +181,7 @@ class Requirement:
     # A range, attribute, or other course-set rule whose concrete courses
     # only Stellic's qualifying-course search can enumerate.
     expand_qualifying_courses: bool = False
+    review: str | None = None
 
     @property
     def is_open_ended(self) -> bool:
@@ -196,6 +197,13 @@ _UNIVERSITY_TOTAL_RE = re.compile(
     r"\btotal\s+\d+\s+credits?\b.*\buniversity degree completion\b", re.I
 )
 _CORE_RE = re.compile(r"\bcore\b", re.I)
+_HIDDEN_COURSE_RE = re.compile(
+    r"\b[A-Z]{2,5}\s+\d{3}[A-Z]{0,3}\s*"
+    r"\(\s*hidden from (?:the )?student[^)]*\)", re.I
+)
+_CROSS_LISTED_ALIAS_RE = re.compile(
+    r"\([^()]*\b([A-Z]{2,5})\s*(\d{3}[A-Z]{0,3})\b[^()]*\)", re.I
+)
 
 
 def _is_university_total(name: str) -> bool:
@@ -221,6 +229,9 @@ class Audit:
     # in Self-Service form ("CIS-101"). Two jobs: never suggest one of these
     # again, and treat them as satisfying other courses' prerequisites.
     completed: set[str] = field(default_factory=set)
+    # Approved one-for-one substitutions that satisfy a listed prerequisite,
+    # without treating the original course as completed for other purposes.
+    prerequisite_completed: set[str] = field(default_factory=set)
 
     @property
     def all_codes(self) -> list[str]:
@@ -478,25 +489,79 @@ def _descendant_courses(node: dict, limit: int = 60) -> list[tuple[str, str, flo
     return out
 
 
-def _rule_texts(node: dict) -> list[str]:
-    """Human-readable constraint lines, e.g. "Fulfill any 3 of the following"."""
+def _visible_texts(values: list[object]) -> list[str]:
+    """Human-readable constraint lines, omitting hidden course references."""
     out: list[str] = []
 
     def add(value) -> None:
         values = value if isinstance(value, list) else [value]
         for item in values:
             text = re.sub(r"\s+", " ", item or "").strip() if isinstance(item, str) else ""
+            text = _HIDDEN_COURSE_RE.sub("", text).strip()
             if text and text not in out:
                 out.append(text)
 
+    for value in values:
+        add(value)
+    return out
+
+
+def _rule_texts(node: dict) -> list[str]:
+    """Human-readable constraint lines, e.g. "Fulfill any 3 of the following"."""
+    values: list[object] = []
     for constraint in node.get("constraints") or []:
         if not constraint.get("is_hidden"):
-            add(constraint.get("type_string"))
-            add(constraint.get("comment"))
-            add(constraint.get("comments"))
-    add(node.get("comment"))
-    add(node.get("comments"))
-    return out
+            values.extend([
+                constraint.get("type_string"),
+                constraint.get("comment"),
+                constraint.get("comments"),
+            ])
+    values.extend([node.get("comment"), node.get("comments")])
+    return _visible_texts(values)
+
+
+def _exception_overrides(audit: dict) -> dict[str, tuple[list[str], list[str]]]:
+    """Approved per-plan course-set changes keyed by requirement id.
+
+    Stellic keeps these changes outside ``req_tree``. Reading the unchanged
+    tree would otherwise restore a course that an approved exception replaced.
+    """
+    exceptions = ((audit.get("student_audit") or {}).get("exceptions") or {})
+    overrides: dict[str, tuple[list[str], list[str]]] = {}
+    for requirement_id, entries in exceptions.items():
+        for exception in reversed(entries or []):
+            definition = exception.get("data") or {}
+            constraint_data = definition.get("data") or {}
+            courses: list[str] = []
+            for course_set in constraint_data.get("conditional_course_sets") or []:
+                if course_set.get("is_hidden") or course_set.get("is_excluded"):
+                    continue
+                for code in course_set.get("courses") or []:
+                    normalised = _normalise_code(str(code))
+                    if normalised and normalised not in courses:
+                        courses.append(normalised)
+            if courses:
+                overrides[str(requirement_id)] = (
+                    courses, _visible_texts([definition.get("type_string")])
+                )
+                break
+    return overrides
+
+
+def _constraint_courses(node: dict) -> set[str]:
+    """Concrete, visible courses in a tree constraint's conditional sets."""
+    courses: set[str] = set()
+    for constraint in node.get("constraints") or []:
+        for course_set in ((constraint.get("data") or {}).get(
+            "conditional_course_sets"
+        ) or []):
+            if course_set.get("is_hidden") or course_set.get("is_excluded"):
+                continue
+            courses.update(
+                _normalise_code(str(code))
+                for code in course_set.get("courses") or []
+            )
+    return {code for code in courses if code}
 
 
 def _has_unmodelled_alternative(node: dict) -> bool:
@@ -559,6 +624,10 @@ def _completed(audit: dict) -> set[str]:
             if status in ("taken", "completed", "in_progress", "registered") \
                     or attempt.get("is_registered"):
                 done.add(_normalise_code(code))
+                for alias_subject, alias_number in _CROSS_LISTED_ALIAS_RE.findall(
+                    str(attempt.get("name") or "")
+                ):
+                    done.add(_normalise_code(f"{alias_subject} {alias_number}"))
                 break
     return done
 
@@ -593,6 +662,7 @@ def parse(payload: dict) -> Audit:
         )
 
     by_id, by_parent = _index(tree)
+    exception_overrides = _exception_overrides(audit)
     # Longest first so "1284239" wins over "128" when splitting composite ids.
     ordered_ids = sorted(by_id, key=len, reverse=True)
 
@@ -647,6 +717,15 @@ def parse(payload: dict) -> Audit:
         else:
             open_units[owner] = open_units.get(owner, 0.0) + (units or 0.0)
 
+    # An approved exception replaces the original tree constraint. It is not
+    # merely another candidate list, so overwrite any inherited tree choices.
+    for requirement_id, (codes, _rules) in exception_overrides.items():
+        if requirement_id in by_id:
+            needed[requirement_id] = {
+                code: NeededCourse(code=code.replace("-", " ", 1), candidate=True)
+                for code in codes
+            }
+
     # Walk the tree in its own order so the report mirrors the Stellic page.
     requirements: list[Requirement] = []
     seen_ids: set[str] = set()
@@ -663,7 +742,7 @@ def parse(payload: dict) -> Audit:
         name = str(node.get("screen_name") or node.get("name") or "").strip()
         name = name or "Requirement"
         courses = list((needed.get(node_id) or {}).values())
-        rules = _rule_texts(node)
+        rules = exception_overrides.get(node_id, ([], _rule_texts(node)))[1]
         # A choice branch without audit data is explanatory only.  In
         # particular, the Capstone tree names every school alternative, while
         # only the student's own branch receives an audit-data entry.  Do not
@@ -689,11 +768,16 @@ def parse(payload: dict) -> Audit:
         # A satisfied requirement can still inherit a descendant's remaining
         # cards in the audit tree. Its choice list is explanatory only, not a
         # recommendation, so never surface those alternate courses.
+        review = None
+        if unresolved_capstone:
+            review = (
+                "Stellic does not identify a specific course for this "
+                "Integrative Capstone requirement. Review with adviser."
+            )
         if (
             satisfied
             or _is_university_total(name)
             or has_unmodelled_alternative
-            or unresolved_capstone
         ):
             courses = []
             spare = 0.0
@@ -701,7 +785,6 @@ def parse(payload: dict) -> Audit:
         if not (
             hidden_by_satisfied_ancestor
             or has_unmodelled_alternative
-            or unresolved_capstone
         ) and (
             courses or spare or (entry and not entry.get("satisfied", True))
         ):
@@ -727,6 +810,7 @@ def parse(payload: dict) -> Audit:
                     slots=int(entry.get("num_remaining") or 0),
                     depth=depth,
                     expand_qualifying_courses=_needs_qualifying_course_search(node),
+                    review=review,
                 )
             )
 
@@ -736,7 +820,7 @@ def parse(payload: dict) -> Audit:
                     child,
                     depth + 1,
                     hidden_by_satisfied_ancestor or satisfied
-                    or has_unmodelled_alternative or unresolved_capstone,
+                    or has_unmodelled_alternative,
                 )
 
     for program in tree.get("programs") or []:
@@ -755,6 +839,16 @@ def parse(payload: dict) -> Audit:
         declared = [p for p in ((payload.get("student") or {}).get("programs") or []) if p]
 
     completed = _completed(audit)
+    prerequisite_completed = set(completed)
+    for requirement_id, (replacement_codes, _rules) in exception_overrides.items():
+        original_codes = _constraint_courses(by_id.get(requirement_id) or {})
+        replacement_codes = set(replacement_codes)
+        removed = original_codes - replacement_codes
+        added = replacement_codes - original_codes
+        # Only a one-for-one approved change establishes a prerequisite
+        # substitution. Broader exceptions need an adviser's judgment.
+        if len(removed) == len(added) == 1 and added <= completed:
+            prerequisite_completed.update(removed)
     # A parent-level rule can name a course that is already complete while a
     # different child keeps the larger University Curriculum block unmet.
     # Stellic's completed record controls: do not surface that course again.
@@ -773,6 +867,7 @@ def parse(payload: dict) -> Audit:
         requirements=requirements,
         online_only=any(_ONLINE_RE.search(name) for name in declared),
         completed=completed,
+        prerequisite_completed=prerequisite_completed,
     )
     _exclude_core_courses_from_candidates(result)
     return result

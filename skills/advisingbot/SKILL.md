@@ -29,10 +29,13 @@ Build a de-duplicated candidate map before asking for sections. Query a section 
 ## Interpret the audit conservatively
 
 - Preserve the order and nesting of open, actionable requirements. Repeat a course under each requirement it can satisfy.
-- Omit satisfied requirements and descendants, inactive alternatives, explanatory labels, `OTHERS_MAY_COUNT` substitutions, unresolved Integrative Capstone umbrellas, and the university-wide total-credit bucket.
+- Omit satisfied requirements and descendants, inactive alternatives, explanatory labels, `OTHERS_MAY_COUNT` substitutions, and the university-wide total-credit bucket. When an open Integrative Capstone requirement has no course identified by Stellic, retain it as `Review with adviser`; do not recommend a course from another program's capstone branch.
 - Obtain University Curriculum candidates from Self-Service `courseTypes`: `UC_FA`, `UC_SS`, `UC_HU`, and `UC_NS`. Search with `openSections: true`, retain returned course and matching section IDs, and use those IDs directly for sections.
 - Do not expand a broad, free-credit, or indeterminate choice into the catalog. Leave it as `Review with adviser` and explain that Stellic did not identify a bounded course set.
 - Exclude courses already completed, in progress, or registered. For a clear unmet prerequisite, retain the course but label it `Needs prerequisite`. Treat unclear prerequisite prose, substitutions, and program restrictions as `Review with adviser`.
+- Treat a parenthetical cross-listed code in a completed course title as completed too. Do not derive recommendations from a constraint marked hidden from the student.
+- When Stellic provides an approved per-plan exception that modifies a course-set constraint, use the exception's course set for that requirement instead of reconstructing options from the unmodified requirement tree.
+- Treat a completed replacement course as meeting a listed prerequisite only when that same approved exception is an unambiguous one-for-one substitution. Leave broader exception effects for adviser review.
 - Include only courses with at least one open section. Keep `Seat availability not published` distinct from an open seat.
 
 ## Easy-to-understand errors

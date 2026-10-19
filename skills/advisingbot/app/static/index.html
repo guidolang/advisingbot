@@ -254,12 +254,7 @@ function render() {
   out.append(renderRequirementTree(branches));
   if (held.length) out.append(renderHeld(held));
 
-  const copyCourses = new Map();
-  rows.flatMap(branch => branch.courses).forEach(item => {
-    if (!copyCourses.has(item.course.code)) copyCourses.set(item.course.code, item);
-  });
-  document.getElementById("plain").value =
-    [...copyCourses.values()].map(({course, secs}) => copyLine(course, secs)).join("\n");
+  document.getElementById("plain").value = copyNotes(rows).join("\n");
   document.getElementById("copypanel").hidden = !rows.length;
 
   const available = new Set(rows.flatMap(branch =>
@@ -284,6 +279,45 @@ function copyLine(course, secs) {
   }
   const tail = parts.length ? ` (${parts.join(", ")})` : "";
   return `- ${course.code}: ${course.title || ""}${tail}`;
+}
+
+function ucCategory(requirement) {
+  if (!/\bUC_(?:FA|HU|SS|NS)\b/.test((requirement.rules || []).join(" ")))
+    return null;
+  const name = (requirement.name || "").replace(/^\s*\d+\.\s*/, "")
+    .replace(/^University Curriculum\s*/i, "").trim();
+  return name ? `UC ${name}` : "University Curriculum";
+}
+
+function copyNotes(rows) {
+  const items = [], seen = new Map();
+  for (const {requirement, courses} of rows) {
+    const category = ucCategory(requirement);
+    if (category) {
+      const key = `category:${category}`;
+      let item = seen.get(key);
+      if (!item) {
+        item = {category, needed: 0, courses: new Map()};
+        seen.set(key, item); items.push(item);
+      }
+      item.needed += requirement.slots || 1;
+      courses.forEach(({course, secs}) => item.courses.set(course.code, {course, secs}));
+      continue;
+    }
+    courses.forEach(({course, secs}) => {
+      const key = `course:${course.code}`;
+      if (!seen.has(key)) {
+        const item = {course, secs};
+        seen.set(key, item); items.push(item);
+      }
+    });
+  }
+  return items.map(item => {
+    if (!item.category) return copyLine(item.course, item.secs);
+    const needed = item.needed;
+    const available = item.courses.size;
+    return `- ${needed} course${needed === 1 ? " that fulfills" : "s that fulfill"} ${item.category} (${available} course${available === 1 ? "" : "s"} with available seats)`;
+  });
 }
 
 const HELD_LABEL = {taken:"Already taken", prerequisite:"Prerequisite not met",
@@ -353,7 +387,9 @@ function renderRequirement({requirement, courses}, descendantHasCourses) {
     detail.push(`${requirement.units_remaining} units remaining`);
   detail.push(...(requirement.rules || []));
   if (detail.length) box.append(el("div", "req-meta", detail.join(" · ")));
-  if (courses.length) {
+  if (requirement.review) {
+    box.append(el("p", "req-meta", requirement.review));
+  } else if (courses.length) {
     box.append(el("span", "courses-label", "Courses that count toward this requirement"));
     const list = el("div", "course-list");
     courses.slice(0, 5).forEach(({course, secs}) =>
@@ -427,7 +463,7 @@ function showStudent() {
 
 function showProgress() {
   const status = document.getElementById("status");
-  status.textContent = `Reading the audit in Stellic${".".repeat(loadingDots)}`;
+  status.textContent = `Reading and processing data from Stellic and Self-Service. This may take a minute${".".repeat(loadingDots)}`;
 }
 
 async function showUpdate() {
