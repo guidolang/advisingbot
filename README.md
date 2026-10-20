@@ -1,6 +1,6 @@
 # AdvisingBot
 
-Finding courses for a student requires checking their degree audit in Stellic, identifying unmet requirements, and searching for appropriate courses with open sections in Self-Service. AdvisingBot brings those steps together. It reads the student’s degree audit and creates a clear list of open courses that may fit their remaining requirements.
+Finding courses for a student requires checking their degree audit in Stellic, identifying unmet requirements, and searching for appropriate courses with open sections in Self-Service. AdvisingBot brings those steps together. It reads the student’s degree audit and creates a clear list of open courses that may fit their remaining requirements. AdvisingBot supports student advisors. Advisors should review every recommendation before discussing it with a student.
 
 ## Before you begin
 
@@ -49,4 +49,6 @@ Use the report to support advising. Confirm the student's final eligibility and 
 | A message about the secure Stellic connection | In Codex, say: **Set up OpenTabs for AdvisingBot.** You can also use the [OpenTabs setup guide](https://opentabs.dev/docs/install). |
 | No courses for a requirement | Try a different semester or modality. There may be no open eligible sections, or the requirement may need adviser review. |
 
-The app runs locally. It holds the student's audit in memory for the current check and does not save it to disk. Its local cache contains public course and seat information only.
+## Privacy and data handling
+
+AdvisingBot runs locally on your computer. During a check, it uses your signed-in Chrome session to read the student’s degree audit from Stellic and checks course and seat information in Self-Service. AdvisingBot does not save the student’s audit to its own disk cache. Its cache contains public course, section, and seat information only. Use AdvisingBot in accordance with applicable privacy and FERPA policies.
