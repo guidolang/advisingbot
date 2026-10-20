@@ -1,33 +1,33 @@
 # AdvisingBot
 
-AdvisingBot helps Quinnipiac student advisors turn a student's Stellic degree audit into a clear list of courses with open seats in Self-Service.
+Finding courses for a student requires checking their degree audit in Stellic, identifying unmet requirements, and searching for appropriate courses with open sections in Self-Service. AdvisingBot brings those steps together. It reads the student’s degree audit and creates a clear list of open courses that may fit their remaining requirements.
 
-It follows the requirement structure in Stellic, so you can see what each course may count toward. A course can appear in more than one place when it can satisfy more than one requirement.
+## Before you begin
 
-## Install
+You need the **[ChatGPT desktop app](https://chatgpt.com/download)** and a subscription that supports **Codex**, such as **ChatGPT Edu** or **ChatGPT Plus**.
 
-In Codex, paste this prompt:
+## Install AdvisingBot
+
+1. In the **ChatGPT desktop app**, in the upper-left corner, select the **ChatGPT** dropdown, then choose **Codex**.
+2. Copy and paste this prompt into Codex:
 
 ```text
-Install the AdvisingBot Skill from https://github.com/guidolang/advisingbot/tree/main/skills/advisingbot. If OpenTabs needs setup, use https://opentabs.dev/docs/install. Then open AdvisingBot in Chrome.
+Download the public AdvisingBot Skill ZIP from https://github.com/guidolang/advisingbot/archive/refs/heads/main.zip. Do not ask me to create or sign in to a GitHub account. Extract the ZIP and install the AdvisingBot Skill from the advisingbot-main/skills/advisingbot folder. If OpenTabs needs setup, use https://opentabs.dev/docs/install. Then open AdvisingBot in Chrome.
 ```
 
-Codex downloads and installs the Skill for you. You do not need to install GitHub, use Terminal, or install Python packages. If Codex asks you to sign in to GitHub, follow that one prompt so it can download the Skill.
-
-The first time you use it, Codex checks the secure connection to Stellic. If anything needs attention, it gives you a plain-language message. You can simply ask Codex to fix the connection for AdvisingBot.
-
-AdvisingBot uses [OpenTabs](https://opentabs.dev/docs/install) to connect securely to Stellic in Chrome. Codex can handle the setup when possible. If Chrome needs a one-time extension confirmation, the OpenTabs guide explains it clearly.
+Codex downloads and installs the Skill for you. AdvisingBot uses [OpenTabs](https://opentabs.dev/docs/install) to connect securely to Stellic in Chrome. If Chrome needs a one-time extension confirmation, just ask Codex to guide you through the steps.
 
 ## Use AdvisingBot
 
-1. In Codex, start a chat and type `$AdvisingBot`. AdvisingBot opens in Chrome.
-2. In Chrome, open Stellic and the student’s degree audit. Copy the page address, for example: `https://qu.stellic.com/app/audit?student_username=test`.
+1. Start a chat and type `$AdvisingBot`. AdvisingBot opens in Chrome.
+2. In Chrome, open a student’s degree audit in Stellic and copy the page address (i.e., `https://qu.stellic.com/app/audit?student_username=test`).
 3. Paste the address into AdvisingBot and select **Check**.
 4. Choose a semester and modality, then review the available courses.
+5. To quit AdvisingBot, just close the tab in Chrome and prompt Codex to close AdvisingBot.
 
-## Example
+## Advising Report
 
-This example shows a fictitious student report.
+This example shows a fictitious student advising report.
 
 ![Example AdvisingBot report](skills/advisingbot/assets/example-report.png)
 
