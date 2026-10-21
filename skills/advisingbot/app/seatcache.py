@@ -75,7 +75,19 @@ class SeatCache:
         return bool(entry) and entry.get("checked_on") == today()
 
     def is_fresh(self, code: str) -> bool:
-        return self._fresh(self.data["courses"].get(code))
+        entry = self.data["courses"].get(code)
+        if not self._fresh(entry):
+            return False
+        # Older versions could write a same-day empty record when the course
+        # index was incomplete.  That record did not establish that the
+        # course had no sections, so it must be retried rather than masking
+        # live availability for the rest of the day.
+        return bool(
+            entry.get("title")
+            or entry.get("description")
+            or entry.get("sections")
+            or entry.get("verified_absent")
+        )
 
     # -- terms ------------------------------------------------------------
 
@@ -122,28 +134,36 @@ class SeatCache:
         """
         key = (course_type or "").upper()
         entry = self.data["course_types"].get(key)
-        if self._fresh(entry):
+        if self._fresh(entry) and entry.get("records"):
+            # Keep the precise course/section IDs returned by the Course Type
+            # search available after restarting the app.  A plain cached list
+            # of codes and titles is not enough to ask for sections later.
+            self.data["index"].setdefault("courses", {}).update(
+                entry["records"]
+            )
             return [tuple(course) for course in entry.get("courses") or []]
 
         courses, _ = self.client.search(
-            course_types=[key], open_only=False, page_size=2000
+            course_types=[key], open_only=True, page_size=2000
         )
         found = [(course.code, course.title) for course in courses if course.code]
         # The Course Type search already returned these courses' section ids.
         # Keep them in the normal index so lookup() does not replace this
         # precise result with a much broader subject-level search.
         index = self.data["index"].setdefault("courses", {})
+        records = {}
         for course in courses:
             if course.code:
-                index[course.code] = {
+                records[course.code] = {
                     "id": course.course_id,
                     "sections": course.matching_section_ids,
                     "title": course.title,
                     "description": course.description,
                     "requisites": [asdict(r) for r in course.requisites],
                 }
+        index.update(records)
         self.data["course_types"][key] = {
-            "checked_on": today(), "courses": found,
+            "checked_on": today(), "courses": found, "records": records,
         }
         self.save()
         return found
@@ -166,7 +186,8 @@ class SeatCache:
         courses, _ = self.client.search(
             subjects=sorted(known | set(missing)), terms=[], open_only=False
         )
-        mapping = {
+        mapping = dict(entry.get("courses") or {})
+        discovered = {
             course.code: {
                 "id": course.course_id,
                 "sections": course.matching_section_ids,
@@ -179,6 +200,11 @@ class SeatCache:
             }
             for course in courses
         }
+        # A Course Type lookup carries the exact matching section IDs for a
+        # UC candidate.  Do not replace that narrower record with a broad
+        # subject search result.
+        for code, record in discovered.items():
+            mapping.setdefault(code, record)
         self.data["index"] = {
             "checked_on": today(),
             "subjects": sorted(known | set(missing)),
@@ -234,6 +260,12 @@ class SeatCache:
                     ]
                 elif found:
                     entry["title"] = found.get("title") or ""
+                # Only a completed lookup may establish that a course is not
+                # in the current catalogue.  This distinguishes that result
+                # from the legacy blank records produced by an incomplete
+                # index, which is_fresh() deliberately retries.
+                if not found:
+                    entry["verified_absent"] = True
                 self.data["courses"][code] = entry
 
             self.save()
