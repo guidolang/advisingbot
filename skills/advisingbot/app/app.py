@@ -176,11 +176,11 @@ def check(url: str, progress: Callable[[str], None] | None = None) -> dict:
     """The whole job: audit -> needed courses -> seats -> who may take them."""
     update = progress or (lambda _message: None)
     update("Reading and processing data from Stellic and Self-Service. This may take a minute...")
-    # Concrete courses are already present in the audit. Broad qualifying
-    # course expansion can turn one open-ended requirement into hundreds of
-    # speculative catalog choices, so UC candidates come only from the
-    # narrower, open-section-only Self-Service course-type query below.
-    audit = stellic.fetch(url, session=session(), expand=False)
+    # Stellic expansion is limited inside stellic.fetch() to unmet, bounded
+    # leaf requirements with a concrete course-set rule. That supplies named
+    # elective choices such as BAN 600-level ranges without expanding a
+    # parent concentration or an indeterminate free-credit requirement.
+    audit = stellic.fetch(url, session=session(), expand=True)
 
     update("Finding courses that can satisfy each requirement")
     store = cache()

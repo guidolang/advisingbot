@@ -489,6 +489,22 @@ def _descendant_courses(node: dict, limit: int = 60) -> list[tuple[str, str, flo
     return out
 
 
+def _has_requirement_children(node: dict) -> bool:
+    """Whether a node is a menu of requirements rather than course choices.
+
+    Stellic repeats an open card for every ancestor in the audit tree.  A card
+    on a parent such as "MSBA Elective Courses" therefore does not mean that
+    every course in each concentration is a direct option at that parent.  A
+    direct course-choice node, by contrast, has only concrete course leaves.
+    """
+    for choice in node.get("choices") or []:
+        if not isinstance(choice, dict):
+            continue
+        if choice.get("choices") or _course_of(choice) is None:
+            return True
+    return False
+
+
 def _visible_texts(values: list[object]) -> list[str]:
     """Human-readable constraint lines, omitting hidden course references."""
     out: list[str] = []
@@ -588,9 +604,18 @@ def _needs_qualifying_course_search(node: dict) -> bool:
 
 
 def _courses_named_in_rules(rules: list[str]) -> list[str]:
-    """Course codes Stellic names only in a requirement's explanatory text."""
+    """Concrete courses named in a positive course-choice rule.
+
+    University Curriculum parent notes can mention a course only to describe
+    double-counting.  Those notes do not make that course a direct candidate.
+    """
     seen: dict[str, None] = {}
     for rule in rules:
+        lowered = (rule or "").lower()
+        if "double count" in lowered or "may not count" in lowered:
+            continue
+        if not re.search(r"\b(?:take|complete|choose|fulfill)\b", lowered):
+            continue
         for subject, number in _RULE_COURSE_RE.findall(rule or ""):
             seen.setdefault(f"{subject} {number}", None)
     return list(seen)
@@ -705,7 +730,10 @@ def parse(payload: dict) -> Audit:
         node = by_id.get(owner) if owner else None
         if node is None:
             continue
-        options = _descendant_courses(node)
+        # Parent cards are repeated summaries of their child requirements.
+        # Only expand an open card into named courses when its immediate
+        # choices are concrete courses.  Otherwise each child owns its list.
+        options = [] if _has_requirement_children(node) else _descendant_courses(node)
         if options:
             bucket = needed.setdefault(owner, {})
             for code, title, course_units in options:
@@ -809,7 +837,14 @@ def parse(payload: dict) -> Audit:
                     open_units=spare,
                     slots=int(entry.get("num_remaining") or 0),
                     depth=depth,
-                    expand_qualifying_courses=_needs_qualifying_course_search(node),
+                    # An approved exception replaces this node's original
+                    # course set.  Never expand that superseded set back into
+                    # the report.
+                    expand_qualifying_courses=(
+                        node_id not in exception_overrides
+                        and not _has_requirement_children(node)
+                        and _needs_qualifying_course_search(node)
+                    ),
                     review=review,
                 )
             )
