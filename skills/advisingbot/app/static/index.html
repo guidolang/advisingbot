@@ -221,10 +221,10 @@ function renderSection(s) {
 
 function render() {
   const term = document.getElementById("term").value;
-  // Students in an online programme cannot attend classroom sections, so the
-  // delivery filter follows their programme instead of being a choice.
-  const mode = DATA && DATA.student.online_only ? "online"
-    : document.getElementById("modality").value;
+  // A programme title does not establish a student's registration modality.
+  // Keep all open sections visible by default and let the adviser choose a
+  // delivery filter when the student's situation calls for one.
+  const mode = document.getElementById("modality").value;
   const out = document.getElementById("out");
   out.replaceChildren();
   if (!DATA) return;
@@ -455,8 +455,6 @@ function showStudent() {
   text.append(el("p","who", DATA.student.name
     + (DATA.student.level ? ` — ${DATA.student.level}` : "")));
   const meta = el("p","meta", DATA.student.programs.join(" · "));
-  if (DATA.student.online_only)
-    meta.append(el("span","badge","online — online sections only"));
   text.append(meta);
   bar.hidden = false;
 }
@@ -528,8 +526,8 @@ async function check(ev) {
     const modality = document.getElementById("modality");
     const only = document.getElementById("termone");
     filters.hidden = DATA.terms.length === 0;
-    modality.value = DATA.student.online_only ? "online" : "any";
-    modality.disabled = DATA.student.online_only;
+    modality.value = "any";
+    modality.disabled = false;
     termSel.hidden = DATA.terms.length < 2;
     only.hidden = DATA.terms.length !== 1;
     if (DATA.terms.length === 1) only.textContent = DATA.terms[0].description;
